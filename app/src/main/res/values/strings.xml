@@ -1,0 +1,198 @@
+<resources>
+    <string name="app_name">Music X</string>
+    <string name="app_names">Music X 🎧🎹🎼</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="search">search</string>
+    <string name="sorting">Sorting</string>
+    <string name="equalizer">Equalizer</string>
+    <string name="settings">Settings</string>
+    <string name="previous">previous</string>
+    <string name="play_pause">play/pause</string>
+    <string name="next_song">Next song</string>
+    <string name="textview">TextView</string>
+    <string name="back">Back to Home ↩️</string>
+    <string name="scroll">⬇️</string>
+    <string name="about">About</string>
+    <string name="exit">Exit</string>
+    <string name="dev_name">Made with ❤️ by Manish</string>
+    <string name="app_version">v1.0.1</string>
+    <string name="voice_mic">Speak</string>
+    <string name="send">Send</string>
+    <string name="app_des">My first music app with few features.
+        \n
+        \n
+        \nInspired By ❤️ CodeWithHarry ❤️
+        \n#HarryBhai
+        \n
+        \n
+        \n
+        \n
+        \n
+        \n
+        \nLorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci quasi ipsa labore dicta consectetur. Ipsa minus facilis, hic blanditiis exercitationem laborum? Incidunt, autem delectus labore modi quidem totam atque vel nesciunt minima! Consequatur totam nesciunt reprehenderit tenetur alias quis vel, sed nostrum, odio, odit consequuntur saepe excepturi molestias tempora praesentium?</string>
+    <string name="dark">Dark</string>
+    <string name="cover">cover</string>
+    <string name="todo">TODO</string>
+    <string name="light">Light</string>
+    <string name="th">Dark</string>
+    <string name="app_ver">v1.0.1</string>
+    <string name="search_songs">Search songs</string>
+    <string name="play">TODO</string>
+    <string name="search_song">search</string>
+    <string name="_00_00">00:00</string>
+    <string name="application_theme">Application Theme</string>
+    <string name="repeat">repeat</string>
+    <string name="song_name"> </string>
+    <string name="rounded_animation">Rounded Animation</string>
+    <string name="choose_cover_type">Choose Cover Type</string>
+    <string name="artist_name"> </string>
+    <string name="loading_song">Loading Song</string>
+    <string name="night_mode">Night mode</string>
+    <string name="day_mode">Day Mode</string>
+    <string name="system_theme">System theme</string>
+    <string name="circular">Circular</string>
+    <string name="circle">Circle</string>
+    <string name="square">Square</string>
+    <string name="circle_animation">Circle animation</string>
+    <string name="change_icon">Change icon of Btn</string>
+    <string name="fetching_songs">Fetching Songs</string>
+    <string name="tulsi_kumar">Tulsi Kumar</string>
+    <string name="shape">shape</string>
+    <string name="theme">Theme</string>
+    <string name="rotateAnim">Rotate Animation</string>
+    <string name="music">Music</string>
+    <string name="swipe_to_refresh">Swipe to Refresh</string>
+    <string name="refresh">Refresh 🔃</string>
+    <string name="show_volume_bar">Show Volume bar</string>
+    <string name="lyrics">Lyrics</string>
+    <string name="no_lyrics">\n\n\nLyrics Not Found
+        \n\n\n\nℹ️ But you can find lyrics using <b>Search lyrics</b> 🔍 button placed in right side
+        It works only when you are connected to Internet<b>(Local Network or Wifi)</b> \n\n\n</string>
+    <string name="lyrics_not_found">\n\n\nLyrics not available for this song \n\n\n\nℹ️ Check your Internet Connection or Try again after some time</string>
+    <string name="delete">Delete</string>
+    <string name="share">Share</string>
+    <string name="add_to_playlist">Add to Playlist</string>
+    <string name="playlist_name">Playlist Name</string>
+    <string name="song_image">Song Image</string>
+    <string name="hide_lyrics">Hide Lyrics</string>
+    <string name="show_lyrics">Show Lyrics</string>
+    <string name="hide_volume_bar">Hide Volume Bar</string>
+    <string name="gradient_night">Gradient (Night)</string>
+    <string name="about_app">About app</string>
+    <string name="appinfo_des">This is an open-source project and can be found on</string>
+    <string name="app_des2">If you liked my work
+        \nshow some ❤️ and ⭐ the repo</string>
+    <string name="go_to_album">Go to Album</string>
+    <string name="go_to_artist">Go to Artist</string>
+    <string name="go_to_folder">Go to Folder</string>
+    <string name="details">Details</string>
+    <string name="delete_from_device">Delete from device</string>
+    <string name="sort_by">Sort By</string>
+    <string name="name">Name</string>
+    <string name="date_added">Date Added</string>
+    <string name="songs">Songs</string>
+    <string name="no_of_song">No of song</string>
+    <string name="appears_on">Appears on</string>
+    <string name="simple_light">Simple Light</string>
+    <string name="gradient_1_light">Gradient 1 (Light)</string>
+    <string name="gradient_2_light">Gradient 2 (Light)</string>
+    <string name="simple_dark">Simple Dark</string>
+    <string name="amoled_dark">Amoled Dark</string>
+    <string name="gradient_dark">Gradient (Dark)</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="favourites">Favourites</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="squircle">Squircle (Default)</string>
+    <string name="queue">queue</string>
+    <string name="playlist_description_optional">Playlist Description (optional)</string>
+    <string name="your_name">Your Name</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="cover_shape">Cover Shape</string>
+    <string name="whats_new">Whats New! 🎼</string>
+    <string name="feedback">Feedback </string>
+    <string name="search_hint">Search Songs, Artists and Albums</string>
+    <string name="enter_url">Enter Url</string>
+    <string name="no_songs_found"> 😔 \nNo Songs found</string>
+    <string name="no_fav_songs_found"> 😔 \n\nYou have not favourite songs yet</string>
+    <string name="no_albums_found"> 😔 \nNo Albums Found</string>
+    <string name="no_artists_found"> 😔 \nNo Artists Found</string>
+    <string name="recently_added_songs">Recently added Songs</string>
+    <string name="view_more">View More</string>
+    <string name="coming_soon"> 😇 \nComing soon</string>
+    <string name="home">Home</string>
+    <string name="tracks">Tracks</string>
+    <string name="albums">Albums</string>
+    <string name="artists">Artists</string>
+    <string name="playlists">Playlists</string>
+    <string name="total_songs">Total Songs</string>
+    <string name="total_artists">Total Artists</string>
+    <string name="more_options">More options</string>
+    <string name="font_size">Font size</string>
+    <string name="search_lyrics">Search lyrics</string>
+    <string name="copy">Copy</string>
+    <string name="allow_permission">Allow Permission</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="create_playlist">Create Playlist</string>
+    <string name="play_by_url">Play by Url</string>
+    <string name="shuffle_song">Shuffle Song</string>
+    <string name="add_to_favourite">Add to Favourite</string>
+    <string name="play_next">Play Next</string>
+    <string name="go_to_favourites">View Favourites</string>
+    <string name="network_stream">Network Stream</string>
+    <string name="new_playlist">New Playlist</string>
+    <string name="view_favourites">View Favourites</string>
+    <string name="title">Title</string>
+    <string name="artist">Artist</string>
+    <string name="album">Album</string>
+    <string name="year">Year</string>
+    <string name="duration">Duration</string>
+    <string name="size">Size</string>
+    <string name="path">File path</string>
+    <string name="ok">OK</string>
+    <string name="from">from</string>
+    <string name="infinite">♾️ Infinite</string>
+    <string name="app_icon">app_icon</string>
+    <string name="powered_by">Powered By</string>
+    <string name="whats_new_description">
+        Music X v1.0.1 (Powered by Infinite)
+        \n\n
+        • More Performance improvements and optimization.
+        \n\n• Added New Mini player with color palette.
+        \n\n• Lyrics Support of many Bollywood Hindi, English and Hollywood English songs that are available on Jio Saavan and Spotify.
+        \n\n• Performance improvements in track list page.
+        \n\n• Minor UI change in mini player.
+        \n\n• Now Playing themes are adaptable to different screen sizes.
+        \n\n• Increased size of Album cover in Album Details page.
+        \n\n• Fixed: Blank mini player
+        \n\n• Fixed: Slow Loading of artworks(covers).
+        \n\n\nWhat comes in Next Update ?
+        \n\n• New Embedded lyrics feature and Material You Theme will come in Next Update.
+
+    </string>
+    <string name="recently_played_albums">Recently played Albums</string>
+    <string name="font_style">Font Style</string>
+    <string name="ubuntu">Ubuntu</string>
+    <string name="poppins">Poppins</string>
+    <string name="open_sans">Open Sans</string>
+    <string name="losing_grip">Losing Grip</string>
+    <string name="my_happy_ending">My Happy Ending</string>
+    <string name="ready_for_it">Ready For It</string>
+
+
+</resources>

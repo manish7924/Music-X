@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/item_no1"
+        android:title="14" />
+
+    <item
+        android:id="@+id/item_no2"
+        android:title="16" />
+
+    <item
+        android:id="@+id/item_no3"
+        android:title="18" />
+
+    <item
+        android:id="@+id/item_no4"
+        android:title="20" />
+
+    <item
+        android:id="@+id/item_no5"
+        android:title="22" />
+
+    <item
+        android:id="@+id/item_no6"
+        android:title="24" />
+
+
+</menu>

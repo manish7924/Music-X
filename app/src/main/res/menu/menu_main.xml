@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/search"
+        android:title="@string/search"
+        android:icon="@drawable/search"
+        android:queryHint="@string/search_hint"
+        android:iconifiedByDefault="false"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        android:tooltipText="@string/search"
+        tools:targetApi="o" />
+
+    <item
+        android:id="@+id/sort_by"
+        android:title="@string/sort_by"
+        app:showAsAction="never" >
+
+        <menu>
+            <item
+                android:id="@+id/by_name"
+                android:title="@string/name"
+                app:showAsAction="never" />
+
+            <item
+                android:id="@+id/by_date"
+                android:title="@string/date_added"
+                app:showAsAction="never" />
+
+            <item
+                android:id="@+id/by_size"
+                android:title="@string/size"
+                app:showAsAction="never" />
+
+
+        </menu>
+
+    </item>
+
+
+
+    <item
+        android:id="@+id/ac_refresh"
+        android:title="@string/refresh"
+        app:showAsAction="collapseActionView" />
+
+
+
+    <item
+        android:id="@+id/ac_theme"
+        android:title="@string/theme"
+        app:showAsAction="collapseActionView"
+        android:icon="@drawable/night_mode1"
+        tools:ignore="AlwaysShowAction" />
+
+
+    <item
+        android:id="@+id/ac_about"
+        android:title="@string/about"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/ac_whats_new"
+        android:title="@string/whats_new"
+        app:showAsAction="collapseActionView" />
+
+
+    <item
+        android:id="@+id/exit_btn"
+        android:title="@string/exit"
+        app:showAsAction="collapseActionView" />
+
+</menu>

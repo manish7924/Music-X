@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ac_home"
+        android:title="@string/home"
+        android:icon="@drawable/ic_nav_home" />
+
+
+    <item
+        android:id="@+id/ac_tracks"
+        android:title="@string/tracks"
+        android:icon="@drawable/ic_nav_tracks" />
+
+    <item
+        android:id="@+id/ac_albums"
+        android:title="@string/albums"
+        android:icon="@drawable/ic_nav_album" />
+
+    <item
+        android:id="@+id/ac_artists"
+        android:title="@string/artists"
+        android:icon="@drawable/ic_nav_artist" />
+
+    <item
+        android:id="@+id/ac_playlist"
+        android:title="@string/playlists"
+        android:icon="@drawable/ic_nav_playlist" />
+
+
+</menu>
+

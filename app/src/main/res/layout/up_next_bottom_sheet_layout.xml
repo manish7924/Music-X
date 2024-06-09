@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="1dp"
+    android:layout_marginLeft="1dp"
+    android:layout_marginRight="1dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
+    android:keepScreenOn="true"
+    android:background="@drawable/panel_bg"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nowPlayingSongLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingVertical="2dp"
+        android:paddingHorizontal="7dp"
+        android:layout_marginTop="2dp"
+        android:background="@android:color/transparent"
+        android:layout_marginBottom="2dp"
+        android:listSelector="#E9EDFA"
+        tools:ignore="TextSizeCheck">
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/currentSongCoverCard"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginVertical="6dp"
+            android:padding="0dp"
+            android:scaleType="center"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/now_playing_song_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/now_playing_art"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/cover"
+                android:src="@drawable/music_note_placeholder" />
+
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/now_playing_song_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="50dp"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:fadingEdge="horizontal"
+            android:fontFamily="@font/poppins_rg"
+            android:paddingVertical="1dp"
+            android:paddingHorizontal="10dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/now_playing"
+            android:textColor="@color/black"
+            android:textFontWeight="700"
+            android:textIsSelectable="false"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toStartOf="@+id/menuMoreOp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/now_playing_song_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:paddingHorizontal="10dp"
+            android:text="@string/artist_name"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textColor="@color/ar_gray"
+            android:textSize="12sp"
+            android:fontFamily="@font/poppins_rg"
+            android:textFontWeight="400"
+            app:layout_constraintEnd_toStartOf="@+id/menuMoreOp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/now_playing_song_title" />
+
+
+        <ImageView
+            android:id="@+id/currently_playing"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginVertical="4dp"
+            android:padding="10dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_equalizer"
+            android:tint="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.25" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/nowPlayingRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_below="@+id/nowPlayingSongLayout" />
+
+
+
+
+
+</RelativeLayout>

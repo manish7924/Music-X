@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.VirtualMusicPlayer" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
+<!--        Xiaomi Device Theme Solution-->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
+    </style>
+
+    <style name="DialogAnimation">
+
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom_sheet</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom_sheet</item>
+
+    </style>
+
+
+<!--    <style name="Theme.VirtualMusicPlayer" parent="Base.Theme.VirtualMusicPlayer" />-->
+
+</resources>

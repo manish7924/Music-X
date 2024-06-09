@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/add_to_playlist"
+        android:title="@string/add_to_playlist"
+        android:icon="@drawable/add_to_playlist"
+        app:showAsAction="collapseActionView" />
+
+
+    <item
+        android:id="@+id/go_to_album"
+        android:title="@string/go_to_album"
+        android:icon="@drawable/ic_album"
+        app:showAsAction="collapseActionView" />
+
+
+
+    <item
+        android:id="@+id/go_to_folder"
+        android:title="@string/go_to_folder"
+        android:icon="@drawable/go_to_folder"
+        app:showAsAction="collapseActionView" />
+
+<!--    <item-->
+<!--        android:id="@+id/equalizer"-->
+<!--        android:icon="@drawable/ic_equalizer"-->
+<!--        android:title="@string/equalizer" />-->
+
+
+    <item
+        android:id="@+id/share"
+        android:title="@string/share"
+        android:icon="@drawable/share"
+        app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/delete_from_device"
+        android:title="@string/delete_from_device"
+        android:icon="@drawable/delete"
+        app:showAsAction="collapseActionView" />
+
+
+    <item
+        android:id="@+id/details"
+        android:title="@string/details"
+        android:icon="@drawable/details"
+        app:showAsAction="collapseActionView" />
+
+
+</menu>

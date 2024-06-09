@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="colorPrimary">#F7F1FF</color>
+    <color name="colorPrimaryDark">#F4EBFF</color>
+    <color name="myPrimary">#FFFFFF</color>
+    <color name="colorAccent">#000000</color>
+    <color name="main_player_bg">#141B1B</color>
+    <color name="main_bg_color">#FFF3FAFF</color>
+    <color name="panel_color">#FEF7FF</color>
+    <color name="fab_color">#FFF3FAFF</color>
+    <color name="mini_player">#FFE9EEF5</color>
+    <color name="myTint">#FFA8AAAD</color>
+    <color name="myTint2">#121314</color>
+    <color name="myTint3">#141218</color>
+
+    <color name="black_btn">#000000</color>
+    <color name="p_black">#03A9F4</color>
+    <color name="wb">#F4EBFF</color>
+    <color name="wb2">#FFFFFF</color>
+    <color name="bw">#000000</color>
+    <color name="album_bg">#000000</color>
+    <color name="green">#4FCD58</color>
+    <color name="teal">#009688</color>
+    <color name="red">#FF4646</color>
+    <color name="blue">#03A9F4</color>
+    <color name="fizz">#FFFFFF</color>
+    <color name="l_blue">#008EFF</color>
+    <color name="p_btn">#06E8E6</color>
+    <color name="bg">#FFFEF7FF</color>
+    <color name="p_teal">#FF22CDB1</color>
+    <color name="spf_btn">#0064FF</color>
+    <color name="ar_gray">#FFA8AAAD</color>
+    <color name="ar_gray_light">#000000</color>
+    <color name="more">#000000</color>
+    <color name="play">#03A9F4</color>
+    <color name="play_card">#FFFFFF</color>
+    <color name="btn_off">#FFA8AAAD</color>
+    <color name="bot_btn_off">#787878</color>
+    <color name="my_black">#FFFFFF</color>
+
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_700">#00FFFD</color>
+    <color name="gray">#FFFFFFFF</color>
+    <color name="dark_gray">#FFAAAAAA</color>
+    <color name="bd_green">#075E54</color>
+    <color name="ufo_green">#8EFFB8</color>
+    <color name="tg">#DCF8C6</color>
+    <color name="pb">#34B7F1</color>
+    <color name="wc">#ECE5DD</color>
+    <color name="p_pure">#EFF0FF</color>
+    <color name="input_blue">#5B90FE</color>
+    <color name="thumb">#27A0FF</color>
+    <color name="btn_blue">#06E8E6</color>
+    <color name="p_music">#06E8E6</color>
+
+
+    <color name="orange">#E65100</color>
+    <color name="btn">#000000</color>
+    <color name="teal_200">#E9FFFF</color>
+    <color name="teal_green">#128C7E</color>
+    <color name="chat_200">#FFFFFF</color>
+    <color name="title">#00B0FF</color>
+    <color name="background_color">#FFFFFF</color>
+    <color name="about_color">#FFFFFBFE</color>
+    <color name="pink">#FF3EA5</color>
+    <color name="toolbar">#DDDDFF</color>
+    <color name="ring">#05EDEC</color>
+    <color name="mic">#07BEBE</color>
+    <color name="send">#04FAFA</color>
+    <color name="color_hint">#17CAC8</color>
+    <color name="chat_input">#FEFDFF</color>
+    <color name="btn_input">#EDEEFF</color>
+
+</resources>

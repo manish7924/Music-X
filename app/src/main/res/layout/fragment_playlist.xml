@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.Favourite">
+
+
+    <LinearLayout
+        android:id="@+id/favouriteLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="14dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="@drawable/fav_bg"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="10dp"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:src="@drawable/favourite_on"
+            android:contentDescription="@string/favourites" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="10dp"
+            android:text="@string/favourites"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlistRv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/favouriteLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="20dp"
+        android:fadeScrollbars="true"
+        android:paddingBottom="20dp"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/no_songs_found"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:visibility="visible"
+        android:fontFamily="@font/poppins_rg"
+        android:text="@string/coming_soon"
+        android:textColor="@color/title"
+        android:textFontWeight="700"
+        android:textSize="23sp"
+        tools:targetApi="p" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addPlaylistBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="76dp"
+        android:contentDescription="@string/new_playlist"
+        app:fabSize="normal"
+        android:visibility="visible"
+        android:tooltipText="@string/new_playlist"
+        app:icon="@drawable/add"
+        android:src="@drawable/add"
+        app:iconSize="50dp"
+        app:tint="@color/title"
+        android:backgroundTint="@color/fab_color"
+        app:iconTint="@color/title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_goneMarginBottom="50dp"
+        tools:targetApi="o" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/networkStreamBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="140dp"
+        android:contentDescription="@string/network_stream"
+        app:fabSize="normal"
+        android:visibility="visible"
+        android:tooltipText="@string/network_stream"
+        app:icon="@drawable/insert_link"
+        android:src="@drawable/insert_link"
+        app:iconSize="50dp"
+        app:tint="@color/title"
+        android:backgroundTint="@color/fab_color"
+        app:iconTint="@color/title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_goneMarginBottom="50dp"
+        tools:targetApi="o" />
+
+</RelativeLayout>

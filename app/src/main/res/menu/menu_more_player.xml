@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/add_to_playlist"
+        android:title="@string/add_to_playlist"
+        android:icon="@drawable/ic_nav_playlist" />
+
+
+    <item
+        android:id="@+id/go_to_album"
+        android:title="@string/go_to_album"
+        android:icon="@drawable/ic_album" />
+
+    <item
+        android:id="@+id/go_to_artist"
+        android:title="@string/go_to_artist"
+        android:icon="@drawable/ic_artist" />
+
+    <item
+        android:id="@+id/go_to_folder"
+        android:title="@string/go_to_folder"
+        android:icon="@drawable/go_to_folder" />
+
+    <item
+        android:id="@+id/go_to_favourite"
+        android:title="@string/go_to_favourites"
+        android:icon="@drawable/favourite_off" />
+
+    <item
+        android:id="@+id/equalizer"
+        android:icon="@drawable/ic_equalizer"
+        android:title="@string/equalizer" />
+
+
+    <item
+        android:id="@+id/share"
+        android:title="@string/share"
+        android:icon="@drawable/share" />
+
+
+    <item
+        android:id="@+id/shape"
+        android:title="@string/cover_shape"
+        android:icon="@drawable/shape">
+
+        <menu>
+
+            <item
+                android:id="@+id/item_no1"
+                android:title="@string/square" />
+
+            <item
+                android:id="@+id/item_no2"
+                android:title="@string/squircle" />
+
+            <item
+                android:id="@+id/item_no3"
+                android:title="@string/circle" />
+
+            <item
+                android:id="@+id/item_no4"
+                android:title="@string/circle_animation" />
+
+
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/delete_from_device"
+        android:title="@string/delete_from_device"
+        android:icon="@drawable/delete" />
+
+
+    <item
+        android:id="@+id/details"
+        android:title="@string/details"
+        android:icon="@drawable/details" />
+
+
+</menu>

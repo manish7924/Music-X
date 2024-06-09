@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".fragments.HomeFragment">
+
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:ignore="UselessParent">
+
+
+            <com.google.android.material.circularreveal.CircularRevealLinearLayout
+                android:id="@+id/home_option_panel"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/home_capsule_panel_bg"
+                android:layout_marginVertical="23dp"
+                android:layout_marginHorizontal="30dp">
+
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/homeHistoryBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="12dp"
+                    android:contentDescription="@string/repeat"
+                    android:paddingVertical="8dp"
+                    android:scaleType="fitCenter"
+                    android:tooltipText="History"
+                    app:srcCompat="@drawable/history"
+                    tools:ignore="ImageContrastCheck"
+                    tools:targetApi="o" />
+
+
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/homeMostPlayedBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/play_pause"
+                    android:paddingVertical="8dp"
+                    android:layout_marginHorizontal="12dp"
+                    android:scaleType="fitCenter"
+                    android:tooltipText="Most Played Songs"
+                    app:srcCompat="@drawable/most_played"
+                    tools:ignore="ImageContrastCheck"
+                    tools:targetApi="o" />
+
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/homeFavBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/previous"
+                    android:paddingVertical="8dp"
+                    android:layout_marginHorizontal="12dp"
+                    android:scaleType="fitCenter"
+                    android:tooltipText="@string/favourites"
+                    app:srcCompat="@drawable/favourite"
+                    tools:ignore="ImageContrastCheck"
+                    tools:targetApi="o" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/homeShuffleBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/play_pause"
+                    android:paddingVertical="8dp"
+                    android:layout_marginHorizontal="12dp"
+                    android:scaleType="fitCenter"
+                    android:tooltipText="@string/shuffle"
+                    app:srcCompat="@drawable/shuffle"
+                    tools:ignore="ImageContrastCheck"
+                    tools:targetApi="o" />
+
+
+            </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/recently_added"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/home_option_panel"
+                android:layout_marginVertical="14dp"
+                android:layout_marginHorizontal="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recently_added_songs"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/poppins_rg"
+                    android:textFontWeight="700"
+                    tools:targetApi="p" />
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:tooltipText="View All"
+                    android:contentDescription="@string/view_more"
+                    android:src="@drawable/right_arrow"
+                    tools:targetApi="o" />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/recently_added_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="6dp"
+                android:layout_below="@+id/recently_added">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/homeRV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:fadeScrollbars="true"
+                    android:keepScreenOn="true"
+                    android:nestedScrollingEnabled="true"
+                    android:scrollIndicators="right"
+                    android:isScrollContainer="true"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbars="vertical" />
+
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/recently_added_albums"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="14dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_below="@id/recently_added_linear_layout">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recently_played_albums"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/poppins_rg"
+                    android:textFontWeight="700"
+                    tools:targetApi="p" />
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:tooltipText="View All"
+                    android:contentDescription="@string/view_more"
+                    android:src="@drawable/right_arrow"
+                    tools:targetApi="o" />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/recently_added_albums_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="6dp"
+                android:layout_below="@+id/recently_added_albums">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/home_albums_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:fadeScrollbars="true"
+                    android:keepScreenOn="true"
+                    android:nestedScrollingEnabled="true"
+                    android:scrollIndicators="right"
+                    android:isScrollContainer="true"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbars="vertical" />
+
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/recently_added_artists"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="14dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_below="@id/recently_added_albums_linear_layout">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recent Artists"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/poppins_rg"
+                    android:textFontWeight="700" />
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:tooltipText="View All"
+                    android:contentDescription="@string/view_more"
+                    android:src="@drawable/right_arrow"
+                    tools:targetApi="o" />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/recently_added_artists_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginHorizontal="6dp"
+                android:orientation="horizontal"
+                android:layout_below="@+id/recently_added_artists">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/home_artist_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:fadeScrollbars="true"
+                    android:keepScreenOn="true"
+                    android:nestedScrollingEnabled="true"
+                    android:scrollIndicators="right"
+                    android:isScrollContainer="true"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbars="vertical" />
+
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/recent_favorites"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="14dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_below="@id/recently_added_artists_linear_layout">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/favourites"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/poppins_rg"
+                    android:textFontWeight="700"
+                    tools:targetApi="p" />
+
+
+                <ImageView
+                    android:id="@+id/go_to_favourite_recent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:tooltipText="View All"
+                    android:contentDescription="@string/view_more"
+                    android:src="@drawable/right_arrow"
+                    tools:targetApi="o" />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/recent_fav_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginHorizontal="6dp"
+                android:orientation="horizontal"
+                android:layout_below="@+id/recent_favorites">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/home_fav_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:fadeScrollbars="true"
+                    android:keepScreenOn="true"
+                    android:nestedScrollingEnabled="true"
+                    android:scrollIndicators="right"
+                    android:isScrollContainer="true"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbars="vertical" />
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

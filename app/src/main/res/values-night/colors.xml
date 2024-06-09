@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FFFFFF</color>
+    <color name="colorPrimary">#0D0D0D</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="myPrimary">#000000</color>
+    <color name="colorAccent">#FFFFFF</color>
+    <color name="main_player_bg">#141B1B</color>
+    <color name="main_bg_color">#000000</color>
+    <color name="panel_color">#141218</color>
+    <color name="fab_color">#141218</color>
+    <color name="mini_player">#FF0E1419</color>
+    <color name="myTint">#FFAAAAAA</color>
+    <color name="myTint2">#121314</color>
+
+    <color name="black_btn">#000000</color>
+    <color name="p_black">#FFFFFF</color>
+    <color name="wb">#000000</color>
+    <color name="wb2">#000000</color>
+    <color name="bw">#FFFFFF</color>
+    <color name="album_bg">#FEF7FF</color>
+    <color name="btn">#000000</color>
+    <color name="green">#4FCD58</color>
+    <color name="teal">#009688</color>
+    <color name="red">#FF4646</color>
+    <color name="blue">#03A9F4</color>
+    <color name="fizz">#008EFF</color>
+    <color name="l_blue">#008EFF</color>
+    <color name="pink">#FF76BF</color>
+    <color name="dark_gray">#DFE2FF</color>
+    <color name="thumb">#06E8E6</color>
+    <color name="btn_blue">#2C81FF</color>
+    <color name="p_teal">#FF22CDB1</color>
+    <color name="spf_btn">#FFFFFF</color>
+    <color name="ar_gray">#FFAAAAAA</color>
+    <color name="ar_gray_light">#FFFFFF</color>
+    <color name="play">#03A9F4</color>
+    <color name="play_card">#1C1C1C</color>
+    <color name="btn_off">#FF666769</color>
+    <color name="bot_btn_off">#A6A7A7</color>
+    <color name="my_black">#FFFFFF</color>
+
+
+    <color name="p_music">#06E8E6</color>
+    <color name="orange">#FF6410</color>
+    <color name="white">#FFFFFF</color>
+    <color name="chat_200">#FF24242A</color>
+    <color name="teal_200">#071A29</color>
+    <color name="teal_green">#128C7E</color>
+    <color name="background_color">#000000</color>
+    <color name="about_color">#000000</color>
+    <color name="toolbar">#141218</color>
+    <color name="ring">#FFFFFF</color>
+    <color name="mic">#0DC1C8</color>
+    <color name="send">#C7CBF8</color>
+    <color name="title">#FFFFFF</color>
+    <color name="chat_input">#F7FBFF</color>
+    <color name="color_hint">#D0D5FF</color>
+    <color name="btn_input">#EDEEFF</color>
+    <color name="p_btn">#00B4BB</color>
+    <color name="bg">#000000</color>
+</resources>

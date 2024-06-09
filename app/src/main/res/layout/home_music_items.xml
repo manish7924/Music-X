@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relative_layout_cardView"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginVertical="20dp"
+    android:background="?selectableItemBackground"
+    android:layout_margin="10dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/home_music_item_card"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/myTint2"
+        app:cardElevation="6dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/colorPrimaryDark">
+
+        <ImageView
+            android:id="@+id/home_music_art"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusableInTouchMode="true"
+            android:src="@drawable/music_note"
+            android:scaleType="center"
+            android:contentDescription="@string/song_image" />
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <TextView
+        android:id="@+id/home_music_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:fontFamily="@font/poppins_rg"
+        android:gravity="center_horizontal"
+        android:textAlignment="center"
+        android:foregroundGravity="center_horizontal"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:text="@string/song_name"
+        android:textColor="@color/black"
+        android:textFontWeight="700"
+        android:textSize="14sp" />
+
+
+</RelativeLayout>

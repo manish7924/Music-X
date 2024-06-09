@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg_color"
+    android:id="@+id/mAlbumContainer"
+    tools:context=".activities.AlbumDetails">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollIndicators="right"
+        android:scrollbars="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/albumCardViewLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/back"
+                    android:layout_width="44dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center"
+                    android:onClick="backToHome"
+                    android:padding="10dp"
+                    android:translationZ="10dp"
+                    android:src="@drawable/back_btn"
+                    android:contentDescription="@string/back"
+                    app:tint="@color/wb" />
+
+
+                <ImageView
+                    android:id="@+id/album_menu"
+                    android:layout_width="44dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:translationZ="10dp"
+                    android:src="@drawable/more_vert"
+                    android:contentDescription="@string/more_options"
+                    app:tint="@color/wb" />
+
+
+                <ImageView
+                    android:id="@+id/album_gradient"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:background="@drawable/album_gradient_bg"
+                    android:layout_alignTop="@id/albumCardViewLayout"
+                    android:contentDescription="@string/gradient_1_light"
+                    tools:ignore="NotSibling" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/albumCardView"
+                    android:layout_width="240dp"
+                    android:layout_height="240dp"
+                    app:cardCornerRadius="17dp"
+                    android:layout_marginTop="60dp"
+                    app:cardBackgroundColor="@color/myTint2"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginHorizontal="40dp"
+                    app:strokeColor="@android:color/transparent"
+                    app:strokeWidth="2dp"
+                    app:cardElevation="10dp">
+
+                    <ImageView
+                        android:id="@+id/albumPhoto"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/album_art"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="@string/album" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <TextView
+                    android:id="@+id/albumTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/poppins_rg"
+                    android:gravity="center_horizontal"
+                    android:layout_marginTop="23dp"
+                    android:layout_below="@id/albumCardView"
+                    android:text="@string/album"
+                    android:layout_marginHorizontal="40dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textColor="@color/black"
+                    android:textFontWeight="700"
+                    android:textSize="23sp"
+                    tools:targetApi="p" />
+
+                <TextView
+                    android:id="@+id/album_year"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:fontFamily="@font/poppins_rg"
+                    android:gravity="center_horizontal"
+                    android:singleLine="true"
+                    android:layout_below="@id/albumTitle"
+                    android:text="@string/year"
+                    android:textColor="@color/black"
+                    android:textFontWeight="400"
+                    android:textSize="15sp"
+                    tools:targetApi="p" />
+
+
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/songsTitleHeading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/poppins_rg"
+                    android:singleLine="true"
+                    android:text="@string/songs"
+                    android:textColor="@color/black"
+                    android:textFontWeight="700"
+                    android:textSize="19sp"
+                    tools:targetApi="p" />
+
+
+                <TextView
+                    android:id="@+id/no_of_album_songs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="23dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/poppins_rg"
+                    android:singleLine="true"
+                    android:text="@string/no_of_song"
+                    android:textColor="@color/black"
+                    android:layout_alignBaseline="@+id/songsTitleHeading"
+                    android:textFontWeight="500"
+                    android:textSize="16sp"
+                    tools:targetApi="p"
+                    tools:ignore="RelativeOverlap" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/songsTitleHeading" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/albumPlayBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="76dp"
+        android:contentDescription="@string/play"
+        app:fabSize="normal"
+        android:visibility="visible"
+        android:tooltipText="Play"
+        app:icon="@drawable/play_bottom"
+        android:src="@drawable/play_bottom"
+        app:iconSize="70dp"
+        app:tint="@color/title"
+        android:backgroundTint="@color/fab_color"
+        app:iconTint="@color/title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_goneMarginBottom="50dp"
+        tools:targetApi="o" />
+
+
+</RelativeLayout>

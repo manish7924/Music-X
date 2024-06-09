@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    tools:context=".activities.About">
+
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="40dp"
+        android:elevation="4dp"
+        android:foregroundGravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:padding="2dp"
+        android:textAlignment="center"
+        app:title="@string/about"
+        app:titleMarginStart="0dp"
+        app:titleTextColor="@color/title"
+        tools:ignore="MissingConstraints" />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/appIconCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp"
+        android:layout_marginBottom="28dp"
+        app:cardCornerRadius="23dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="2dp"
+        app:strokeColor="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/appIcon"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:padding="23dp"
+            android:contentDescription="@string/cover"
+            app:srcCompat="@drawable/music_icon" />
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/songTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="23dp"
+        android:fontFamily="@font/poppins_rg"
+        android:requiresFadingEdge="horizontal"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textFontWeight="700"
+        android:textIsSelectable="false"
+        android:textSize="28sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appIconCard"
+        tools:targetApi="p" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/versionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center_horizontal"
+        android:text="@string/app_ver"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textFontWeight="600"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/songTitle"
+        tools:targetApi="p" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/description1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/poppins_rg"
+        android:gravity="center"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="2dp"
+        android:text="@string/appinfo_des"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/versionText" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/description2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/poppins_rg"
+        android:gravity="center"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="2dp"
+        android:text="@string/app_des2"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/github" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/github"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/ubuntu_rg"
+        android:gravity="center"
+        android:onClick="gitBtn"
+        android:paddingVertical="2dp"
+        android:text="GitHub"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textFontWeight="900"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:tooltipText="GitHub"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description1"
+        tools:ignore="HardcodedText"
+        tools:targetApi="p" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/nameDes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="40dp"
+        android:fontFamily="@font/poppins_rg"
+        android:gravity="center_horizontal"
+        android:text="@string/dev_name"
+        android:textColor="@color/black"
+        android:textFontWeight="700"
+        android:textSize="17sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.514"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linkedin"
+        app:layout_goneMarginTop="2dp"
+        tools:targetApi="p" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/back"
+        android:layout_width="44dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:onClick="backBtn"
+        android:padding="10dp"
+        android:src="@drawable/back_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/insta"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginTop="40dp"
+        android:onClick="instaBtn"
+        android:padding="4dp"
+        android:src="@drawable/instagram"
+        android:tooltipText="Instagram"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description2"
+        tools:ignore="SpeakableTextPresentCheck"
+        tools:targetApi="o" />
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/linkedin"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="40dp"
+        android:onClick="linkedInBtn"
+        android:padding="4dp"
+        android:src="@drawable/linkedin"
+        android:tooltipText="LinkedIn"
+        app:layout_constraintEnd_toStartOf="@+id/discord"
+        app:layout_constraintHorizontal_bias="0.521"
+        app:layout_constraintStart_toEndOf="@+id/insta"
+        app:layout_constraintTop_toBottomOf="@+id/description2"
+        tools:ignore="SpeakableTextPresentCheck"
+        tools:targetApi="o" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/discord"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="36dp"
+        android:onClick="whatsappCommunity"
+        android:padding="4dp"
+        android:src="@drawable/music_icon"
+        android:tooltipText="Music X community"
+        app:layout_constraintEnd_toStartOf="@+id/shareWithFriends"
+        app:layout_constraintTop_toBottomOf="@+id/description2"
+        tools:ignore="SpeakableTextPresentCheck"
+        tools:targetApi="o" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/shareWithFriends"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="56dp"
+        android:onClick="shareWithFriends"
+        android:padding="4dp"
+        android:src="@drawable/share"
+        android:tint="@color/green"
+        android:tooltipText="Music X community"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description2"
+        tools:ignore="SpeakableTextPresentCheck"
+        tools:targetApi="o" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

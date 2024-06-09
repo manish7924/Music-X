@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/mini_player"
+    android:background="@drawable/now_playing_bg"
+    tools:context=".fragments.NowPlayingFragment">
+
+    <RelativeLayout
+        android:id="@+id/progress_relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="3dp"
+        android:paddingHorizontal="4.23dp"
+        android:layout_below="@id/card_relative_layout">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/mini_player_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="4dp"
+            app:indicatorColor="@color/title"
+            app:trackColor="@android:color/transparent"
+            android:foregroundGravity="bottom" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/card_relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="2dp"
+        android:paddingVertical="2dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@id/card_relative_layout"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:cardCornerRadius="7dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:strokeColor="@android:color/transparent"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="2dp">
+
+            <ImageView
+                android:id="@+id/bottom_art"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@android:color/transparent"
+                android:src="@drawable/music_note"
+                android:contentDescription="@string/now_playing" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <ImageView
+            android:id="@+id/previousBtn_bottom"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:shadowColor="@color/white"
+            android:shadowRadius="23"
+            android:src="@drawable/skip_previous_bottom"
+            android:background="?selectableItemBackground"
+            android:layout_toStartOf="@id/play_pause_miniplayer"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="2dp"
+            android:contentDescription="@string/previous" />
+
+        <ImageView
+            android:id="@+id/nextBtn_bottom"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:shadowColor="@color/white"
+            android:shadowRadius="23"
+            android:src="@drawable/skip_next_bottom"
+            android:background="?selectableItemBackground"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/next_song" />
+
+        <ImageView
+            android:id="@+id/play_pause_miniplayer"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/play_bottom"
+            android:padding="4dp"
+            android:shadowColor="@color/white"
+            android:shadowRadius="23"
+            android:background="?selectableItemBackground"
+            android:layout_toStartOf="@id/nextBtn_bottom"
+            android:layout_marginEnd="2dp"
+            app:fabSize="mini"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/play_pause" />
+
+        <TextView
+            android:id="@+id/song_name_mini_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/song_name"
+            android:tooltipText="@string/song_name"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_md"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="4dp"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:fadingEdgeLength="20dp"
+            android:textFontWeight="700"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:background="@android:color/transparent"
+            android:singleLine="true"
+            android:layout_toEndOf="@id/card_relative_layout"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:layout_toStartOf="@id/previousBtn_bottom"
+            tools:targetApi="p" />
+
+        <TextView
+            android:id="@+id/song_artist_mini_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/artist_name"
+            android:tooltipText="@string/artist_name"
+            android:textColor="@color/ar_gray"
+            android:fontFamily="@font/poppins_rg"
+            android:ellipsize="end"
+            android:textFontWeight="400"
+            android:layout_marginTop="1dp"
+            android:layout_marginStart="4dp"
+            android:layout_toEndOf="@id/card_relative_layout"
+            android:layout_below="@id/song_name_mini_player"
+            android:textSize="11sp"
+            android:maxLines="1"
+            android:layout_toStartOf="@id/previousBtn_bottom"
+            tools:targetApi="p" />
+
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>

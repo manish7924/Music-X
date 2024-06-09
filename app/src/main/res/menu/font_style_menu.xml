@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/item_no1"
+        android:title="@string/ubuntu" />
+
+    <item
+        android:id="@+id/item_no2"
+        android:title="@string/poppins" />
+
+    <item
+        android:id="@+id/item_no3"
+        android:title="@string/open_sans" />
+
+    <item
+        android:id="@+id/item_no4"
+        android:title="@string/losing_grip" />
+
+    <item
+        android:id="@+id/item_no5"
+        android:title="@string/my_happy_ending" />
+
+    <item
+        android:id="@+id/item_no6"
+        android:title="@string/ready_for_it" />
+
+
+</menu>
