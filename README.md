@@ -60,7 +60,7 @@
   
 **License**
 
-  This project is licensed under the MIT License. See the [LICENSE](https://developer.android.com/studio/) file for details.
+  This project is licensed under the MIT License. See the [LICENSE](https://github.com/manish7924/Music-X/blob/main/LICENSE) file for details.
 
   
 **Contact**
