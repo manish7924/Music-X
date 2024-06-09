@@ -33,11 +33,13 @@
    **Android Studio** Android device or emulator
       
    **Installation**
-      1. **Clone the repository:**
+    1. **Clone the repository:**
           git clone https://github.com/yourusername/MusicX.git
-      2. **Open the project in Android Studio:**
+
+2. **Open the project in Android Studio:**
           Navigate to File > Open and select the MusicX directory.
-      3. **Build and run the project:**
+      
+3. **Build and run the project:**
           Click on the Run button or use Shift + F10.
           
 
