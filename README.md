@@ -34,7 +34,7 @@
       
    **Installation**
     1. **Clone the repository:**
-          git clone https://github.com/yourusername/MusicX.git
+          git clone [https://github.com/manish7924/Music-X.git](https://github.com/manish7924/Music-X.git)
 
 2. **Open the project in Android Studio:**
           Navigate to File > Open and select the MusicX directory.
@@ -62,5 +62,5 @@
 **Releases**
 
    Here is the link of Releases page.
-
-   https://github.com/manish7924/Music-X/releases/tag/v1.0.0
+   
+   [https://github.com/manish7924/Music-X/releases/tag/v1.0.0]( https://github.com/manish7924/Music-X/releases/tag/v1.0.0)
