@@ -18,20 +18,20 @@
   
   **Java & XML:** Core components of the application development.
   
-  **Glide Library:** Efficient image loading for album covers.
+  [**Glide Library:**](https://github.com/bumptech/glide) Efficient image loading for album covers.
   
-  **MediaSession:** Enhanced notifications for seamless media control.
+  [**MediaSession:**](https://developer.android.com/reference/android/media/session/MediaSession) Enhanced notifications for seamless media control.
   
-  **Google's Palette API:** Dynamic color themes for the now playing screen.
+  [**Google's Palette API:**](https://developer.android.com/develop/ui/views/graphics/palette-colors) Dynamic color themes for the now playing screen.
   
-  **Jsoup:** Web scraping integration for fetching lyrics.
+  [**Jsoup:**](https://github.com/jhy/jsoup) Web scraping integration for fetching lyrics.
   
   
 **Getting Started**
 
 **Prerequisites**
     
-Android Studio, Android device or emulator
+[**Android Studio**](https://developer.android.com/studio/), Android device or emulator
 
 **Installation**
    
@@ -45,12 +45,12 @@ Android Studio, Android device or emulator
       
 4. **Build and run the project:**
    
-   Click on the Run button or use Shift + F10.
+   Click on the **Run** button or use **Shift + F10**.
           
 
 **Usage**
 
-  Once installed, you can start using Music X to play your favorite songs, manage your playlists, and explore music by albums and artists. The app will provide dynamic themes and display lyrics for the currently playing track.
+  Once installed, you can start using **Music X** to play your favorite songs, manage your playlists, and explore music by albums and artists. The app will provide dynamic themes and display lyrics for the currently playing track.
   
   
 **Contributing**
@@ -60,7 +60,7 @@ Android Studio, Android device or emulator
   
 **License**
 
-  This project is licensed under the MIT License. See the LICENSE file for details.
+  This project is licensed under the MIT License. See the [LICENSE](https://developer.android.com/studio/) file for details.
 
   
 **Contact**
