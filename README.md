@@ -12,6 +12,7 @@
    **Sing Along:** Access lyrics for your favorite tracks using the integrated search feature.
     
    **Dynamic Themes:** Now playing screen adapts its color scheme based on the album cover.
+
     
 **Technologies Used**
   
@@ -27,35 +28,43 @@
   
   
 **Getting Started**
-  
-  **Prerequisites**
+
+**Prerequisites**
     
-   **Android Studio** Android device or emulator
-      
-   **Installation**
-    1. **Clone the repository:**
-          git clone [https://github.com/manish7924/Music-X.git](https://github.com/manish7924/Music-X.git)
+Android Studio, Android device or emulator
+
+**Installation**
+   
+1. **Clone the repository:**
+   
+   _git clone [https://github.com/manish7924/Music-X.git](https://github.com/manish7924/Music-X.git)_
 
 2. **Open the project in Android Studio:**
-          Navigate to File > Open and select the MusicX directory.
+   
+   Navigate to File > Open and select the MusicX directory.
       
-3. **Build and run the project:**
-          Click on the Run button or use Shift + F10.
+4. **Build and run the project:**
+   
+   Click on the Run button or use Shift + F10.
           
 
 **Usage**
+
   Once installed, you can start using Music X to play your favorite songs, manage your playlists, and explore music by albums and artists. The app will provide dynamic themes and display lyrics for the currently playing track.
   
   
 **Contributing**
+
   Contributions are welcome! If you have suggestions for improvements or find any issues, please open an issue or create a pull request.
 
   
 **License**
+
   This project is licensed under the MIT License. See the LICENSE file for details.
 
   
 **Contact**
+
   For any inquiries, please reach out to **Manish Chidar** at [manishchidar79@gmail.com].Thank you for checking out Music X! Enjoy your music!
 
 
