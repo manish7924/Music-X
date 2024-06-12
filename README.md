@@ -72,4 +72,4 @@
 
    Here is the link of Releases page.
    
-   [https://github.com/manish7924/Music-X/releases/tag/v1.0.0]( https://github.com/manish7924/Music-X/releases/tag/v1.0.0)
+   [https://github.com/manish7924/Music-X/releases/tag/v1.0.0]( https://github.com/manish7924/Music-X/releases)
