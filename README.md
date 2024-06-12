@@ -2,13 +2,6 @@
 **Music X** Music X is a sleek, feature-rich, intuitive local music player designed for Android devices. Enjoy your music collection with a seamless and powerful experience.
 Offering a seamless and engaging listening experience. This project leverages a variety of technologies to deliver a robust and user-friendly application.
 
-Sure, here's a sample README file for your Music X local music player Android app:
-
----
-
-# Music X
-
-Music X is a sleek, intuitive local music player designed for Android devices. Enjoy your music collection with a seamless and powerful experience.
 
 ## Features
 
