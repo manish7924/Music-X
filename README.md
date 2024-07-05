@@ -3,6 +3,9 @@
 Offering a seamless and engaging listening experience. This project leverages a variety of technologies to deliver a robust and user-friendly application.
 
 
+![image](https://)
+
+
 ## Features
 
 - **High-Quality Playback:** Enjoy your music in the best quality possible.
