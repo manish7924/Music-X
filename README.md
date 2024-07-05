@@ -3,8 +3,9 @@
 Offering a seamless and engaging listening experience. This project leverages a variety of technologies to deliver a robust and user-friendly application.
 
 
-![image](https://)
+![image](https://raw.githubusercontent.com/manish7924/Music-X/main/ResizedImage_2024-06-03_21-22-21_2129.png)
 
+![image](https://raw.githubusercontent.com/manish7924/Music-X/main/ResizedImage_2024-06-03_21-18-45_2089.png)
 
 ## Features
 
