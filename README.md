@@ -3,9 +3,9 @@
 Offering a seamless and engaging listening experience. This project leverages a variety of technologies to deliver a robust and user-friendly application.
 
 
-![image](https://raw.githubusercontent.com/manish7924/Music-X/main/ResizedImage_2024-06-03_21-22-21_2129.png)
+![image](https://raw.githubusercontent.com/manish7924/Music-X/master/ResizedImage_2024-06-03_21-22-21_2129.png)
 
-![image](https://raw.githubusercontent.com/manish7924/Music-X/main/ResizedImage_2024-06-03_21-18-45_2089.png)
+![image](https://raw.githubusercontent.com/manish7924/Music-X/master/ResizedImage_2024-06-03_21-18-45_2089.png)
 
 ## Features
 
@@ -91,4 +91,3 @@ Music X is licensed under the MIT License. See the [LICENSE](https://github.com/
 ## Contact
 
   For any inquiries, please reach out to **Manish Chidar** at [manishchidar79@gmail.com].Thank you for checking out Music X! Enjoy your music!
-
