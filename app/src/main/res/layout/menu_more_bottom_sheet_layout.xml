@@ -41,7 +41,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="center"
                 android:background="@drawable/music_bg"
-                android:contentDescription="@string/cover" />
+                android:contentDescription="@string/Cover" />
 
         </androidx.cardview.widget.CardView>
 

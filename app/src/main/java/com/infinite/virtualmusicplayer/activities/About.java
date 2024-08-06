@@ -31,7 +31,7 @@ public class About extends AppCompatActivity {
     }
 
     public void gitBtn(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/manish7924"));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/manish7924/Music-X"));
         startActivity(intent);
     }
 
@@ -54,8 +54,12 @@ public class About extends AppCompatActivity {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Share song with");
-        String string = "Try this amazing Music player app Music X a simple music player with amazing features";
+        String string = "Try this simple Music player app Music X with amazing features" +
+                "" +
+                "\n\nhttps://github.com/manish7924/Music-X/releases";
         shareIntent.putExtra(Intent.EXTRA_TEXT, string);
         startActivity(Intent.createChooser(shareIntent, "Share via"));
     }
+
+
 }

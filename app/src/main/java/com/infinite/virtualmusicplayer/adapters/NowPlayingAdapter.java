@@ -14,11 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.infinite.virtualmusicplayer.model.Music;
-import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
 import com.infinite.virtualmusicplayer.R;
+import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
+import com.infinite.virtualmusicplayer.model.Music;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.MyHolder> {
@@ -52,14 +51,14 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.My
 
         byte[] image = getAlbumArt(nowPlayingSongFiles.get(position).getPath());
         if (image != null){
-            Glide.with(mContext).asBitmap()
-                    .load(image)
+            Glide.with(mContext)
+                    .load(image).placeholder(R.drawable.music_note_placeholder)
                     .into(holder.up_next_art);
             holder.up_next_art.setPadding(0, 0, 0, 0);
         }
         else {
             holder.up_next_art.setPadding(12, 12, 12, 12);
-            Glide.with(mContext).asBitmap()
+            Glide.with(mContext)
                     .load(R.drawable.music_note)
                     .into(holder.up_next_art);
         }
@@ -77,27 +76,6 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.My
         });
 
 
-
-        holder.up_next_drag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-//                PopupMenu popupMenu = new PopupMenu(mContext, view);
-//                popupMenu.getMenuInflater().inflate(R.menu.album_menu_more, popupMenu.getMenu());
-//                popupMenu.show();
-//                popupMenu.setOnMenuItemClickListener((item) -> {
-//                    if (item.getItemId() == R.id.delete_from_device) {
-////                        deleteFile(position, view);
-//                    }
-//                    else if (item.getItemId() == R.id.share) {
-//                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-//                        shareIntent.setType("audio/*");
-//                        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(nowPlayingSongFiles.get(position).getPath()));
-//                        mContext.startActivity(Intent.createChooser(shareIntent, "Sharing Music File via"));
-//                    }
-//                    return true;
-//                });
-            }
-        });
 
 
 
@@ -128,8 +106,8 @@ public class NowPlayingAdapter extends RecyclerView.Adapter<NowPlayingAdapter.My
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }

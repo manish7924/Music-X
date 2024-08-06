@@ -32,14 +32,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
-import com.infinite.virtualmusicplayer.model.Music;
-import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.activities.ArtistDetails;
 import com.infinite.virtualmusicplayer.activities.Favourite;
+import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
+import com.infinite.virtualmusicplayer.model.Music;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapter.MyHolder> {
@@ -73,14 +72,14 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
 
         byte[] image = getAlbumArt(albumSongFiles.get(position).getPath());
         if (image != null){
-            Glide.with(mContext).asBitmap()
-                    .load(image)
+            Glide.with(mContext)
+                    .load(image).placeholder(R.drawable.music_note)
                     .into(holder.album_song_image);
             holder.album_song_image.setPadding(0, 0, 0, 0);
         }
         else {
             holder.album_song_image.setPadding(12, 12, 12, 12);
-            Glide.with(mContext).asBitmap()
+            Glide.with(mContext)
                     .load(R.drawable.music_note)
                     .into(holder.album_song_image);
         }
@@ -250,13 +249,13 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
                 byte[] nowPlayingImage = getAlbumArt(albumSongFiles.get(position).getPath());
                 if (nowPlayingImage != null){
                     nowPlayingSongImg.setPadding(0, 0, 0, 0);
-                    Glide.with(mContext).asBitmap().placeholder(R.drawable.music_note_placeholder)
-                            .load(nowPlayingImage)
+                    Glide.with(mContext)
+                            .load(nowPlayingImage).placeholder(R.drawable.music_note)
                             .into(nowPlayingSongImg);
                 }
                 else {
                     nowPlayingSongImg.setPadding(12, 12, 12, 12);
-                    Glide.with(mContext).asBitmap()
+                    Glide.with(mContext)
                             .load(R.drawable.music_note)
                             .into(nowPlayingSongImg);
                 }
@@ -407,8 +406,8 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }

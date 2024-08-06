@@ -32,7 +32,7 @@
         \n
         \nLorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci quasi ipsa labore dicta consectetur. Ipsa minus facilis, hic blanditiis exercitationem laborum? Incidunt, autem delectus labore modi quidem totam atque vel nesciunt minima! Consequatur totam nesciunt reprehenderit tenetur alias quis vel, sed nostrum, odio, odit consequuntur saepe excepturi molestias tempora praesentium?</string>
     <string name="dark">Dark</string>
-    <string name="cover">cover</string>
+    <string name="Cover">Cover</string>
     <string name="todo">TODO</string>
     <string name="light">Light</string>
     <string name="th">Dark</string>
@@ -63,7 +63,7 @@
     <string name="rotateAnim">Rotate Animation</string>
     <string name="music">Music</string>
     <string name="swipe_to_refresh">Swipe to Refresh</string>
-    <string name="refresh">Refresh 🔃</string>
+    <string name="refresh">Refresh</string>
     <string name="show_volume_bar">Show Volume bar</string>
     <string name="lyrics">Lyrics</string>
     <string name="no_lyrics">\n\n\nLyrics Not Found
@@ -166,7 +166,7 @@
     <string name="path">File path</string>
     <string name="ok">OK</string>
     <string name="from">from</string>
-    <string name="infinite">♾️ Infinite</string>
+    <string name="infinite">Infinite ♾️</string>
     <string name="app_icon">app_icon</string>
     <string name="powered_by">Powered By</string>
     <string name="whats_new_description">
@@ -181,7 +181,7 @@
         \n\n• Increased size of Album cover in Album Details page.
         \n\n• Fixed: Blank mini player
         \n\n• Fixed: Slow Loading of artworks(covers).
-        \n\n\nWhat comes in Next Update ?
+        \n\n\nWhat will come in Next Update ?
         \n\n• New Embedded lyrics feature and Material You Theme will come in Next Update.
 
     </string>
@@ -193,6 +193,16 @@
     <string name="losing_grip">Losing Grip</string>
     <string name="my_happy_ending">My Happy Ending</string>
     <string name="ready_for_it">Ready For It</string>
+    <string name="Hi">Hi There,</string>
+    <string name="user_name">User Name</string>
+    <string name="recent_artists">Recent Artists</string>
+    <string name="very_small">Very small</string>
+    <string name="small">Small</string>
+    <string name="medium">Medium</string>
+    <string name="large">Large</string>
+    <string name="very_large">Very large</string>
+    <string name="accessibility_service_description">My Accessibility service\n</string>
+    <string name="accessibility_service">Accessibility Service</string>
 
 
 </resources>

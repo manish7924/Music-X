@@ -245,7 +245,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
                     Glide.with(requireContext()).load(thumb).into(albumArt);
                 }
                 else {
-                    Glide.with(requireContext()).load(R.drawable.music_note).into(albumArt);
+                    Glide.with(requireContext()).load(R.drawable.music_note_player).into(albumArt);
                 }
                 songName.setText(SONG_NAME_TO_FRAG);
                 NowPlayingFragment.artistName.setText(ARTIST_TO_FRAG);
@@ -278,7 +278,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
                     Glide.with(requireContext()).load(art).into(albumArt);
                 }
                 else {
-                    Glide.with(requireContext()).load(R.drawable.music_note).into(albumArt);
+                    Glide.with(requireContext()).load(R.drawable.music_note_player).into(albumArt);
                 }
                 songName.setText(SONG_NAME_TO_FRAG);
                 artistName.setText(ARTIST_TO_FRAG);

@@ -12,6 +12,8 @@ import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaMetadataRetriever;
@@ -33,15 +35,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
-import com.infinite.virtualmusicplayer.model.Music;
-import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.activities.AlbumDetails;
 import com.infinite.virtualmusicplayer.activities.ArtistDetails;
 import com.infinite.virtualmusicplayer.activities.Favourite;
+import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
+import com.infinite.virtualmusicplayer.model.Music;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder> {
@@ -69,49 +70,26 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+
         holder.songName.setText(mFiles.get(position).getTitle());
         holder.songArtist.setText(mFiles.get(position).getArtist());
         holder.songDuration.setText("• "+millisecondsToTime(Integer.parseInt(mFiles.get(position).getDuration())));
-//        holder.now_playing_anim.setVisibility(View.VISIBLE);
-
 
 
         byte[] image = getAlbumArt(mFiles.get(position).getPath());
-        try {
-            if (image != null){
-//                holder.albumArt.setPadding(12, 12, 12, 12);
-//                holder.albumArt.setPadding(0, 0, 0, 0);
-                Glide.with(context).asBitmap().placeholder(R.drawable.music_note_placeholder)
-                        .load(image)
-                        .into(holder.albumArt);
-            }
-            else {
-//                holder.albumArt.setPadding(12, 12, 12, 12);
-                Glide.with(context).asBitmap()
-                        .load(R.drawable.music_note)
-                        .into(holder.albumArt);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+        if (image != null){
+            Glide.with(context)
+                    .load(image).placeholder(R.drawable.music_note_placeholder2)
+                    .into(holder.albumArt);
+
         }
+        else {
+//                holder.albumArt.setPadding(12, 12, 12, 12);
+            Glide.with(context)
+                    .load(R.drawable.music_note_placeholder2)
+                    .into(holder.albumArt);
 
-
-//        byte[] image = getAlbumArt(mFiles.get(position).getPath());
-//        if (image != null){
-//            holder.albumArt.setPadding(12, 12, 12, 12);
-//            Glide.with(context).asBitmap().placeholder(R.drawable.music_note_placeholder)
-//                    .load(image)
-//                    .into(holder.albumArt);
-//
-//            holder.albumArt.setPadding(0, 0, 0, 0);
-//        }
-//        else {
-//            holder.albumArt.setPadding(12, 12, 12, 12);
-//            Glide.with(context).asBitmap()
-//                    .load(R.drawable.music_note)
-//                    .into(holder.albumArt);
-//        }
-
+        }
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -246,14 +224,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
 
                 byte[] nowPlayingImage = getAlbumArt(mFiles.get(position).getPath());
                 if (nowPlayingImage != null){
-                    Glide.with(context).asBitmap().placeholder(R.drawable.music_note_placeholder)
-                            .load(nowPlayingImage)
+                    Glide.with(context)
+                            .load(nowPlayingImage).placeholder(R.drawable.music_note)
                             .into(nowPlayingSongImg);
                     nowPlayingSongImg.setPadding(0, 0, 0, 0);
                 }
                 else {
                     nowPlayingSongImg.setPadding(12, 12, 12, 12);
-                    Glide.with(context).asBitmap()
+                    Glide.with(context)
                             .load(R.drawable.music_note)
                             .into(nowPlayingSongImg);
                 }
@@ -375,7 +353,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, mFiles.size());
                     Snackbar.make(view, "File Deleted From device" ,Snackbar.LENGTH_SHORT).show();
-                }catch (Exception e){
+                } catch (Exception e){
                     e.printStackTrace();
 //                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                     Snackbar.make(view, e.toString() ,Snackbar.LENGTH_SHORT).show();
@@ -409,7 +387,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
             songDuration = itemView.findViewById(R.id.music_duration);
             albumArt = itemView.findViewById(R.id.music_img);
             menuMore = itemView.findViewById(R.id.menu_more);
-//            now_playing_anim = itemView.findViewById(R.id.now_playing_anim);
 
 
         }
@@ -421,11 +398,12 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }
+
 
 
     @SuppressLint("NotifyDataSetChanged")

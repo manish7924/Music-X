@@ -4,15 +4,11 @@ import static com.infinite.virtualmusicplayer.activities.MainActivity.playlists;
 import static com.infinite.virtualmusicplayer.adapters.PlaylistAdapter.playlistList;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -21,12 +17,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
-import com.infinite.virtualmusicplayer.activities.Favourite;
-import com.infinite.virtualmusicplayer.model.Music;
-import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
-import com.infinite.virtualmusicplayer.adapters.PlaylistAdapter;
 import com.infinite.virtualmusicplayer.R;
+import com.infinite.virtualmusicplayer.activities.Favourite;
+import com.infinite.virtualmusicplayer.adapters.PlaylistAdapter;
 
 
 public class PlaylistFragment extends Fragment {
@@ -35,14 +28,14 @@ public class PlaylistFragment extends Fragment {
     PlaylistAdapter playlistAdapter;
     LinearLayout favouriteLayout;
 
-    private ViewGroup alertdialog;
+//    private ViewGroup alertdialog;
 
     FloatingActionButton networkStreamBtn;
-    String networkStreamUrl;
+//    String networkStreamUrl;
 
-    public static Music.MusicPlaylist musicPlaylist = new Music.MusicPlaylist();
+//    public static Music.MusicPlaylist musicPlaylist = new Music.MusicPlaylist();
 
-    TextInputEditText playlistNameEditText, yourNameEditText;
+//    TextInputEditText playlistNameEditText, yourNameEditText;
     FloatingActionButton addPlaylistBtn;
 
 
@@ -106,42 +99,42 @@ public class PlaylistFragment extends Fragment {
         return view;
     }
 
-    private void showLinkDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Enter URL");
-
-        // Set up the input
-        final EditText input = new EditText(getContext());
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        // Set up the buttons
-        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String url = input.getText().toString().trim();
-                if (!url.isEmpty()) {
-                    // Start Music Player Activity and play URL
-                    try {
-                        Intent intent = new Intent(getContext(), MusicPlayerActivity.class);
-                        intent.putExtra("url", url);
-                        startActivity(intent);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-    }
+//    private void showLinkDialog() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//        builder.setTitle("Enter URL");
+//
+//        // Set up the input
+//        final EditText input = new EditText(getContext());
+//        input.setInputType(InputType.TYPE_CLASS_TEXT);
+//        builder.setView(input);
+//
+//        // Set up the buttons
+//        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                String url = input.getText().toString().trim();
+//                if (!url.isEmpty()) {
+//                    // Start Music Player Activity and play URL
+//                    try {
+//                        Intent intent = new Intent(getContext(), MusicPlayerActivity.class);
+//                        intent.putExtra("url", url);
+//                        startActivity(intent);
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                        Toast.makeText(getContext(), e.toString(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//        });
+//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//            }
+//        });
+//
+//        builder.show();
+//    }
 
 //    private void createPlaylistCustomAlertDialog() {
 //        playlistNameEditText = customDialog.findViewById(R.id.playlistName);

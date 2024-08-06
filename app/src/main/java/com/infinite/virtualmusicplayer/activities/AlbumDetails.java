@@ -24,11 +24,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.adapters.AlbumDetailsAdapter;
 import com.infinite.virtualmusicplayer.model.Music;
-import com.infinite.virtualmusicplayer.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -93,7 +92,7 @@ public class AlbumDetails extends AppCompatActivity {
         if (image != null)
         {
             Glide.with(this)
-                    .load(image)
+                    .load(image).placeholder(R.drawable.album_art)
                     .into(albumPhoto);
         }
         else
@@ -206,8 +205,8 @@ public class AlbumDetails extends AppCompatActivity {
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }

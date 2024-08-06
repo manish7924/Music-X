@@ -46,7 +46,7 @@
                 android:id="@+id/now_playing_art"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="@string/cover"
+                android:contentDescription="@string/Cover"
                 android:src="@drawable/music_note_placeholder" />
 
 

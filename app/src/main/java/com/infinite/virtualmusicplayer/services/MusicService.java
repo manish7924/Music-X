@@ -523,7 +523,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
                 @Override
                 public void onSeekTo(long playbackPosition) {
-//                    playbackPosition = ((long) progress);
                     seekTo((int) playbackPosition);
                     super.onSeekTo(playbackPosition);
                 }

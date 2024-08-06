@@ -133,14 +133,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/home_capsule_panel_bg"
-        app:backgroundTint="@color/play"
+        app:backgroundTint="@color/title"
         android:layout_below="@id/pathTextView"
         android:layout_marginTop="14dp"
         android:layout_alignParentEnd="true"
         android:layout_centerHorizontal="false"
         android:text="@string/ok"
         android:textStyle="bold"
-        android:textColor="@color/white"/>
+        android:textColor="@color/wb"/>
 
 
 </RelativeLayout>

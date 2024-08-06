@@ -17,9 +17,10 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/back"
         android:padding="5dp"
+        android:layout_marginStart="6dp"
         android:paddingVertical="6dp"
         android:tooltipText="Back"
-        android:src="@drawable/chevron_back"
+        android:src="@drawable/back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.015"
         app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +99,7 @@
             app:strokeWidth="2dp"
             app:strokeColor="@android:color/transparent"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/cover"
+            android:contentDescription="@string/Cover"
             android:foregroundGravity="center_horizontal"
             app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="16dp"
@@ -112,7 +113,7 @@
                 android:id="@+id/cover_art"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="@string/cover"
+                android:contentDescription="@string/Cover"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -233,24 +234,6 @@
             tools:targetApi="o" />
 
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/fontStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/font_style"
-            android:padding="2dp"
-            android:visibility="invisible"
-            android:scaleType="fitCenter"
-            android:tooltipText="@string/font_style"
-            app:layout_constraintTop_toBottomOf="@+id/fontSize"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/font_style"
-            tools:ignore="ImageContrastCheck"
-            tools:targetApi="o" />
-
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/searchLyrics"
@@ -295,7 +278,7 @@
         android:layout_width="match_parent"
         android:layout_height="23dp"
         android:foregroundGravity="center"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="2dp"
         android:visibility="invisible"
         android:layout_marginHorizontal="40dp"
         android:progressTint="@android:color/white"
@@ -310,7 +293,7 @@
         android:id="@+id/songTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:layout_marginHorizontal="40dp"
         android:ellipsize="marquee"
         android:fadingEdge="horizontal"
@@ -491,7 +474,6 @@
                 android:contentDescription="@string/play_pause"
                 android:padding="2dp"
                 android:scaleType="fitCenter"
-                android:tooltipText="play"
                 app:srcCompat="@drawable/pause"
                 tools:ignore="ImageContrastCheck" />
 

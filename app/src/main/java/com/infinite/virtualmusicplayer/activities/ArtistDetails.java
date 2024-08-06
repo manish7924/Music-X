@@ -4,10 +4,6 @@ import static com.infinite.virtualmusicplayer.activities.MainActivity.musicFiles
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isShuffle;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,13 +18,16 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.adapters.ArtistDetailsAdapter;
 import com.infinite.virtualmusicplayer.model.Music;
-import com.infinite.virtualmusicplayer.R;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -183,8 +182,8 @@ public class ArtistDetails extends AppCompatActivity {
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }

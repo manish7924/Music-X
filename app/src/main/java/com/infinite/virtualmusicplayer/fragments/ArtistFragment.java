@@ -1,14 +1,18 @@
 package com.infinite.virtualmusicplayer.fragments;
 
 import static com.infinite.virtualmusicplayer.activities.MainActivity.artists;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.musicFiles;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isShuffle;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,7 +20,10 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.infinite.virtualmusicplayer.adapters.ArtistAdapter;
 import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
 import com.infinite.virtualmusicplayer.R;
@@ -25,9 +32,12 @@ import java.util.Random;
 
 public class ArtistFragment extends Fragment {
 
+    SwipeRefreshLayout swipeRefreshLayout;
+
+
     RecyclerView recyclerView;
     TextView noArtistsFound;
-    ImageView artistShuffleBtn, artistGridBtn;
+    FloatingActionButton artistShuffleBtn;
 
     public static ArtistAdapter artistAdapter;
     int mainPosition = 0;
@@ -42,10 +52,10 @@ public class ArtistFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
+        swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
         recyclerView = view.findViewById(R.id.recyclerView);
         noArtistsFound = view.findViewById(R.id.no_artists_found);
-        artistShuffleBtn = view.findViewById(R.id.artist_shuffleBtn);
-        artistGridBtn = view.findViewById(R.id.artist_gridBtn);
+        artistShuffleBtn = view.findViewById(R.id.artistShuffleBtn);
 
 
         artistAdapter = new ArtistAdapter(getContext(), artists);
@@ -56,6 +66,38 @@ public class ArtistFragment extends Fragment {
 
         artistShuffleBtn.setOnClickListener(view1 -> playAllSongs());
 
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                try {
+                    CountDownTimer count = new CountDownTimer(0, 100) {
+                        @Override
+                        public void onTick(long l) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            swipeRefreshLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_in_refresh));
+
+                            Snackbar.make(swipeRefreshLayout, artists.size()+" Artists Found", Snackbar.LENGTH_SHORT)
+                                    .setAction("OK", view -> {}).setActionTextColor(Color.parseColor("#00B0FF")).show();
+
+
+                        }
+
+                    };
+                    count.start();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
 //            ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(artistAdapter);
 //            scaleInAnimationAdapter.setDuration(40);
 //            scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator());
@@ -63,7 +105,7 @@ public class ArtistFragment extends Fragment {
 //            recyclerView.setAdapter(scaleInAnimationAdapter);
 
 
-        if (!(artists.size() < 1))
+        if (artists != null  &&  artists.size() >= 1)
         {
             noArtistsFound.setVisibility(View.GONE);
             int cacheSize = artists.size();

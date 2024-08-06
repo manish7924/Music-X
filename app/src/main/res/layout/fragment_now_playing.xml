@@ -12,13 +12,13 @@
         android:id="@+id/progress_relative_layout"
         android:layout_width="wrap_content"
         android:layout_height="3dp"
-        android:paddingHorizontal="4.23dp"
+        android:paddingHorizontal="7.79dp"
         android:layout_below="@id/card_relative_layout">
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/mini_player_progressBar"
             android:layout_width="wrap_content"
-            android:layout_height="4dp"
+            android:layout_height="wrap_content"
             app:indicatorColor="@color/title"
             app:trackColor="@android:color/transparent"
             android:foregroundGravity="bottom" />
@@ -30,19 +30,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingHorizontal="2dp"
-        android:paddingVertical="2dp">
+        android:paddingVertical="0dp">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@id/card_relative_layout"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:cardCornerRadius="7dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            app:cardCornerRadius="9dp"
             app:cardBackgroundColor="@android:color/transparent"
             app:strokeColor="@android:color/transparent"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="5dp"
             android:layout_marginEnd="6dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="2dp">
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="3dp">
 
             <ImageView
                 android:id="@+id/bottom_art"
@@ -58,7 +58,7 @@
 
         <ImageView
             android:id="@+id/previousBtn_bottom"
-            android:layout_width="35dp"
+            android:layout_width="36dp"
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:shadowColor="@color/white"
@@ -68,11 +68,12 @@
             android:layout_toStartOf="@id/play_pause_miniplayer"
             android:layout_centerVertical="true"
             android:layout_marginEnd="2dp"
-            android:contentDescription="@string/previous" />
+            android:contentDescription="@string/previous"
+            app:tint="@color/title" />
 
         <ImageView
             android:id="@+id/nextBtn_bottom"
-            android:layout_width="35dp"
+            android:layout_width="36dp"
             android:layout_height="wrap_content"
             android:padding="4dp"
             android:shadowColor="@color/white"
@@ -82,7 +83,8 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
-            android:contentDescription="@string/next_song" />
+            android:contentDescription="@string/next_song"
+            app:tint="@color/title" />
 
         <ImageView
             android:id="@+id/play_pause_miniplayer"
@@ -92,12 +94,12 @@
             android:padding="4dp"
             android:shadowColor="@color/white"
             android:shadowRadius="23"
-            android:background="?selectableItemBackground"
+            android:background="?android:selectableItemBackground"
             android:layout_toStartOf="@id/nextBtn_bottom"
             android:layout_marginEnd="2dp"
-            app:fabSize="mini"
             android:layout_centerVertical="true"
-            android:contentDescription="@string/play_pause" />
+            android:contentDescription="@string/play_pause"
+            app:tint="@color/title" />
 
         <TextView
             android:id="@+id/song_name_mini_player"
@@ -107,7 +109,7 @@
             android:tooltipText="@string/song_name"
             android:textColor="@color/black"
             android:fontFamily="@font/poppins_md"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="7dp"
             android:layout_marginStart="4dp"
             android:ellipsize="marquee"
             android:fadingEdge="horizontal"

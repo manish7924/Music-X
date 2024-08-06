@@ -32,14 +32,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
-import com.infinite.virtualmusicplayer.model.Music;
-import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.activities.AlbumDetails;
 import com.infinite.virtualmusicplayer.activities.Favourite;
+import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
+import com.infinite.virtualmusicplayer.model.Music;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ArtistDetailsAdapter extends RecyclerView.Adapter<ArtistDetailsAdapter.MyArtistViewHolder> {
@@ -72,14 +71,14 @@ public class ArtistDetailsAdapter extends RecyclerView.Adapter<ArtistDetailsAdap
 
         byte[] image = getAlbumArt(artistSongFiles.get(position).getPath());
         if (image != null){
-            holder.artist_music_image.setPadding(0, 0, 0, 0);
-            Glide.with(mContext).asBitmap()
-                    .load(image)
+            Glide.with(mContext)
+                    .load(image).placeholder(R.drawable.music_note)
                     .into(holder.artist_music_image);
+            holder.artist_music_image.setPadding(0, 0, 0, 0);
         }
         else {
             holder.artist_music_image.setPadding(12, 12, 12, 12);
-            Glide.with(mContext).asBitmap()
+            Glide.with(mContext)
                     .load(R.drawable.music_note)
                     .into(holder.artist_music_image);
         }
@@ -400,8 +399,8 @@ public class ArtistDetailsAdapter extends RecyclerView.Adapter<ArtistDetailsAdap
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }

@@ -1,16 +1,20 @@
 package com.infinite.virtualmusicplayer.activities;
 
+import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.lightVibrantColor;
+import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.mPalette;
+import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.musicService;
+import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.thumb;
 import static com.infinite.virtualmusicplayer.fragments.AlbumFragment.albumAdapter;
 import static com.infinite.virtualmusicplayer.fragments.ArtistFragment.artistAdapter;
-import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.musicService;
-import static com.infinite.virtualmusicplayer.services.MusicService.MUSIC_FILE;
-import static com.infinite.virtualmusicplayer.services.MusicService.MUSIC_LAST_PLAYED;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.albumArt;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.artistName;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.mini_player;
+import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.mini_player_progressBar;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.playPauseBtn;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.songName;
 import static com.infinite.virtualmusicplayer.fragments.SongsFragment.musicAdapter;
+import static com.infinite.virtualmusicplayer.services.MusicService.MUSIC_FILE;
+import static com.infinite.virtualmusicplayer.services.MusicService.MUSIC_LAST_PLAYED;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -20,11 +24,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,34 +46,31 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.fragments.AlbumFragment;
 import com.infinite.virtualmusicplayer.fragments.ArtistFragment;
 import com.infinite.virtualmusicplayer.fragments.HomeFragment;
-import com.infinite.virtualmusicplayer.model.Music;
+import com.infinite.virtualmusicplayer.fragments.NowPlayingFragment;
 import com.infinite.virtualmusicplayer.fragments.PlaylistFragment;
-import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.fragments.SongsFragment;
+import com.infinite.virtualmusicplayer.model.Music;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
-
-//    For Binding Views
 
     BottomNavigationView bottomNavigationView;
     FrameLayout frameLayout;
     private static final int REQUEST_CODE = 1;
 
 //    MusicService musicService;
-    public static ArrayList<Music> musicFiles;
+    public static ArrayList<Music> musicFiles = new ArrayList<>();
     public static ArrayList<Music> albums = new ArrayList<>();
     SearchView searchView;
     int id;
@@ -96,17 +97,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //    private SharedPreferences myFavPref;
     private final String[] themes = {"System Theme", "Dark Theme", "Light Theme"};
 
+    static boolean isPermissionGranted = false;
     static boolean isSystem = false;
     static boolean isNight = false;
     static boolean isLight = false;
-
-    //        fragment
-//        View bottomSheet = findViewById(R.id.design_bottom_sheet);
-//        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-//        state = true;
-//        viewPager = findViewById(R.id.viewpager);
-//        bottomSheetBehavior = BottomSheetBehavior.from(frag_mini_player);
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
 
     @SuppressLint("ResourceAsColor")
@@ -119,17 +113,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         sharedPreferences = getSharedPreferences("ThemePrefs", Context.MODE_PRIVATE);
 
-//        CollapsingToolbarLayout toolbarLayout = findViewById(R.id.toolbarLayout);
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         frameLayout = findViewById(R.id.frameLayout);
 
-        replaceFragment(new SongsFragment());
-        bottomNavigationView.setSelectedItemId(R.id.ac_tracks);
 
 //        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, new SongsFragment()).commit();
+
+
 
 
         bottomNavigationView.setOnItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) item -> {
@@ -139,29 +132,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             if (id == R.id.ac_home){
                 replaceFragment(new HomeFragment());
 
-
             } else if (id == R.id.ac_tracks) {
                 replaceFragment(new SongsFragment());
-
 
             } else if (id == R.id.ac_albums) {
                 replaceFragment(new AlbumFragment());
 
-
             } else if (id == R.id.ac_artists) {
                 replaceFragment(new ArtistFragment());
 
-
             } else if (id == R.id.ac_playlist) {
                 replaceFragment(new PlaylistFragment());
-
             }
-
-//            assert selectedFragment != null;
-//            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, selectedFragment).commit();
 
             return true;
         });
+
+
+        bottomNavigationView.setOnItemReselectedListener((BottomNavigationView.OnNavigationItemReselectedListener) item -> id = item.getItemId());
 
 
 
@@ -193,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         showOrHideMiniPlayer();
 
-
     }
 
     private void showOrHideMiniPlayer() {
@@ -207,10 +194,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         try {
             showMiniPlayer();
-        }catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
 
@@ -222,21 +211,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         , REQUEST_CODE);
             }catch (Exception e){
                 e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
             }
         }
         else {
             try {
                 musicFiles = getAllAudio(this);
-                replaceFragment(new SongsFragment());
-//                frameLayout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
-//                replaceFragment(new SongsFragment());
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-//            Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                setDefaultFragment();
 
+            } catch (Exception e){
+                e.printStackTrace();
+//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -251,21 +237,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         , REQUEST_CODE);
             }catch (Exception e){
                 e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
             }
 
         }
         else {
             try {
                 musicFiles = getAllAudio(this);
-                replaceFragment(new SongsFragment());
-//                frameLayout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-//            Toast.makeText(this, musicFiles.size() + " Songs Found", Toast.LENGTH_SHORT).show();
+                setDefaultFragment();
 
+            } catch (Exception e){
+                e.printStackTrace();
+//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -280,21 +264,32 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 try {
                     musicFiles = getAllAudio(this);
 //                    Important for first time launch
-                    replaceFragment(new SongsFragment());
-                }catch (Exception e){
+                    setDefaultFragment();
+
+                } catch (Exception e){
                     e.printStackTrace();
-                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
             else {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_MEDIA_AUDIO}
-                            , REQUEST_CODE);
+                    try {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_MEDIA_AUDIO}
+                                , REQUEST_CODE);
+                    }catch (Exception e){
+                        e.printStackTrace();
+//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}
-                            , REQUEST_CODE);
+                    try {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}
+                                , REQUEST_CODE);
+                    }catch (Exception e){
+                        e.printStackTrace();
+//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
@@ -302,12 +297,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
     private void replaceFragment(Fragment fragment){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.frameLayout, fragment);
-        fragmentTransaction.commit();
+//        Inline method
+        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
     }
+
+//    Briefly method
+    //        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//
+//        fragmentTransaction.replace(R.id.frameLayout, fragment).commit();
+//        fragmentTransaction.commit();
 
 
 //    private void setFullScreen() {
@@ -380,7 +379,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private ArrayList<Music> getAllAudio(Context context) {
         SharedPreferences preferences = getSharedPreferences(MY_SORT_PREF, MODE_PRIVATE);
         String sortOrder = preferences.getString("sorting", "sortByName");
-
 
         ArrayList<String> duplicate = new ArrayList<>();
         ArrayList<String> artist_duplicate = new ArrayList<>();
@@ -499,9 +497,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         MenuItem menuItem = menu.findItem(R.id.search);
 
         searchView = (SearchView) menuItem.getActionView();
-
         searchView.setQueryHint("Search Music (Tracks, Albums, Artists)");
-
         searchView.setOnQueryTextListener(this);
 
         return super.onCreateOptionsMenu(menu);
@@ -509,7 +505,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-
         return true;
     }
 
@@ -630,7 +625,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             if (musicService != null){
                 if (musicService.isPlaying()){
                     musicService.pause();
-
                     try {
                         editor.putString("sorting", "sortBySize");
                         editor.apply();
@@ -669,37 +663,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         else if (id == R.id.ac_theme) {
             showThemeSelectionDialog();
         }
-        else if(id == R.id.ac_refresh) {
-            // Implement your desired functionality here
-            try {
-                CountDownTimer count = new CountDownTimer(0, 100) {
-                    @Override
-                    public void onTick(long l) {
 
-                    }
-
-                    @Override
-                    public void onFinish() {
-//                        replaceFragment(new SongsFragment());
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, new SongsFragment()).commit();
-                        bottomNavigationView.setSelectedItemId(R.id.ac_tracks);
-                        Toast.makeText(MainActivity.this, musicFiles.size()+" Songs Found", Toast.LENGTH_SHORT).show();
-//                        frameLayout.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_refresh));
-
-                    }
-
-                };
-                count.start();
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        }
+//        else if(id == R.id.ac_refresh) {
+//            // Implement your desired functionality here
+//
+//            return true;
+//        }
 
         else if (id == R.id.ac_about) {
             Intent intent = new Intent(this, About.class);
             startActivity(intent);
+//            startActivity(new Intent(this,About.class));
             return true;
         }
         else if (id == R.id.ac_whats_new) {
@@ -808,6 +782,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void setDefaultFragment() {
+//        replaceFragment(new SongsFragment());
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, new SongsFragment()).commit();
         bottomNavigationView.setSelectedItemId(R.id.ac_tracks);
 //        frameLayout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
@@ -815,7 +790,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
     private void showThemeSelectionDialog() {
-
         final Spinner spinner = new Spinner(this);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, themes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -843,7 +817,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         Toast.makeText(this, e1.toString() , Toast.LENGTH_SHORT).show();
                     }
 //                    replaceFragment(new SongsFragment());
-                    setDefaultFragment();
+//                    setDefaultFragment();
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> {
                     // Exit the app
@@ -872,8 +846,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }
@@ -917,15 +891,100 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if (SHOW_MINI_PLAYER){
             byte[] art = getAlbumArt(PATH_TO_FRAG);
             if (art != null){
-                Glide.with(this).load(art).into(albumArt);
+                Glide.with(this).load(art).placeholder(R.drawable.music_note_player).into(albumArt);
             }
             else {
-                Glide.with(this).load(R.drawable.music_note).into(albumArt);
+                Glide.with(this).load(R.drawable.music_note_player).into(albumArt);
             }
             songName.setText(SONG_NAME_TO_FRAG);
             artistName.setText(ARTIST_TO_FRAG);
+
+            if (musicService != null){
+                mini_player_progressBar.setProgress(musicService.getCurrentPosition(), false);
+            }
+
+            if (musicService != null){
+                if (thumb != null){
+                    Palette.from(thumb).generate(new Palette.PaletteAsyncListener() {
+                        @Override
+                        public void onGenerated(Palette palette) {
+                            mPalette = palette;
+                            createGradientBackground();
+                        }
+
+                        private void createGradientBackground() {
+                            if (mPalette != null) {
+
+                                // Extract dominant color
+                                int dominantColor = mPalette.getDominantColor(Color.WHITE);
+                                lightVibrantColor = manipulateColor(mPalette.getLightVibrantColor(Color.WHITE), 1f);
+
+                                int lightColor1 = manipulateColor(dominantColor, 0.8f);
+                                int lightColor2 = manipulateColor(dominantColor, 0.9f);
+                                int lightColor3 = manipulateColor(dominantColor, 0.95f);
+                                int lightColor4 = manipulateColor(dominantColor, 1f);
+
+//                        status bar color
+//                        getWindow().setStatusBarColor(lightColor4);
+
+
+                                GradientDrawable gradientDrawableMiniPlayer = new GradientDrawable(
+                                        GradientDrawable.Orientation.RIGHT_LEFT,
+                                        new int[]{lightColor1, lightColor2, lightColor3, lightColor4});
+
+                                gradientDrawableMiniPlayer.setCornerRadius(17);
+
+                                NowPlayingFragment.mini_player.setBackground(gradientDrawableMiniPlayer);
+
+                                // Manipulate colors for gradient (darker at bottom, lighter at top)
+
+                                mini_player_progressBar.setIndicatorColor(lightVibrantColor);
+
+                                if (thumb != null){
+                                    songName.setTextColor(lightVibrantColor);
+                                    artistName.setTextColor(manipulateColor(lightVibrantColor, 1f));
+                                    playPauseBtn.setColorFilter(lightVibrantColor);
+                                    NowPlayingFragment.nextBtn.setColorFilter(lightVibrantColor);
+                                    NowPlayingFragment.prevBtn.setColorFilter(lightVibrantColor);
+                                    mini_player_progressBar.setIndicatorColor(lightVibrantColor);
+
+                                }
+                                else {
+                                    songName.setTextColor(Color.WHITE);
+                                    artistName.setTextColor(Color.WHITE);
+                                    playPauseBtn.setColorFilter(Color.WHITE);
+                                    NowPlayingFragment.nextBtn.setColorFilter(Color.WHITE);
+                                    NowPlayingFragment.prevBtn.setColorFilter(Color.WHITE);
+                                    mini_player_progressBar.setIndicatorColor(Color.WHITE);
+
+                                }
+
+
+                            }
+                        }
+
+                        private int manipulateColor(int color, float factor) {
+                            int alpha = Color.alpha(color);
+                            int red = Color.red(color);
+                            int green = Color.green(color);
+                            int blue = Color.blue(color);
+
+                            red = Math.round(red * factor);
+                            green = Math.round(green * factor);
+                            blue = Math.round(blue * factor);
+
+                            return Color.argb(alpha, red, green, blue);
+                        }
+
+                    });
+                }
+            }
+
+
         }
     }
+
+
 
 
     @Override
@@ -934,21 +993,21 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             if (musicService.isPlaying()){
                 try {
                     super.onDestroy();
-                }catch (Exception e){
+                } catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
                 }
-            } else {
+            }
+            else {
                 try {
-                    super.onDestroy();
-                    if (musicService != null){
-//                        audioManager.abandonAudioFocus(musicService);
-                        musicService.stop();
-                        musicService.release();
-                        musicService.stopForeground(true);
-                        musicService = null;
+                    musicService.stop();
+                    musicService.release();
+                    musicService.stopForeground(true);
+                    musicService = null;
+                    if (getBaseContext() != null){
+                        super.onDestroy();
                     }
-                }catch (Exception e){
+                } catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
                 }
@@ -959,7 +1018,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         else {
             try {
                 super.onDestroy();
-            }catch (Exception e){
+            } catch (Exception e){
                 e.printStackTrace();
                 Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
             }
@@ -1021,10 +1080,13 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         // Handle back press event
         if (!searchView.isIconified()) {
             // If the SearchView is open, close it and restore the original song list
-            searchView.setIconified(true);
+            try {
+                searchView.setIconified(true);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         } else {
             super.onBackPressed();
-            showExitApplicationDialog();
         }
 
     }

@@ -3,19 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/item_no1"
+        android:id="@+id/very_small"
         android:title="@string/square" />
 
     <item
-        android:id="@+id/item_no2"
+        android:id="@+id/small"
         android:title="@string/squircle" />
 
     <item
-        android:id="@+id/item_no3"
+        android:id="@+id/medium"
         android:title="@string/circle" />
 
     <item
-        android:id="@+id/item_no4"
+        android:id="@+id/large"
         android:title="@string/circle_animation" />
 
 

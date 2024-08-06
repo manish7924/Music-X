@@ -15,11 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.infinite.virtualmusicplayer.model.Music;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.activities.AlbumDetails;
+import com.infinite.virtualmusicplayer.model.Music;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
@@ -48,12 +47,12 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
 
         byte[] image = getAlbumArt(albumFiles.get(position).getPath());
         if (image != null){
-            Glide.with(mContext).asBitmap().placeholder(R.drawable.album_art)
-                    .load(image)
+            Glide.with(mContext)
+                    .load(image).placeholder(R.drawable.album_art)
                     .into(holder.album_image);
         }
         else {
-            Glide.with(mContext).asBitmap()
+            Glide.with(mContext)
                     .load(R.drawable.album_art)
                     .into(holder.album_image);
         }
@@ -102,8 +101,8 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }

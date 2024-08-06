@@ -14,6 +14,12 @@
         android:tooltipText="@string/search"
         tools:targetApi="o" />
 
+
+    <item
+        android:id="@+id/ac_refresh"
+        android:title="@string/refresh"
+        app:showAsAction="collapseActionView" />
+
     <item
         android:id="@+id/sort_by"
         android:title="@string/sort_by"
@@ -43,13 +49,6 @@
 
 
     <item
-        android:id="@+id/ac_refresh"
-        android:title="@string/refresh"
-        app:showAsAction="collapseActionView" />
-
-
-
-    <item
         android:id="@+id/ac_theme"
         android:title="@string/theme"
         app:showAsAction="collapseActionView"
@@ -58,13 +57,14 @@
 
 
     <item
-        android:id="@+id/ac_about"
-        android:title="@string/about"
-        app:showAsAction="collapseActionView" />
-
-    <item
         android:id="@+id/ac_whats_new"
         android:title="@string/whats_new"
+        app:showAsAction="collapseActionView" />
+
+
+    <item
+        android:id="@+id/ac_about"
+        android:title="@string/about"
         app:showAsAction="collapseActionView" />
 
 

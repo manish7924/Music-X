@@ -2,7 +2,6 @@ package com.infinite.virtualmusicplayer.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,16 +12,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.infinite.virtualmusicplayer.model.Music;
-import com.infinite.virtualmusicplayer.activities.PlaylistDetails;
 import com.infinite.virtualmusicplayer.R;
-import com.infinite.virtualmusicplayer.fragments.PlaylistFragment;
+import com.infinite.virtualmusicplayer.model.Music;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
@@ -73,34 +67,34 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
 
 
 
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, PlaylistDetails.class);
-            intent.putExtra("index", position);
-            ContextCompat.startActivity(context, intent, null);
-        });
+//        holder.itemView.setOnClickListener(v -> {
+//            Intent intent = new Intent(context, PlaylistDetails.class);
+//            intent.putExtra("index", position);
+//            ContextCompat.startActivity(context, intent, null);
+//        });
 
 
-        holder.playlistDeleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ArrayList<Music> myFiles = new ArrayList<>();
-                new MaterialAlertDialogBuilder(context)
-                        .setTitle(playlistList.get(position).getAlbum())
-                        .setMessage("Do you want to Delete this Playlist ?")
-                        .setPositiveButton("Yes", (dialog, which) -> {
-                            // Exit the app
-                            PlaylistFragment.musicPlaylist.getRef().remove(position);
-                            refreshPlaylist(playlistList);
-                            dialog.dismiss();
-                        })
-                        .setNegativeButton("No", (dialog, which) -> {
-                            // Exit the app
-                            dialog.dismiss();
-                        })
-                        .show();
-
-            }
-        });
+//        holder.playlistDeleteBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ArrayList<Music> myFiles = new ArrayList<>();
+//                new MaterialAlertDialogBuilder(context)
+//                        .setTitle(playlistList.get(position).getAlbum())
+//                        .setMessage("Do you want to Delete this Playlist ?")
+//                        .setPositiveButton("Yes", (dialog, which) -> {
+//                            // Exit the app
+//                            PlaylistFragment.musicPlaylist.getRef().remove(position);
+//                            refreshPlaylist(playlistList);
+//                            dialog.dismiss();
+//                        })
+//                        .setNegativeButton("No", (dialog, which) -> {
+//                            // Exit the app
+//                            dialog.dismiss();
+//                        })
+//                        .show();
+//
+//            }
+//        });
 
     }
 
@@ -136,8 +130,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }

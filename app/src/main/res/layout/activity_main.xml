@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:theme="@style/Theme.Material3.DayNight.NoActionBar"
     tools:context=".activities.MainActivity">
 
 
@@ -20,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/menu_main"
         app:title="@string/app_name"
-        app:titleMarginStart="16dp"
+        app:titleMarginStart="7dp"
         app:titleTextColor="@color/title" />
 
 
@@ -30,7 +31,7 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/main_bg_color"
+        android:background="@color/nav"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,12 +43,11 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:activeIndicatorLabelPadding="0dp"
+        android:layout_height="80dp"
         android:background="@android:color/white"
-        app:itemIconTint="@color/title"
-        app:itemTextColor="@color/title"
-        app:itemBackground="@color/panel_color"
+        app:itemIconTint="@color/my_blue"
+        app:itemTextColor="@color/my_blue"
+        app:itemBackground="@color/item_bg_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,13 +61,13 @@
         android:background="@android:color/transparent"
         app:behavior_hideable="true"
         android:elevation="5dp"
+        android:layout_marginBottom="0dp"
         app:behavior_peekHeight="50dp"
         app:layout_behavior="@string/bottom_sheet_behavior"
-        android:layout_marginHorizontal="2dp"
+        android:layout_marginHorizontal="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/frameLayout"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintBottom_toBottomOf="@+id/frameLayout">
 
         <fragment
             android:name="com.infinite.virtualmusicplayer.fragments.NowPlayingFragment"

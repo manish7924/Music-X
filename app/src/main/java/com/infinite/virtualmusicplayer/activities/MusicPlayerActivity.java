@@ -76,7 +76,6 @@ import com.infinite.virtualmusicplayer.receivers.SwipeGestureListener;
 import com.infinite.virtualmusicplayer.services.MusicService;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -88,9 +87,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
     static ImageView play;
     AudioManager audioManager;
     ImageView nextBtn, previousBtn, musicCover, loop, shuffle, shape, rotateAnim, equalizerBtn, info, copy, lyricsBtn, lyrics_gradient, fontSize, searchLyrics, volumeBtn;
-    ImageView favBtn, backBtn;
-//    ImageView queueBtn;
-    ImageView moreOptionBtn;
+    ImageView favBtn, backBtn, moreOptionBtn;
+//    Thread playThread, prevThread, nextThread;
     CardView cardView;
 
     GradientDrawable gradientDrawable;
@@ -111,7 +109,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
     Vibrator myVib;
 
-    private Palette mPalette;
+    static Palette mPalette;
 
     public static int position = -1;
 //    String url;
@@ -122,13 +120,16 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
     static int fIndex = -1;
 
     int currentDuration = 0;
-    int seekProgress = 0;
     public static long finalSeekProgress = 0;
-    static String nowPlayingId = "";
+//    static String nowPlayingId = "";
     int totalDuration = 0;
     public static boolean isPlaying = false;
+    private boolean isPrev = false;
+    private boolean isNext = false;
     public static boolean isShuffle = false;
     public static boolean isLoop = false;
+
+//    private boolean isPlay = false;
     private boolean isLyrics = false;
     private boolean isVol = false;
     static boolean isAnim = false;
@@ -154,27 +155,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
         getIntentMethod();
 
-//        if (getIntent().getData() != null && getIntent().getData().getScheme().equals("content")){
-//            position = 0;
-//            listSongs = new ArrayList<>();
-//            listSongs.add(getMusicDetails(getIntent().getData()));
-//
-//            startPlaying();
-//
-//            Glide.with(this)
-//                    .load(getAlbumArt(listSongs.get(position).getPath()))
-//                    .apply(new RequestOptions().placeholder(R.drawable.music_note_placeholder).centerCrop())
-//                    .into(musicCover);
-//            songTitleTv.setText(listSongs.get(position).getTitle());
-//
-//        }
-//        else {
-//            getIntentMethod();
-//        }
-
 
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
-
 
 
         // Volume Bar
@@ -205,13 +187,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     seekBar.setProgress(progress);
 
                     //  most imp not change this position it is only in from user
-                    if (musicService != null) {
-                        if (isPlaying){
-                            musicService.showNotification(R.drawable.pause_noti, 1F);
-                        } else {
-                            musicService.showNotification(R.drawable.play_noti, 0F);
-                        }
-                    }
+                    showNotificationWithPreference();
                 }
 
                 mini_player_progressBar.setProgress(progress, false);
@@ -247,22 +223,51 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     currentTimeTv.setText(millisecondsToTime(currentDuration));
                     totalTimeTv.setText(millisecondsToTime(totalDuration));
 
-//                    if (musicService.isPlaying()) {
-//                        isPlaying = true;
-//                    }
-//                    else {
-//                        isPlaying = false;
-//                    }
-
 
                 }
-                handler.postDelayed(this, 50);
+                handler.postDelayed(this, 100);
             }
         });
 
+
+        play.setOnClickListener(view -> {
+            playPauseBtnClicked();
+
+            if (musicService != null && musicService.isPlaying()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    play.setTooltipText("Pause");
+                }
+                play.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_once_play));
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    play.setTooltipText("Play");
+                }
+                play.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_once_pause));
+            }
+
+        });
+
+
+        nextBtn.setOnClickListener(view -> {
+            nextBtnClicked();
+            nextBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_next_prev_btn));
+
+        });
+
+        previousBtn.setOnClickListener(view -> {
+            prevBtnClicked();
+            previousBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_next_prev_btn));
+
+        });
+
+
         shuffle.setOnClickListener(view -> {
-            myVib.vibrate(30);
-            shuffle.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
+            if (isShuffle){
+                shuffle.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.square_shape_anim));
+            } else {
+                shuffle.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_half_loop));
+            }
+
             if (isShuffle) {
                 isShuffle = false;
 //                    Toast.makeText(MusicPlayerActivity.this, "Shuffle off", Toast.LENGTH_SHORT).show();
@@ -285,11 +290,15 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         });
 
         loop.setOnClickListener(view -> {
-            myVib.vibrate(30);
-            loop.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
+            if (isLoop){
+                loop.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.square_shape_anim));
+            }
+            else {
+                loop.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_half_loop));
+            }
+
             if (isLoop) {
                 isLoop = false;
-//                    Toast.makeText(MusicPlayerActivity.this, "Loop off", Toast.LENGTH_SHORT).show();
                 loop.setColorFilter(R.color.btn_off);
                 loop.setImageResource(R.drawable.repeat_off);
             } else {
@@ -301,7 +310,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                 }
 
                 isLoop = true;
-//                    Toast.makeText(MusicPlayerActivity.this, "Loop on", Toast.LENGTH_SHORT).show();
                 loop.setColorFilter(lightVibrantColor);
                 loop.setImageResource(R.drawable.repeat_on);
 
@@ -339,7 +347,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
 
         info.setOnClickListener(view -> {
-            myVib.vibrate(30);
+//            myVib.vibrate(30);
             info.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
 
             showSongDetails();
@@ -378,10 +386,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     startActivity(intent);
                     return true;
                 }
-                if (id == R.id.go_to_folder) {
-                    Toast.makeText(MusicPlayerActivity.this, "Coming Soon", Toast.LENGTH_SHORT).show();
-                    return true;
-                }
                 if (id == R.id.details){
                     showSongDetails();
                     return true;
@@ -391,7 +395,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     return true;
                 }
 //                        shape menu
-                if (id == R.id.item_no1) {
+                if (id == R.id.very_small) {
                     cardView.setRadius(12);
                     shape.setImageResource(R.drawable.square);
 //                            rotateAnim.setVisibility(View.INVISIBLE);
@@ -399,7 +403,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     animStarterForSquare();
                     rotateAnim.setImageResource(R.drawable.anim_off);
                     return true;
-                } else if (id == R.id.item_no2) {
+                } else if (id == R.id.small) {
                     cardView.setRadius(30);
                     shape.setImageResource(R.drawable.rounded_square);
 //                            rotateAnim.setVisibility(View.INVISIBLE);
@@ -407,7 +411,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     animStarterForSquare();
                     rotateAnim.setImageResource(R.drawable.anim_off);
                     return true;
-                } else if (id == R.id.item_no3) {
+                } else if (id == R.id.medium) {
                     cardView.setRadius(600);
 //                            cardViewUn.setRadius(600);
                     isAnim = false;
@@ -418,7 +422,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     animStarterForSquare();
                     rotateAnim.setImageResource(R.drawable.anim_off);
                     return true;
-                } else if (id == R.id.item_no4) {
+                } else if (id == R.id.large) {
                     cardView.setRadius(600);
                     shape.setImageResource(R.drawable.anim_circle);
                     isAnim = true;
@@ -442,16 +446,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
                 if (id == R.id.equalizer) {
 
-                    try {
-                        Intent eqIntent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-                        eqIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, musicService.mediaPlayer.getAudioSessionId());
-                        eqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getBaseContext().getPackageName());
-                        eqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
-                        startActivityForResult(eqIntent, 13);
-                    }
-                    catch (Exception e){
-                        Toast.makeText(MusicPlayerActivity.this, "Equalizer Not Found", Toast.LENGTH_SHORT).show();
-                    }
+                    equalizerActivityLaunch();
 
                     return true;
                 }
@@ -473,22 +468,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
 
         lyricsBtn.setOnClickListener(v -> {
-            myVib.vibrate(32);
+            myVib.vibrate(30);
             showLyrics();
             lyricsBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
         });
-
-//        lyricsBtn.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                myVib.vibrate(32);
-//                showLyrics();
-//                lyricsBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
-//                searchLyrics();
-//
-//                return true;
-//            }
-//        });
 
         volumeBtn.setOnClickListener(view -> {
             myVib.vibrate(30);
@@ -507,7 +490,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
         rotateAnim.setOnClickListener(view -> {
             myVib.vibrate(30);
-            rotateAnim.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
+
+            if (isAnim){
+                rotateAnim.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
+
+            } else {
+                rotateAnim.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_once));
+            }
+//            rotateAnim.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
 
             isAnim = !isAnim;
             if (musicService.isPlaying()  && isAnim) {
@@ -542,7 +532,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
         favBtn.setOnClickListener(view -> {
             myVib.vibrate(30);
-            favBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
+            favBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_smooth));
 
             if (isFav) {
                 isFav = false;
@@ -559,37 +549,17 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
             }
         });
 
-//        favBtn.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                myVib.vibrate(32);
-//                favBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
-//
-//                Intent intent = new Intent(MusicPlayerActivity.this, FavouriteActivity.class);
-//                startActivity(intent);
-//                return true;
-//            }
-//        });
 
         equalizerBtn.setOnClickListener(view -> {
-            myVib.vibrate(30);
+//            myVib.vibrate(30);
             equalizerBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
 
-            try {
-                Intent eqIntent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-                eqIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, musicService.mediaPlayer.getAudioSessionId());
-                eqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getBaseContext().getPackageName());
-                eqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
-                startActivityForResult(eqIntent, 13);
-            }
-            catch (Exception e){
-                Toast.makeText(MusicPlayerActivity.this, "Equalizer Not Found", Toast.LENGTH_SHORT).show();
-            }
+            equalizerActivityLaunch();
         });
 
 
         shape.setOnClickListener(v -> {
-            myVib.vibrate(30);
+//            myVib.vibrate(30);
             shape.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
 
             showShapePopupMenu();
@@ -653,16 +623,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
         gestureDetector = new GestureDetector(this, swipeGestureListener);
 
-        cardView.setOnTouchListener((v, event) -> {
-            myVib.vibrate(0);
-            return gestureDetector.onTouchEvent(event);
-        });
+        cardView.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
 
-        musicCover.setOnTouchListener((v, event) -> {
-            myVib.vibrate(0);
-            return gestureDetector.onTouchEvent(event);
-        });
+        musicCover.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
 
+        mContainer.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
 
         play.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
 
@@ -670,73 +635,46 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
         nextBtn.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
 
-        buttonPanel.setOnTouchListener((v, event) -> {
-            myVib.vibrate(0);
-            return gestureDetector.onTouchEvent(event);
-        });
-
-        songTitleTv.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
-
-        artistTv.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
-
-        songName.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
-
-        artistName.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
+        buttonPanel.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
 
 
-        NowPlayingFragment.playPauseBtn.setOnTouchListener((v, event) -> {
-            myVib.vibrate(0);
-            return gestureDetector.onTouchEvent(event);
-        });
 
-        NowPlayingFragment.prevBtn.setOnTouchListener((v, event) -> {
-            myVib.vibrate(0);
-            return gestureDetector.onTouchEvent(event);
-        });
+        NowPlayingFragment.playPauseBtn.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
 
-        NowPlayingFragment.nextBtn.setOnTouchListener((v, event) -> {
-            myVib.vibrate(0);
-            return gestureDetector.onTouchEvent(event);
-        });
+        NowPlayingFragment.prevBtn.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
 
-        NowPlayingFragment.songName.setOnTouchListener((v, event) -> {
-            myVib.vibrate(0);
-            return gestureDetector.onTouchEvent(event);
-        });
+        NowPlayingFragment.nextBtn.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
 
-        NowPlayingFragment.artistName.setOnTouchListener((v, event) -> {
-            myVib.vibrate(0);
-            return gestureDetector.onTouchEvent(event);
-        });
 
-        NowPlayingFragment.albumArt.setOnTouchListener((v, event) -> {
-            myVib.vibrate(0);
-            return gestureDetector.onTouchEvent(event);
-        });
+        NowPlayingFragment.mini_player.setOnTouchListener((v, event) -> gestureDetector.onTouchEvent(event));
 
 
     }
 
-//    private Music getMusicDetails(Uri contentUri) {
-//        String path = null;
-//        String duration;
-//        try {
-//            String[] projection = {MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.DURATION};
-//            Cursor cursor = this.getContentResolver().query(uri, projection, null, null, null);
-//            cursor.moveToFirst();
-//            int dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-//            int durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
-//            path = cursor.getString(dataColumn);
-//            duration = cursor.getString(durationColumn);
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return new Music(path, path, "artist", "album", "duration", "id", "year", "size");
-//
-//    }
+    private void showNotificationWithPreference() {
+        if (musicService != null) {
+            if (musicService.isPlaying()){
+                isPlaying = true;
+                musicService.showNotification(R.drawable.pause_noti, 1F);
+            } else {
+                isPlaying = false;
+                musicService.showNotification(R.drawable.play_noti, 0F);
+            }
+        }
+    }
 
+    private void equalizerActivityLaunch() {
+        try {
+            Intent eqIntent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+            eqIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, musicService.mediaPlayer.getAudioSessionId());
+            eqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getBaseContext().getPackageName());
+            eqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
+            startActivityForResult(eqIntent, 13);
+        }
+        catch (Exception e){
+            Toast.makeText(MusicPlayerActivity.this, "Equalizer Not Found", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     private void increaseTextSize() {
@@ -749,23 +687,20 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         // PopUp Menu click listener
         fontMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
-            if (id == R.id.item_no1) {
-                lyricsText.setTextSize(14);
+            if (id == R.id.very_small) {
+                lyricsText.setTextSize(15);
                 return true;
-            } else if (id == R.id.item_no2) {
-                lyricsText.setTextSize(16);
+            } else if (id == R.id.small) {
+                lyricsText.setTextSize(17);
                 return true;
-            } else if (id == R.id.item_no3) {
-                lyricsText.setTextSize(18);
+            } else if (id == R.id.medium) {
+                lyricsText.setTextSize(19);
                 return true;
-            } else if (id == R.id.item_no4) {
-                lyricsText.setTextSize(20);
+            } else if (id == R.id.large) {
+                lyricsText.setTextSize(21);
                 return true;
-            } else if (id == R.id.item_no5) {
-                lyricsText.setTextSize(22);
-                return true;
-            } else if (id == R.id.item_no6) {
-                lyricsText.setTextSize(24);
+            } else if (id == R.id.very_large) {
+                lyricsText.setTextSize(23);
                 return true;
             }
             return true;
@@ -784,7 +719,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int id = item.getItemId();
-                if (id == R.id.item_no1) {
+                if (id == R.id.very_small) {
                     cardView.setRadius(12);
                     shape.setImageResource(R.drawable.square);
 //                            rotateAnim.setVisibility(View.INVISIBLE);
@@ -792,7 +727,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     animStarterForSquare();
                     rotateAnim.setImageResource(R.drawable.anim_off);
                     return true;
-                } else if (id == R.id.item_no2) {
+                } else if (id == R.id.small) {
                     cardView.setRadius(30);
                     shape.setImageResource(R.drawable.rounded_square);
 //                            rotateAnim.setVisibility(View.INVISIBLE);
@@ -800,7 +735,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     animStarterForSquare();
                     rotateAnim.setImageResource(R.drawable.anim_off);
                     return true;
-                } else if (id == R.id.item_no3) {
+                } else if (id == R.id.medium) {
                     cardView.setRadius(600);
 //                            cardViewUn.setRadius(600);
                     isAnim = false;
@@ -811,7 +746,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     animStarterForSquare();
                     rotateAnim.setImageResource(R.drawable.anim_off);
                     return true;
-                } else if (id == R.id.item_no4) {
+                } else if (id == R.id.large) {
                     cardView.setRadius(600);
                     shape.setImageResource(R.drawable.anim_circle);
                     isAnim = true;
@@ -1065,17 +1000,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         }
     }
 
-//    private void startPlayingByUrl() {
-//        try {
-//            //  start playing
-//            Intent intent = new Intent(this, MusicService.class);
-////            intent.putExtra("url", url);
-//            startService(intent);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            Toast.makeText(this, e.toString() , Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     private void startPlaying(){
         if (listSongs != null) {
@@ -1129,8 +1053,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                 newPosition = musicService.getDuration();
                 Toast.makeText(MusicPlayerActivity.this, "End of the song", Toast.LENGTH_SHORT).show();
             }
+
+
             if (musicService != null) {
                 musicService.seekTo(newPosition);
+                showNotificationWithPreference();
             }
         }
     }
@@ -1145,87 +1072,15 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
             } else {
                 newPosition = 0;
                 Toast.makeText(MusicPlayerActivity.this, "Start of the song", Toast.LENGTH_SHORT).show();
-                if (musicService != null) {
-                    if (isPlaying){
-                        musicService.showNotification(R.drawable.pause_noti, 1F);
-                    }else {
-                        musicService.showNotification(R.drawable.play_noti, 0F);
 
-                    }
-                }
             }
             if (musicService != null) {
                 musicService.seekTo(newPosition);
+                showNotificationWithPreference();
             }
         }
     }
 
-
-//    @SuppressLint("SetTextI18n")
-//    private void displaySongDetailsPopup() {
-////  //       Create a dialog to show song details
-////        position = getIntent().getIntExtra("position", -1);
-////        String sender = getIntent().getStringExtra("sender");
-////
-////        if (sender != null && sender.equals("albumDetails")) {
-////            listSongs = albumFiles;
-////        } else {
-////            listSongs = mFiles;
-////        }
-//
-//        final Dialog dialog = new Dialog(MusicPlayerActivity.this);
-//        dialog.requestWindowFeature(Window.FEATURE_SWIPE_TO_DISMISS);
-//        dialog.setCancelable(true);
-//        dialog.setCanceledOnTouchOutside(true);
-//        dialog.setContentView(R.layout.song_details_popup);
-//
-////        MaterialAlertDialogBuilder dialogBuilder = new MaterialAlertDialogBuilder(this);
-////
-////        dialogBuilder.setTitle("Song Details");
-////        dialogBuilder.setIcon(R.drawable.info);
-////
-////
-////        dialogBuilder.setView(R.layout.song_details_popup);
-////
-////        dialogBuilder.setPositiveButton("OK", (dialog, which) -> {
-////
-////        });
-////
-////
-////        builder.show();
-//
-//        // Set song details
-//        TextView TitleView = dialog.findViewById(R.id.titleView);
-//        TextView titleTextView = dialog.findViewById(R.id.titleTextView);
-//        TextView artistTextView = dialog.findViewById(R.id.artistTextView);
-//        TextView albumTextView = dialog.findViewById(R.id.albumTextView);
-//        TextView yearTextView = dialog.findViewById(R.id.yearTextView);
-//        TextView durationTextView = dialog.findViewById(R.id.durationTextView);
-//        TextView sizeTextView = dialog.findViewById(R.id.sizeTextView);
-//        TextView pathTitleTextView = dialog.findViewById(R.id.pathTitleTextView);
-//        TextView pathTextView = dialog.findViewById(R.id.pathTextView);
-//
-//        titleTextView.setText("Title : " + currentSong.getTitle());
-//        artistTextView.setText("Artist : " + currentSong.getArtist());
-//        albumTextView.setText("Album : " + currentSong.getAlbum());
-//        yearTextView.setText("Year : "+ currentSong.getYear());
-//        durationTextView.setText("Duration : " + millisecondsToTime(Integer.parseInt(currentSong.getDuration())));
-//        sizeTextView.setText("Size : "+ formatMB(Integer.parseInt(currentSong.getSize())));
-//        pathTitleTextView.setText("File path: ");
-//        pathTextView.setText(currentSong.getPath());
-//
-//
-//        // Close button
-//        Button closeButton = dialog.findViewById(R.id.closeButton);
-//        closeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//            }
-//        });
-////
-//        dialog.show();
-//    }
 
 
     private void copyToClipboard() {
@@ -1338,24 +1193,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         NowPlayingFragment.mini_player_progressBar.setTrackCornerRadius(12);
 //        totalDuration = musicService.getDuration();
 
-//        byte[] art = retriever.getEmbeddedPicture();
-//        Bitmap bitmap;
-
         if (thumb != null) {
 
             musicCover.setPadding(0, 0, 0, 0);
 
             musicCover.setImageBitmap(thumb);
             //        settingImageArt on Mini player
-            if (thumb != null){
-                albumArt.setImageBitmap(thumb);
-            }
-            else {
-                Glide.with(getBaseContext()).load(R.drawable.music_note_player).into(albumArt);
-            }
-//            bitmap = BitmapFactory.decodeByteArray(art, 0, art.length);
-//            //            animation
-//            ImageAnimation(getBaseContext(), musicCover, bitmap);
+            albumArt.setImageBitmap(thumb);
+
 
             Palette.from(thumb).generate(new Palette.PaletteAsyncListener() {
                 @Override
@@ -1400,7 +1245,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                                 GradientDrawable.Orientation.RIGHT_LEFT,
                                 new int[]{lightColor1, lightColor2, lightColor3, lightColor4});
 
-                        gradientDrawableMiniPlayer.setCornerRadius(17);
+                        gradientDrawableMiniPlayer.setCornerRadius(23);
 
                         NowPlayingFragment.mini_player.setBackground(gradientDrawableMiniPlayer);
 
@@ -1409,8 +1254,15 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
                         songTitleTv.setTextColor(lightVibrantColor);
                         artistTv.setTextColor(lightVibrantColor);
+                        lyricsTitle.setTextColor(lightVibrantColor);
+                        lyricsText.setTextColor(Color.WHITE);
                         totalTimeTv.setTextColor(lightVibrantColor);
                         currentTimeTv.setTextColor(lightVibrantColor);
+
+                        backBtn.setColorFilter(lightVibrantColor);
+                        equalizerBtn.setColorFilter(lightVibrantColor);
+                        shape.setColorFilter(lightVibrantColor);
+                        info.setColorFilter(lightVibrantColor);
 
                         play.setColorFilter(lightVibrantColor);
                         previousBtn.setColorFilter(lightVibrantColor);
@@ -1443,6 +1295,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                             NowPlayingFragment.nextBtn.setColorFilter(Color.WHITE);
                             NowPlayingFragment.prevBtn.setColorFilter(Color.WHITE);
                             mini_player_progressBar.setIndicatorColor(Color.WHITE);
+//                            playPauseBtn.setBackgroundColor(Color.parseColor("#E8DEF8"));
 
                         }
                         if (isLoop){
@@ -1480,6 +1333,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 //            getWindow().setStatusBarColor(Color.BLACK);
 
             musicCover.setImageResource(R.drawable.music_note_player);
+            albumArt.setImageResource(R.drawable.music_note);
 
             if (isNight) {
 
@@ -1487,6 +1341,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 //                        GradientDrawable.Orientation.BOTTOM_TOP,
 //                        new int[]{Color.parseColor("#141B1B"), Color.parseColor("#141B1B"), Color.parseColor("#141B1B"), Color.parseColor("#141B1B")}
 //                );
+
+                musicCover.setImageResource(R.drawable.music_note_player);
+                albumArt.setImageResource(R.drawable.music_note);
 
                 GradientDrawable gradientDrawable = new GradientDrawable(
                         GradientDrawable.Orientation.BOTTOM_TOP,
@@ -1506,15 +1363,22 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         new int[]{Color.BLACK, Color.BLACK, Color.BLACK, Color.parseColor("#141218"), Color.parseColor("#242B2E"), Color.parseColor("#414F55"), Color.parseColor("#61757E"), Color.parseColor("#7D96A2"), Color.parseColor("#8DABB8")} // You can modify this array to create different gradients
                 );
 
-                gradientDrawableMiniPlayer.setCornerRadius(17);
+                gradientDrawableMiniPlayer.setCornerRadius(23);
 
                 NowPlayingFragment.mini_player.setBackground(gradientDrawableMiniPlayer);
 
 
                 songTitleTv.setTextColor(Color.WHITE);
                 artistTv.setTextColor(Color.WHITE);
+                lyricsTitle.setTextColor(Color.WHITE);
+                lyricsText.setTextColor(Color.WHITE);
                 currentTimeTv.setTextColor(Color.WHITE);
                 totalTimeTv.setTextColor(Color.WHITE);
+
+                backBtn.setColorFilter(Color.WHITE);
+                equalizerBtn.setColorFilter(Color.WHITE);
+                shape.setColorFilter(Color.WHITE);
+                info.setColorFilter(Color.WHITE);
 
                 play.setColorFilter(Color.WHITE);
                 previousBtn.setColorFilter(Color.WHITE);
@@ -1536,6 +1400,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                 NowPlayingFragment.playPauseBtn.setColorFilter(Color.WHITE);
                 NowPlayingFragment.nextBtn.setColorFilter(Color.WHITE);
                 NowPlayingFragment.prevBtn.setColorFilter(Color.WHITE);
+//                NowPlayingFragment.playPauseBtn.setBackgroundColor(Color.parseColor("#4A4458"));
 
                 if (isLoop){
                     loop.setColorFilter(Color.WHITE);
@@ -1553,9 +1418,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
             } else if (isLight) {
 
+                musicCover.setImageResource(R.drawable.music_note);
+                albumArt.setImageResource(R.drawable.music_note);
+
                 GradientDrawable gradientDrawable = new GradientDrawable(
                         GradientDrawable.Orientation.BOTTOM_TOP,
-                        new int[]{Color.BLACK, Color.BLACK, Color.BLACK, Color.parseColor("#141218"), Color.parseColor("#242B2E"), Color.parseColor("#414F55"), Color.parseColor("#61757E"), Color.parseColor("#7D96A2"), Color.parseColor("#8DABB8")} // You can modify this array to create different gradients
+                        new int[]{Color.parseColor("#FEF7FF"), Color.parseColor("#FEF7FF"), Color.parseColor("#FEf7FF")}
                 );
 
                 // Set the gradient drawable as the background of your music player view
@@ -1569,44 +1437,52 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         new int[]{Color.parseColor("#E9EDFA"), Color.parseColor("#E0E0FF"), Color.parseColor("#DDDDFF")}
                 );
 
-                gradientDrawableMiniPlayer.setCornerRadius(17);
+                gradientDrawableMiniPlayer.setCornerRadius(23);
 
                 NowPlayingFragment.mini_player.setBackground(gradientDrawableMiniPlayer);
 
-                songTitleTv.setTextColor(Color.WHITE);
-                artistTv.setTextColor(Color.WHITE);
-                currentTimeTv.setTextColor(Color.WHITE);
-                totalTimeTv.setTextColor(Color.WHITE);
+                songTitleTv.setTextColor(Color.BLACK);
+                artistTv.setTextColor(Color.BLACK);
+                lyricsTitle.setTextColor(Color.BLACK);
+                lyricsText.setTextColor(Color.BLACK);
+                currentTimeTv.setTextColor(Color.BLACK);
+                totalTimeTv.setTextColor(Color.BLACK);
 
-                play.setColorFilter(Color.WHITE);
-                previousBtn.setColorFilter(Color.WHITE);
-                nextBtn.setColorFilter(Color.WHITE);
-                volumeBtn.setColorFilter(Color.WHITE);
-                lyricsBtn.setColorFilter(Color.WHITE);
-                favBtn.setColorFilter(Color.WHITE);
-                rotateAnim.setColorFilter(Color.WHITE);
-                moreOptionBtn.setColorFilter(Color.WHITE);
+                backBtn.setColorFilter(Color.BLACK);
+                equalizerBtn.setColorFilter(Color.BLACK);
+                shape.setColorFilter(Color.BLACK);
+                info.setColorFilter(Color.BLACK);
 
-                seekBar.setThumbTintList(ColorStateList.valueOf(Color.WHITE));
-                seekBar.setProgressTintList(ColorStateList.valueOf(Color.WHITE));
-                seekVol.setThumbTintList(ColorStateList.valueOf(Color.WHITE));
-                seekVol.setProgressTintList(ColorStateList.valueOf(Color.WHITE));
-                NowPlayingFragment.mini_player_progressBar.setIndicatorColor(R.color.title);
+                play.setColorFilter(Color.BLACK);
+                previousBtn.setColorFilter(Color.BLACK);
+                nextBtn.setColorFilter(Color.BLACK);
+                volumeBtn.setColorFilter(Color.BLACK);
+                lyricsBtn.setColorFilter(Color.BLACK);
+                favBtn.setColorFilter(Color.BLACK);
+                rotateAnim.setColorFilter(Color.BLACK);
+                moreOptionBtn.setColorFilter(Color.BLACK);
+
+                seekBar.setThumbTintList(ColorStateList.valueOf(Color.BLACK));
+                seekBar.setProgressTintList(ColorStateList.valueOf(Color.BLACK));
+                seekVol.setThumbTintList(ColorStateList.valueOf(Color.BLACK));
+                seekVol.setProgressTintList(ColorStateList.valueOf(Color.BLACK));
+                NowPlayingFragment.mini_player_progressBar.setIndicatorColor(R.color.black);
 
                 NowPlayingFragment.songName.setTextColor(R.color.black);
                 NowPlayingFragment.artistName.setTextColor(R.color.black);
                 NowPlayingFragment.playPauseBtn.setColorFilter(R.color.black);
                 NowPlayingFragment.nextBtn.setColorFilter(R.color.black);
                 NowPlayingFragment.prevBtn.setColorFilter(R.color.black);
+//                NowPlayingFragment.playPauseBtn.setBackgroundColor(Color.parseColor("#E8DEF8"));
 
                 if (isLoop){
-                    loop.setColorFilter(Color.WHITE);
+                    loop.setColorFilter(Color.BLACK);
                 }else {
                     loop.setColorFilter(R.color.btn_off);
                 }
 
                 if (isShuffle){
-                    shuffle.setColorFilter(Color.WHITE);
+                    shuffle.setColorFilter(Color.BLACK);
                 }else {
                     shuffle.setColorFilter(R.color.btn_off);
                 }
@@ -1619,20 +1495,20 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
     }
 
 
-    private void nextThreadBtn() {
-        Thread nextThread = new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                nextBtn.setOnClickListener(view -> {
-                    nextBtnClicked();
-                    nextBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
-
-                });
-            }
-        };
-        nextThread.start();
-    }
+//    private void nextThreadBtn() {
+//        nextThread = new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
+//                nextBtn.setOnClickListener(view -> {
+//                    nextBtnClicked();
+//                    nextBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_next_prev_btn));
+//
+//                });
+//            }
+//        };
+//        nextThread.start();
+//    }
 
     @SuppressLint("SetTextI18n")
     public void nextBtnClicked() {
@@ -1693,18 +1569,19 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         totalTimeTv.setText(millisecondsToTime(totalDuration));
 
                     }
-                    handler.postDelayed(this, 50);
+                    handler.postDelayed(this, 100);
                 }
             });
 
             musicService.onCompleted();
+            isNext = true;
+            isPlaying = true;
+            musicService.start();
             musicService.showNotification(R.drawable.pause_noti, 1F);
             playPauseBtn.setImageResource(R.drawable.pause_bottom);
             play.setImageResource(R.drawable.pause);
-            musicService.start();
-            isPlaying = true;
-            //            setting Music Cover art
             setImageArt();
+            //            setting Music Cover art
 
         }
         else {
@@ -1760,15 +1637,16 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         totalTimeTv.setText(millisecondsToTime(totalDuration));
 
                     }
-                    handler.postDelayed(this, 50);
+                    handler.postDelayed(this, 100);
                 }
             });
 
             musicService.onCompleted();
+            isNext = true;
             musicService.showNotification(R.drawable.play_noti, 1F);
             play.setImageResource(R.drawable.play);
             playPauseBtn.setImageResource(R.drawable.play_bottom);
-            //            setting Music Cover art
+            // setting Mini Music Cover art
             setImageArt();
 
         }
@@ -1796,20 +1674,20 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         return random.nextInt(i + 1);
     }
 
-    private void prevThreadBtn() {
-        Thread prevThread = new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                previousBtn.setOnClickListener(view -> {
-                    prevBtnClicked();
-                    previousBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
-
-                });
-            }
-        };
-        prevThread.start();
-    }
+//    private void prevThreadBtn() {
+//        prevThread = new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
+//                previousBtn.setOnClickListener(view -> {
+//                    prevBtnClicked();
+//                    previousBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_next_prev_btn));
+//
+//                });
+//            }
+//        };
+//        prevThread.start();
+//    }
 
     public void prevBtnClicked() {
 
@@ -1872,13 +1750,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         totalTimeTv.setText(millisecondsToTime(totalDuration));
 
                     }
-                    handler.postDelayed(this, 50);
+                    handler.postDelayed(this, 100);
                 }
             });
 
             musicService.onCompleted();
-            musicService.start();
+            isPrev = true;
             isPlaying = true;
+            musicService.start();
             musicService.showNotification(R.drawable.pause_noti, 1F);
             play.setImageResource(R.drawable.pause);
             playPauseBtn.setImageResource(R.drawable.pause_bottom);
@@ -1941,16 +1820,17 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         totalTimeTv.setText(millisecondsToTime(totalDuration));
 
                     }
-                    handler.postDelayed(this, 50);
+                    handler.postDelayed(this, 100);
                 }
             });
 
             musicService.onCompleted();
+            isPrev = true;
+            isPlaying = true;
+            musicService.start();
             musicService.showNotification(R.drawable.play_noti, 1F);
             play.setImageResource(R.drawable.play);
             playPauseBtn.setImageResource(R.drawable.play_bottom);
-            musicService.start();
-            isPlaying = true;
 //            setting MusicCover art
             setImageArt();
 
@@ -1984,20 +1864,27 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
     }
 
 
-    private void playThreadBtn() {
-        Thread playThread = new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                play.setOnClickListener(view -> {
-                    playPauseBtnClicked();
-                    play.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
-
-                });
-            }
-        };
-        playThread.start();
-    }
+//    private void playThreadBtn() {
+//        playThread = new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
+//                play.setOnClickListener(view -> {
+//                    playPauseBtnClicked();
+//
+//                    if (musicService.isPlaying()){
+////                    pause
+//                        play.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_once_pause));
+//                    } else {
+////                    play
+//                        play.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_once_play));
+//                    }
+//
+//                });
+//            }
+//        };
+//        playThread.start();
+//    }
 
     public void playPauseBtnClicked() {
 
@@ -2005,8 +1892,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 //            play.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_once_play));
             if (musicService.isPlaying()) {
                 musicService.pause();
-                isPlaying = false;
                 play.setImageResource(R.drawable.play);
+                isPlaying = false;
                 musicService.showNotification(R.drawable.play_noti, 0F);
                 playPauseBtn.setImageResource(R.drawable.play_bottom);
 
@@ -2026,7 +1913,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                             totalTimeTv.setText(millisecondsToTime(totalDuration));
 
                         }
-                        handler.postDelayed(this, 10);
+                        handler.postDelayed(this, 100);
                     }
                 });
 
@@ -2035,8 +1922,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 //            play.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_once_pause));
 
                 musicService.start();
-                isPlaying = true;
                 play.setImageResource(R.drawable.pause);
+                isPlaying = true;
                 musicService.showNotification(R.drawable.pause_noti, 1F);
                 playPauseBtn.setImageResource(R.drawable.pause_bottom);
 
@@ -2056,7 +1943,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                             totalTimeTv.setText(millisecondsToTime(totalDuration));
 
                         }
-                        handler.postDelayed(this, 10);
+                        handler.postDelayed(this, 100);
                     }
                 });
             }
@@ -2168,19 +2055,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         Intent intent = new Intent(this, MusicService.class);
         bindService(intent, this, BIND_AUTO_CREATE);
         super.onResume();
-        playThreadBtn();
-        prevThreadBtn();
-        nextThreadBtn();
 
-//        if (mFiles != null){
-//            nowPlayingSongs.addAll(albums);
-//        }
+//        playThreadBtn();
+//        prevThreadBtn();
+//        nextThreadBtn();
 
-//        if (!(nowPlayingSongs.size() < 1)){
-//            NowPlayingAdapter nowPlayingAdapter = new NowPlayingAdapter(this, nowPlayingSongs);
-//            recyclerView.setAdapter(nowPlayingAdapter);
-//            recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-//        }
+
     }
 
     @Override
@@ -2192,9 +2072,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 13  ||  requestCode == RESULT_OK){
-            return;
-        }
+        if (requestCode == 13  ||  requestCode == RESULT_OK){}
     }
 
     @Override
@@ -2206,9 +2084,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
         initializeLayout();
 
+        myVib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
+
         playingSetUp();
 
-        myVib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
         musicService.onCompleted();
 
 //        requestAudioFocus();
@@ -2248,10 +2127,16 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
     @SuppressLint("SetTextI18n")
     private void initializeLayout() {
         fIndex = Music.favouriteChecker(listSongs.get(position).getId());
-        isPlaying = true;
         setNotificationArt();
         initializePlayerMetaData();
-        musicService.showNotification(R.drawable.pause_noti, 1F);
+
+        if (isNext  ||  isPrev) {
+            isPlaying = true;
+            musicService.showNotification(R.drawable.pause_noti, 1F);
+        }
+        else {
+            showNotificationWithPreference();
+        }
 
         totalDuration = musicService.getDuration();
         currentDuration = musicService.getCurrentPosition();
@@ -2377,8 +2262,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }
@@ -2390,36 +2275,4 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         super.onBackPressed();
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//
-////        if (mFiles.get(position).getId() == "id"  &&  !isPlaying){
-////            exit();
-////        }
-//    }
-
-
-    //    public void openCloseBottomSheet(View view) {
-//        final Dialog bottomSheetDialog = new Dialog(this);
-//        bottomSheetDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-////        bottomSheetDialog.setTitle("Up Next");
-//        bottomSheetDialog.setContentView(R.layout.up_next_bottom_sheet_layout);
-//
-//
-//        TextView nowPlayingTitle = bottomSheetDialog.findViewById(R.id.now_playing_song_title);
-//        TextView nowPlayingArtist = bottomSheetDialog.findViewById(R.id.now_playing_song_artist);
-//        ImageView nowPlayingArt = bottomSheetDialog.findViewById(R.id.now_playing_art);
-//
-//        nowPlayingTitle.setText(currentSong.getTitle());
-//        nowPlayingArtist.setText(currentSong.getArtist());
-//        nowPlayingArt.setImageBitmap(thumb);
-//
-//
-//        bottomSheetDialog.show();
-//        bottomSheetDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        bottomSheetDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        bottomSheetDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-//        bottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
-//    }
 }

@@ -15,11 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.infinite.virtualmusicplayer.model.Music;
-import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
 import com.infinite.virtualmusicplayer.R;
+import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
+import com.infinite.virtualmusicplayer.model.Music;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyViewHolder> {
@@ -50,8 +49,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
 
         byte[] image = getAlbumArt(favouriteFiles.get(position).getPath());
         if (image != null){
-            Glide.with(context).asBitmap().placeholder(R.drawable.music_note_placeholder)
-                    .load(image)
+            Glide.with(context)
+                    .load(image).placeholder(R.drawable.music_note_placeholder)
                     .into(holder.favSongImg);
         }
         else {
@@ -108,8 +107,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }

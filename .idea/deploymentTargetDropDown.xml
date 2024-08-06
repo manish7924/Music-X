@@ -12,23 +12,14 @@
         </deviceKey>
       </Target>
     </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2024-05-09T16:54:54.026939400Z" />
+    <timeTargetWasSelectedWithDropDown value="2024-07-30T08:19:14.827419700Z" />
     <runningDeviceTargetsSelectedWithDialog>
       <Target>
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\LENOVO\.android\avd\Pixel_4_API_31.avd" />
-          </Key>
-        </deviceKey>
-      </Target>
-      <Target>
-        <type value="RUNNING_DEVICE_TARGET" />
-        <deviceKey>
-          <Key>
             <type value="SERIAL_NUMBER" />
-            <value value="2818263110BA0AG2" />
+            <value value="adb-2818263110BA0AG2-uJLTpc._adb-tls-connect._tcp" />
           </Key>
         </deviceKey>
       </Target>

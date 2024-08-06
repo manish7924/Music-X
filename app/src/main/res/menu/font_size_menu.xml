@@ -3,28 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/item_no1"
-        android:title="14" />
+        android:id="@+id/very_small"
+        android:title="@string/very_small" />
 
     <item
-        android:id="@+id/item_no2"
-        android:title="16" />
+        android:id="@+id/small"
+        android:title="@string/small" />
 
     <item
-        android:id="@+id/item_no3"
-        android:title="18" />
+        android:id="@+id/medium"
+        android:title="@string/medium" />
 
     <item
-        android:id="@+id/item_no4"
-        android:title="20" />
+        android:id="@+id/large"
+        android:title="@string/large" />
 
     <item
-        android:id="@+id/item_no5"
-        android:title="22" />
-
-    <item
-        android:id="@+id/item_no6"
-        android:title="24" />
+        android:id="@+id/very_large"
+        android:title="@string/very_large" />
 
 
 </menu>
