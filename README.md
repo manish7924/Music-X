@@ -84,7 +84,7 @@ We welcome contributions to improve Music X. To contribute:
    
 4. Make your changes and commit them
    ```sh
-   git commit -m 'Add new feature
+   git commit -m Add new feature
    ```
    
 7. Push to the branch
@@ -96,7 +96,7 @@ We welcome contributions to improve Music X. To contribute:
 
 ## License
 
-Music X is licensed under the MIT License. See the [LICENSE](https://github.com/manish7924/Music-X/blob/main/LICENSE) file for more information.
+**Music X** is licensed under the MIT License. See the [LICENSE](https://github.com/manish7924/Music-X/blob/main/LICENSE) file for more information.
 
 ## Contact
 
