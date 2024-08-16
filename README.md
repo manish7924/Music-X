@@ -4,11 +4,11 @@
 
 ## Screenshots
 
-![App Screenshot 1](https://raw.githubusercontent.com/manish7924/Music-X/master/ResizedImage_2024-06-03_21-22-21_2129.png)
-![App Screenshot 2](https://raw.githubusercontent.com/manish7924/Music-X/master/ResizedImage_2024-06-03_21-18-45_2089.png)
-![App Screenshot 3](https://raw.githubusercontent.com/manish7924/Music-X/master/ResizedImage_2024-06-03_21-22-21_2129.png)
-![App Screenshot 4](https://raw.githubusercontent.com/manish7924/Music-X/master/ResizedImage_2024-06-03_21-18-45_2089.png)
-![App Screenshot 5](https://raw.githubusercontent.com/manish7924/Music-X/master/ResizedImage_2024-06-03_21-22-21_2129.png)
+![App Screenshot 1](https://raw.githubusercontent.com/manish7924/Music-X/master/app/src/main/res/layout-land/1.png)
+![App Screenshot 2](https://raw.githubusercontent.com/manish7924/Music-X/master/app/src/main/res/layout-land/2.png)
+![App Screenshot 3](https://raw.githubusercontent.com/manish7924/Music-X/master/app/src/main/res/layout-land/3.png)
+![App Screenshot 4](https://raw.githubusercontent.com/manish7924/Music-X/master/app/src/main/res/layout-land/4.png)
+![App Screenshot 5](https://raw.githubusercontent.com/manish7924/Music-X/master/app/src/main/res/layout-land/5.png)
 
 ## Features
 
