@@ -1,19 +1,16 @@
 package com.infinite.virtualmusicplayer.fragments;
 
 import static com.infinite.virtualmusicplayer.activities.MainActivity.artists;
-import static com.infinite.virtualmusicplayer.activities.MainActivity.musicFiles;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isShuffle;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,10 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.infinite.virtualmusicplayer.adapters.ArtistAdapter;
-import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
 import com.infinite.virtualmusicplayer.R;
+import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
+import com.infinite.virtualmusicplayer.adapters.ArtistAdapter;
 
 import java.util.Random;
 
@@ -82,8 +78,10 @@ public class ArtistFragment extends Fragment {
                         public void onFinish() {
                             swipeRefreshLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_in_refresh));
 
-                            Snackbar.make(swipeRefreshLayout, artists.size()+" Artists Found", Snackbar.LENGTH_SHORT)
-                                    .setAction("OK", view -> {}).setActionTextColor(Color.parseColor("#00B0FF")).show();
+//                            Snackbar.make(swipeRefreshLayout, artists.size()+" Artists Found", Snackbar.LENGTH_SHORT)
+//                                    .setAction("OK", view -> {}).setActionTextColor(Color.parseColor("#00B0FF")).show();
+
+                            Toast.makeText(getContext(), artists.size() +  " Artists Found", Toast.LENGTH_SHORT).show();
 
 
                         }

@@ -64,6 +64,7 @@
     <color name="play_bg">#E8DEF8</color>
     <color name="title">#00B0FF</color>
     <color name="my_blue">#00B7FF</color>
+    <color name="blue_grad">#D0F4FF</color>
 
     <color name="orange">#E65100</color>
     <color name="btn">#000000</color>

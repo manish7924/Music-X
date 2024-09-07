@@ -54,7 +54,7 @@ public class About extends AppCompatActivity {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Share song with");
-        String string = "Try this simple Music player app Music X with amazing features" +
+        String string = "Try this Music player app Music X with amazing features" +
                 "" +
                 "\n\nhttps://github.com/manish7924/Music-X/releases";
         shareIntent.putExtra(Intent.EXTRA_TEXT, string);

@@ -16,7 +16,7 @@
             android:id="@+id/widgetImageCover"
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:src="@drawable/music_icon"
+            android:src="@drawable/icon"
             android:contentDescription="@string/Cover" />
 
 
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/title"
                 android:layout_weight="1"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
             <TextView

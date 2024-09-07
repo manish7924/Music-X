@@ -27,6 +27,7 @@
             android:onClick="favBackBtn"
             android:padding="10dp"
             android:src="@drawable/back_btn"
+            android:contentDescription="@string/back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,6 +47,7 @@
 
 
     </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favouriteRv"
@@ -70,22 +72,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="76dp"
-        android:backgroundTint="@color/fab_color"
-        android:contentDescription="@string/shuffle_song"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="80dp"
+        android:contentDescription="@string/shuffle"
         android:src="@drawable/shuffle_on"
-        android:tooltipText="Shuffle Song"
-        android:visibility="visible"
         app:fabSize="normal"
+        android:visibility="visible"
+        android:tooltipText="Shuffle"
         app:icon="@drawable/shuffle_on"
+        android:backgroundTint="@color/fab_color"
         app:iconSize="50dp"
-        app:iconTint="@color/title"
+        app:tint="@color/my_blue"
+        app:iconTint="@color/my_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.954"
-        app:layout_constraintStart_toStartOf="parent"
-        app:tint="@color/title"
+        app:layout_goneMarginBottom="50dp"
         tools:targetApi="o" />
 
 

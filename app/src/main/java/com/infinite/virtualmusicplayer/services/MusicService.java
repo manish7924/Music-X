@@ -1,9 +1,5 @@
 package com.infinite.virtualmusicplayer.services;
 
-import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.ACTION_NEXT;
-import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.ACTION_PLAY;
-import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.ACTION_PREVIOUS;
-import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.CHANNEL_ID_2;
 import static com.infinite.virtualmusicplayer.activities.MainActivity.ARTIST_TO_FRAG;
 import static com.infinite.virtualmusicplayer.activities.MainActivity.PATH_TO_FRAG;
 import static com.infinite.virtualmusicplayer.activities.MainActivity.SHOW_MINI_PLAYER;
@@ -15,6 +11,10 @@ import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.mus
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.thumb;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.albumArt;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.songName;
+import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.ACTION_NEXT;
+import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.ACTION_PLAY;
+import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.ACTION_PREVIOUS;
+import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.CHANNEL_ID_2;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -37,15 +37,14 @@ import androidx.core.app.NotificationCompat;
 import androidx.media.session.MediaButtonReceiver;
 
 import com.bumptech.glide.Glide;
-import com.infinite.virtualmusicplayer.model.Music;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.activities.MainActivity;
 import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
-import com.infinite.virtualmusicplayer.receivers.ActionPlaying;
 import com.infinite.virtualmusicplayer.fragments.NowPlayingFragment;
+import com.infinite.virtualmusicplayer.model.Music;
+import com.infinite.virtualmusicplayer.receivers.ActionPlaying;
 import com.infinite.virtualmusicplayer.receivers.NotificationReceiver;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MusicService extends Service implements MediaPlayer.OnCompletionListener {
@@ -433,7 +432,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 //        }
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID_2)
-                .setSmallIcon(R.drawable.music_icon)
+                .setSmallIcon(R.drawable.icon)
                 .setLargeIcon(thumb)
                 .setContentIntent(contentIntent)
                 .setContentTitle(musicServiceFiles.get(currentSongIndex).getTitle())
@@ -445,7 +444,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         .setMediaSession(mediaSession.getSessionToken()))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.EXTRA_MEDIA_SESSION)
-                .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_DEFAULT)
+                .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOnlyAlertOnce(true)
                 .build();
@@ -559,8 +558,8 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         byte[] art = retriever.getEmbeddedPicture();
         try {
             retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return art;
     }

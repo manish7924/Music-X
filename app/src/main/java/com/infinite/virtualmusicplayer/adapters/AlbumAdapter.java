@@ -58,21 +58,18 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
         }
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    String albumTitle = albumFiles.get(position).getAlbum();
-                    String albumYear = albumFiles.get(position).getYear();
-                    Intent intent = new Intent(mContext, AlbumDetails.class);
-                    intent.putExtra("albumName", albumTitle);
-                    intent.putExtra("albumTitle", albumTitle);
-                    intent.putExtra("albumYear", albumYear);
-                    mContext.startActivity(intent);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
-                }
+        holder.itemView.setOnClickListener(view -> {
+            try {
+                String albumTitle = albumFiles.get(position).getAlbum();
+                String albumYear = albumFiles.get(position).getYear();
+                Intent intent = new Intent(mContext, AlbumDetails.class);
+                intent.putExtra("albumName", albumTitle);
+                intent.putExtra("albumTitle", albumTitle);
+                intent.putExtra("albumYear", albumYear);
+                mContext.startActivity(intent);
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }

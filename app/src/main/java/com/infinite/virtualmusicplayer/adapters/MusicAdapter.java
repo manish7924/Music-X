@@ -12,8 +12,6 @@ import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaMetadataRetriever;
@@ -79,44 +77,44 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
         byte[] image = getAlbumArt(mFiles.get(position).getPath());
         if (image != null){
             Glide.with(context)
-                    .load(image).placeholder(R.drawable.music_note_placeholder2)
+                    .load(image).placeholder(R.drawable.music_note)
                     .into(holder.albumArt);
 
         }
         else {
 //                holder.albumArt.setPadding(12, 12, 12, 12);
             Glide.with(context)
-                    .load(R.drawable.music_note_placeholder2)
+                    .load(R.drawable.music_note).centerInside()
                     .into(holder.albumArt);
 
         }
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceAsColor")
-            @Override
-            public void onClick(View view) {
-                if (isLoop || isShuffle){
-                    lightVibrantColor = Color.WHITE;
-                    if (isLoop){
-                        isLoop = false;
-                    }
-                }
-
-                try {
-                    Intent intent = new Intent(context, MusicPlayerActivity.class);
-                    intent.putExtra("position", position);
-                    context.startActivity(intent);
+        holder.albumArt.setOnClickListener(view -> showSongDetails(position));
 
 
+        holder.itemView.setOnClickListener(view -> {
+            if (isLoop || isShuffle){
+                lightVibrantColor = Color.WHITE;
+                if (isLoop){
+                    isLoop = false;
                 }
-                catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(context, "Exception"+ e.toString(), Toast.LENGTH_SHORT).show();
-                }
+            }
+
+
+            try {
+                Intent intent = new Intent(context, MusicPlayerActivity.class);
+                intent.putExtra("position", position);
+                context.startActivity(intent);
 
 
             }
+            catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(context, "Exception"+ e, Toast.LENGTH_SHORT).show();
+            }
+
+
         });
 
         holder.menuMore.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +131,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
 
                 fIndex = Music.favouriteChecker(mFiles.get(position).getId());
 
-                ImageView nowPlayingSongImg = dialog.findViewById(R.id.nowPlayingSongImg);
+                ImageView selectedSongImg = dialog.findViewById(R.id.selectedSongImg);
                 ImageView addToFavourite = dialog.findViewById(R.id.addToFavBtn);
                 TextView nowPlayingSongName = dialog.findViewById(R.id.nowPlayingSongName);
                 TextView nowPlayingSongArtist = dialog.findViewById(R.id.nowPlayingSongArtist);
@@ -211,6 +209,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
 //                        dialog.dismiss();
                 });
 
+                selectedSongImg.setOnClickListener(view -> {
+                    showSongDetails(position);
+//                    dialog.dismiss();
+                });
+
                 details.setOnClickListener(view -> {
                     showSongDetails(position);
                     dialog.dismiss();
@@ -226,14 +229,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
                 if (nowPlayingImage != null){
                     Glide.with(context)
                             .load(nowPlayingImage).placeholder(R.drawable.music_note)
-                            .into(nowPlayingSongImg);
-                    nowPlayingSongImg.setPadding(0, 0, 0, 0);
+                            .into(selectedSongImg);
+                    selectedSongImg.setPadding(0, 0, 0, 0);
                 }
                 else {
-                    nowPlayingSongImg.setPadding(12, 12, 12, 12);
+                    selectedSongImg.setPadding(12, 12, 12, 12);
                     Glide.with(context)
-                            .load(R.drawable.music_note)
-                            .into(nowPlayingSongImg);
+                            .load(R.drawable.music_note).centerInside()
+                            .into(selectedSongImg);
                 }
 
 
@@ -319,12 +322,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
 
         // Close button
         Button closeButton = dialog.findViewById(R.id.closeButton);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        closeButton.setOnClickListener(v -> dialog.dismiss());
 //
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

@@ -60,21 +60,18 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         }
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    Intent intent = new Intent(context, MusicPlayerActivity.class);
-                    intent.putExtra("position", position);
-                    intent.putExtra("favIntent","FavIntent");
-                    context.startActivity(intent);
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(context, "Exception"+ e, Toast.LENGTH_SHORT).show();
-                }
-
+        holder.itemView.setOnClickListener(view -> {
+            try {
+                Intent intent = new Intent(context, MusicPlayerActivity.class);
+                intent.putExtra("position", position);
+                intent.putExtra("favIntent","FavIntent");
+                context.startActivity(intent);
             }
+            catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(context, "Exception"+ e, Toast.LENGTH_SHORT).show();
+            }
+
         });
 
     }

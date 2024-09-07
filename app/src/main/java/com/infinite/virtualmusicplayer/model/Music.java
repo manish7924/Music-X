@@ -197,6 +197,8 @@ public class Music {
     }
 
 
+
+
 //    public static ArrayList<Music> checkPlaylist(ArrayList<Music> playlist) {
 //        for (int i = 0; i < playlist.size(); i++) {
 //            File file = new File(playlist.get(i).getPath());

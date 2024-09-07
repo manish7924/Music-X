@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="190dp"
+    android:id="@+id/header_background"
+    android:background="@android:color/transparent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <RelativeLayout
+        android:id="@+id/card_relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="2dp"
+        android:paddingVertical="0dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@id/card_relative_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="80dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:strokeColor="@android:color/transparent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="3dp">
+
+            <ImageView
+                android:id="@+id/header_imageView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:background="@android:color/black"
+                android:contentDescription="@string/now_playing"
+                android:scaleType="fitCenter"
+                android:src="@drawable/music_note"
+                tools:ignore="ImageContrastCheck" />
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+        <TextView
+            android:id="@+id/header_songTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:tooltipText="@string/song_name"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/poppins_rg"
+            android:layout_marginTop="14dp"
+            android:layout_marginStart="5dp"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:fadingEdgeLength="20dp"
+            android:textFontWeight="700"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:background="@android:color/transparent"
+            android:singleLine="true"
+            android:layout_toEndOf="@id/card_relative_layout"
+            android:textSize="15sp"
+            android:maxLines="1"
+            tools:targetApi="p" />
+
+        <TextView
+            android:id="@+id/header_songArtist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header_songTitle"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="1dp"
+            android:layout_toEndOf="@id/card_relative_layout"
+            android:ellipsize="end"
+            android:fontFamily="@font/poppins_rg"
+            android:maxLines="1"
+            android:text="Artist"
+            android:textColor="@color/ar_gray"
+            android:textFontWeight="400"
+            android:textSize="12sp"
+            android:tooltipText="@string/artist_name"
+            tools:targetApi="p" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

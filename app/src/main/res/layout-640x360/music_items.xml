@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
+    android:paddingVertical="8dp"
     android:paddingHorizontal="2dp"
     android:keepScreenOn="true"
     android:background="?selectableItemBackground"
@@ -16,58 +15,54 @@
         android:id="@+id/coverCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="6dp"
+        android:layout_marginVertical="2dp"
         android:padding="0dp"
-        app:cardElevation="4dp"
-        app:strokeWidth="1dp"
+        app:cardBackgroundColor="@color/main_bg_color"
+        app:cardCornerRadius="60dp"
+        app:cardElevation="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:strokeColor="@color/myTint4"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginVertical="6dp"
-        app:cardBackgroundColor="@android:color/transparent"
-        app:cardCornerRadius="80dp">
+        app:strokeWidth="1dp">
 
         <ImageView
             android:id="@+id/music_img"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/music_note"
-            android:background="@drawable/music_bg"
-            android:contentDescription="@string/Cover" />
+            android:background="?selectableItemBackground"
+            android:contentDescription="@string/Cover"
+            android:src="@drawable/music_note" />
 
     </androidx.cardview.widget.CardView>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/nowPlayingSongLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/coverCard"
-        android:orientation="vertical"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="2dp"
         android:layout_marginStart="2dp"
-        android:paddingHorizontal="4dp"
-        android:paddingVertical="2dp"
+        android:layout_marginTop="2dp"
         android:background="@android:color/transparent"
         android:listSelector="#E9EDFA"
-        android:layout_marginEnd="4dp"
-        android:layout_toStartOf="@+id/menu_more"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/menu_more"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/coverCard"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="TextSizeCheck">
 
         <TextView
             android:id="@+id/music_file_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
             android:fadingEdge="horizontal"
             android:fontFamily="@font/poppins_rg"
-            android:paddingVertical="1dp"
-            android:scrollHorizontally="true"
+            android:maxWidth="230dp"
             android:maxLines="2"
-            android:ellipsize="end"
             android:text="@string/music"
             android:textColor="@color/black"
             android:textFontWeight="500"
@@ -84,14 +79,14 @@
             android:id="@+id/music_artist_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="200dp"
-            android:layout_marginTop="1dp"
-            android:text="@string/artist_name"
-            android:textColor="@color/ar_gray"
-            android:textSize="12sp"
-            android:singleLine="true"
-            android:maxLines="1"
+            android:layout_marginStart="4dp"
             android:ellipsize="end"
+            android:maxWidth="200dp"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@string/artist"
+            android:textColor="@color/ar_gray"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/music_file_name" />
@@ -101,12 +96,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="10dp"
             android:gravity="center"
             android:singleLine="false"
-            android:text="@string/duration"
+            android:text="@string/_00_00"
             android:textColor="@color/ar_gray"
-            android:textSize="12sp"
-            android:layout_marginEnd="10dp"
+            android:textSize="11sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -115,34 +110,21 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-<!--    <ImageView-->
-<!--        android:id="@+id/now_playing_anim"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="48dp"-->
-<!--        android:padding="10dp"-->
-<!--        android:layout_marginTop="2dp"-->
-<!--        android:layout_marginEnd="2dp"-->
-<!--        android:visibility="invisible"-->
-<!--        android:layout_toStartOf="@+id/menu_more"-->
-<!--        android:layout_marginVertical="4dp"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:src="@drawable/now_playing_anim" />-->
-
-
     <ImageView
         android:id="@+id/menu_more"
-        android:layout_width="wrap_content"
+        android:layout_width="36dp"
         android:layout_height="44dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginVertical="4dp"
         android:paddingHorizontal="7dp"
         android:paddingVertical="10dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginVertical="4dp"
         android:scaleType="center"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/more_vert" />
+        android:background="?selectableItemBackground"
+        android:src="@drawable/more_vert"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

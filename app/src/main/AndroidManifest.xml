@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.infinite.virtualmusicplayer">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission
     android:name="android.permission.READ_EXTERNAL_STORAGE"
     android:maxSdkVersion="32" />
@@ -43,7 +44,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:logo="@drawable/music_icon"
+        android:logo="@drawable/icon"
         android:preserveLegacyExternalStorage="true"
         android:requestLegacyExternalStorage="true"
         android:requestRawExternalStorageAccess="true"

@@ -60,19 +60,16 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyArtistVi
         }
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    String artistTitle = artistFiles.get(position).getArtist();
-                    Intent intent = new Intent(mContext, ArtistDetails.class);
-                    intent.putExtra("artistName", artistTitle);
-                    intent.putExtra("artistTitle", artistTitle);
-                    mContext.startActivity(intent);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
-                }
+        holder.itemView.setOnClickListener(view -> {
+            try {
+                String artistTitle = artistFiles.get(position).getArtist();
+                Intent intent = new Intent(mContext, ArtistDetails.class);
+                intent.putExtra("artistName", artistTitle);
+                intent.putExtra("artistTitle", artistTitle);
+                mContext.startActivity(intent);
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }

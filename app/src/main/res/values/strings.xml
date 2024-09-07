@@ -44,9 +44,9 @@
     <string name="application_theme">Application Theme</string>
     <string name="repeat">repeat</string>
     <string name="song_name"> </string>
+    <string name="artist_name"> </string>
     <string name="rounded_animation">Rounded Animation</string>
     <string name="choose_cover_type">Choose Cover Type</string>
-    <string name="artist_name"> </string>
     <string name="loading_song">Loading Song</string>
     <string name="night_mode">Night mode</string>
     <string name="day_mode">Day Mode</string>
@@ -61,15 +61,17 @@
     <string name="shape">shape</string>
     <string name="theme">Theme</string>
     <string name="rotateAnim">Rotate Animation</string>
-    <string name="music">Music</string>
+    <string name="music">Title</string>
     <string name="swipe_to_refresh">Swipe to Refresh</string>
     <string name="refresh">Refresh</string>
     <string name="show_volume_bar">Show Volume bar</string>
     <string name="lyrics">Lyrics</string>
-    <string name="no_lyrics">\n\n\nLyrics Not Found
-        \n\n\n\nℹ️ But you can find lyrics using <b>Search lyrics</b> 🔍 button placed in right side
-        It works only when you are connected to Internet<b>(Local Network or Wifi)</b> \n\n\n</string>
-    <string name="lyrics_not_found">\n\n\nLyrics not available for this song \n\n\n\nℹ️ Check your Internet Connection or Try again after some time</string>
+    <string name="embedded_lyrics_not_found">\n\n\nEmbedded Lyrics Not Found
+        \n\n\nℹ️ But you can find lyrics online using <b>search lyrics</b> 🔍 button placed in right side
+        It works only when you are connected to Internet<b>(Mobile Internet or Wifi)</b> \n\n\n</string>
+    <string name="finding_lyrics">\n\nFinding Lyrics\n\n\n\n\n\nIt will take 3 to 5 seconds or based on your Internet Connection</string>
+    <string name="lyrics_not_found">\n\n\nLyrics not available for this song</string>
+    <string name="check_internet_connection">\n\n\n\nℹ️ Check your Internet Connection or Try again</string>
     <string name="delete">Delete</string>
     <string name="share">Share</string>
     <string name="add_to_playlist">Add to Playlist</string>
@@ -124,7 +126,9 @@
     <string name="your_name">Your Name</string>
     <string name="now_playing">Now Playing</string>
     <string name="cover_shape">Cover Shape</string>
-    <string name="whats_new">Whats New! 🎼</string>
+    <string name="whats_new">What\'s New! 🎼</string>
+    <string name="share_app">Try this Music player app <b>Music X</b> with amazing features
+                            \n\nhttps://github.com/manish7924/Music-X/releases</string>
     <string name="feedback">Feedback </string>
     <string name="search_hint">Search Songs, Artists and Albums</string>
     <string name="enter_url">Enter Url</string>
@@ -170,9 +174,11 @@
     <string name="app_icon">app_icon</string>
     <string name="powered_by">Powered By</string>
     <string name="whats_new_description">
-        Music X v1.0.1 (Powered by Infinite)
+        Music X v1.0.1 (beta) (Powered by Infinite)
         \n\n
-        • More Performance improvements and optimization.
+        • More Performance improvements, bug fixed and optimization.
+        \n\n• Added Navigation Drawer and Navigation menu.
+        \n\n• Some changes and improvements in UI.
         \n\n• Added New Mini player with color palette.
         \n\n• Lyrics Support of many Bollywood Hindi, English and Hollywood English songs that are available on Jio Saavan and Spotify.
         \n\n• Performance improvements in track list page.
@@ -203,6 +209,10 @@
     <string name="very_large">Very large</string>
     <string name="accessibility_service_description">My Accessibility service\n</string>
     <string name="accessibility_service">Accessibility Service</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
 
 
 </resources>

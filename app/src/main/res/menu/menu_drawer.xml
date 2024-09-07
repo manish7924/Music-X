@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/ac_home"
+            android:title="@string/home"
+            android:icon="@drawable/ic_nav_home" />
+
+
+        <item
+            android:id="@+id/ac_tracks"
+            android:title="@string/tracks"
+            android:icon="@drawable/ic_nav_tracks" />
+
+        <item
+            android:id="@+id/ac_albums"
+            android:title="@string/albums"
+            android:icon="@drawable/ic_nav_album" />
+
+        <item
+            android:id="@+id/ac_artists"
+            android:title="@string/artists"
+            android:icon="@drawable/ic_nav_artist" />
+
+        <item
+            android:id="@+id/ac_playlist"
+            android:title="@string/playlists"
+            android:icon="@drawable/ic_nav_playlist" />
+
+        <item
+            android:id="@+id/ac_favourite"
+            android:title="@string/favourites"
+            android:icon="@drawable/favourite" />
+
+        <item
+            android:id="@+id/ac_equalizer"
+            android:title="@string/equalizer"
+            android:icon="@drawable/ic_equalizer" />
+
+
+
+    </group>
+
+    <item android:title="Connect">
+        <menu>
+            <item
+                android:id="@+id/instagram"
+                android:icon="@drawable/instagram"
+                android:title="Instagram" />
+
+            <item
+                android:id="@+id/linkedin"
+                android:icon="@drawable/linkedin"
+                android:title="LinkedIN" />
+
+            <item
+                android:id="@+id/github"
+                android:icon="@drawable/ic_person"
+                android:title="GitHub" />
+
+            <item
+                android:id="@+id/music_community"
+                android:icon="@drawable/icon"
+                android:title="WhatsApp Channel" />
+
+            <item
+                android:id="@+id/share"
+                android:icon="@drawable/share"
+                android:title="Share" />
+
+            <item
+                android:id="@+id/rate"
+                android:icon="@drawable/rate"
+                android:title="Rate" />
+        </menu>
+
+    </item>
+</menu>

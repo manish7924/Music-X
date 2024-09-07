@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative_layout_cardView"
@@ -11,13 +11,16 @@
     tools:ignore="MissingDefaultResource">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/album_items"
+        android:id="@+id/artist_items"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="100dp"
         app:cardBackgroundColor="@color/myTint2"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/colorPrimaryDark">
+        app:strokeColor="@color/colorPrimaryDark"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:id="@+id/artist_image"
@@ -36,7 +39,6 @@
         android:id="@+id/artist_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginHorizontal="10dp"
         android:layout_marginVertical="10dp"
@@ -50,7 +52,11 @@
         android:text="@string/artist"
         android:textColor="@color/black"
         android:textFontWeight="700"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/artist_items"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:targetApi="p" />
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

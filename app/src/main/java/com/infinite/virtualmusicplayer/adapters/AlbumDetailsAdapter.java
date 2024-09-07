@@ -85,28 +85,28 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
         }
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isLoop || isShuffle){
-                    if (isLoop){
-                        isLoop = false;
-                    }
-                    if (isShuffle){
-                        isShuffle = false;
-                    }
-                }
-                try {
-                    Intent intent = new Intent(mContext, MusicPlayerActivity.class);
-                    intent.putExtra("albumSender","albumDetails");
-                    intent.putExtra("position", position);
-                    mContext.startActivity(intent);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
-                }
+        holder.album_song_image.setOnClickListener(view -> showSongDetails(position));
 
+
+        holder.itemView.setOnClickListener(view -> {
+            if (isLoop || isShuffle){
+                if (isLoop){
+                    isLoop = false;
+                }
+                if (isShuffle){
+                    isShuffle = false;
+                }
             }
+            try {
+                Intent intent = new Intent(mContext, MusicPlayerActivity.class);
+                intent.putExtra("albumSender","albumDetails");
+                intent.putExtra("position", position);
+                mContext.startActivity(intent);
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(mContext, e.toString(), Toast.LENGTH_SHORT).show();
+            }
+
         });
 
 
@@ -157,7 +157,7 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
 
                 fIndex = Music.favouriteChecker(albumSongFiles.get(position).getId());
 
-                ImageView nowPlayingSongImg = dialog.findViewById(R.id.nowPlayingSongImg);
+                ImageView selectedSongImg = dialog.findViewById(R.id.selectedSongImg);
                 ImageView addToFavourite = dialog.findViewById(R.id.addToFavBtn);
                 TextView nowPlayingSongName = dialog.findViewById(R.id.nowPlayingSongName);
                 TextView nowPlayingSongArtist = dialog.findViewById(R.id.nowPlayingSongArtist);
@@ -234,6 +234,8 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
 //                        dialog.dismiss();
                 });
 
+                selectedSongImg.setOnClickListener(view -> showSongDetails(position));
+
                 details.setOnClickListener(view -> {
                     showSongDetails(position);
                     dialog.dismiss();
@@ -248,16 +250,16 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
 
                 byte[] nowPlayingImage = getAlbumArt(albumSongFiles.get(position).getPath());
                 if (nowPlayingImage != null){
-                    nowPlayingSongImg.setPadding(0, 0, 0, 0);
+                    selectedSongImg.setPadding(0, 0, 0, 0);
                     Glide.with(mContext)
                             .load(nowPlayingImage).placeholder(R.drawable.music_note)
-                            .into(nowPlayingSongImg);
+                            .into(selectedSongImg);
                 }
                 else {
-                    nowPlayingSongImg.setPadding(12, 12, 12, 12);
+                    selectedSongImg.setPadding(12, 12, 12, 12);
                     Glide.with(mContext)
-                            .load(R.drawable.music_note)
-                            .into(nowPlayingSongImg);
+                            .load(R.drawable.music_note).centerInside()
+                            .into(selectedSongImg);
                 }
 
 
@@ -334,12 +336,7 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
 
         // Close button
         Button closeButton = dialog.findViewById(R.id.closeButton);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        closeButton.setOnClickListener(v -> dialog.dismiss());
 //
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

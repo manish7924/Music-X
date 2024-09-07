@@ -1,5 +1,6 @@
 package com.infinite.virtualmusicplayer.activities;
 
+import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.lightVibrantColor;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.mPalette;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.musicService;
@@ -26,6 +27,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaMetadataRetriever;
+import android.media.audiofx.AudioEffect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,16 +37,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.palette.graphics.Palette;
 
@@ -52,6 +60,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.navigation.NavigationView;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.fragments.AlbumFragment;
 import com.infinite.virtualmusicplayer.fragments.ArtistFragment;
@@ -65,17 +74,32 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
+    MaterialToolbar toolbar;
+    private NavigationView navigationView;
+    private DrawerLayout drawerLayout;
+
     BottomNavigationView bottomNavigationView;
     FrameLayout frameLayout;
     private static final int REQUEST_CODE = 1;
-
-//    MusicService musicService;
-    public static ArrayList<Music> musicFiles = new ArrayList<>();
-    public static ArrayList<Music> albums = new ArrayList<>();
-    SearchView searchView;
     int id;
+    public static ArrayList<Music> musicFiles = new ArrayList<>();
     public static ArrayList<Music> artists = new ArrayList<>();
+    public static ArrayList<Music> albums = new ArrayList<>();
     public static ArrayList<Music> playlists = new ArrayList<>();
+    SearchView searchView;
+
+//    public static BottomSheetBehavior<View> bottomSheetBehavior;
+//    static View bottomSheet;
+//    public static boolean state;
+
+    static RelativeLayout headerBackground;
+
+    static TextView headerSongTitle;
+    static TextView headerSongArtist;
+    static ImageView headerImage;
+
+
+
 //    Boolean state;
 
 //    private ViewPager viewPager;
@@ -95,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //    themes
     private SharedPreferences sharedPreferences;
 //    private SharedPreferences myFavPref;
-    private final String[] themes = {"System Theme", "Dark Theme", "Light Theme"};
+    private final String[] themes = {"      System", "      Dark", "      Light"};
 
     static boolean isPermissionGranted = false;
     static boolean isSystem = false;
@@ -113,15 +137,128 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         sharedPreferences = getSharedPreferences("ThemePrefs", Context.MODE_PRIVATE);
 
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         frameLayout = findViewById(R.id.frameLayout);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.navigation_view);
+
+//        Action bar
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+//        Navigation bar
+        View headerView = navigationView.getHeaderView(0);
+
+        headerBackground = headerView.findViewById(R.id.header_background);
+        headerSongTitle = headerView.findViewById(R.id.header_songTitle);
+        headerSongArtist = headerView.findViewById(R.id.header_songArtist);
+        headerImage = headerView.findViewById(R.id.header_imageView);
 
 
-//        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, new SongsFragment()).commit();
 
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+
+                // Navigation drawer item click listener
+                int id = item.getItemId();
+
+                if (id == R.id.ac_home) {
+                    replaceFragment(new HomeFragment());
+                    bottomNavigationView.setSelectedItemId(R.id.ac_home);
+
+                }
+                else if (id == R.id.ac_tracks) {
+                    replaceFragment(new SongsFragment());
+                    bottomNavigationView.setSelectedItemId(R.id.ac_tracks);
+
+                }
+                else if (id == R.id.ac_albums) {
+                    replaceFragment(new AlbumFragment());
+                    bottomNavigationView.setSelectedItemId(R.id.ac_albums);
+
+                }
+                else if (id == R.id.ac_artists) {
+                    replaceFragment(new ArtistFragment());
+                    bottomNavigationView.setSelectedItemId(R.id.ac_artists);
+
+                }
+                else if (id == R.id.ac_playlist) {
+                    replaceFragment(new PlaylistFragment());
+                    bottomNavigationView.setSelectedItemId(R.id.ac_playlist);
+
+                }
+                else if (id == R.id.ac_favourite) {
+                    Intent intent = new Intent(MainActivity.this, Favourite.class);
+                    startActivity(intent);
+                }
+
+                else if (id == R.id.ac_equalizer) {
+                    if (musicService != null) {
+                        try {
+                            Intent eqIntent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+                            eqIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, musicService.mediaPlayer.getAudioSessionId());
+                            eqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getBaseContext().getPackageName());
+                            eqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
+                            startActivityForResult(eqIntent, 7);
+                        }
+                        catch (Exception e){
+                            Toast.makeText(MainActivity.this, "Play any Song for use Equalizer", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
+                        Toast.makeText(MainActivity.this, "Play any song for using Equalizer", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+                else if (id == R.id.instagram) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/mr._stark7?igsh=YzljYTk1ODg3Zg=="));
+                    startActivity(intent);
+                }
+                else if (id == R.id.linkedin) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/manish-chidar-393b1525b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"));
+                    startActivity(intent);
+                }
+                else if (id == R.id.github) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/manish7924/Music-X"));
+                    startActivity(intent);
+                }
+                else if (id == R.id.music_community) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://whatsapp.com/channel/0029VaQCaJZCnA7zDT0OjE34"));
+                    startActivity(intent);
+                }
+                else if (id == R.id.share) {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Share song with");
+                    String string = "Try this Music player app Music X with amazing features" +
+                            "" +
+                            "\n\nhttps://github.com/manish7924/Music-X/releases";
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, string);
+                    startActivity(Intent.createChooser(shareIntent, "Share via"));
+                }
+                else if (id == R.id.rate) {
+                    Toast.makeText(MainActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+                }
+
+
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
+
+
+        try {
+            applyTheme(getSelectedTheme());
+        }catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        }
 
 
 
@@ -152,15 +289,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         bottomNavigationView.setOnItemReselectedListener((BottomNavigationView.OnNavigationItemReselectedListener) item -> id = item.getItemId());
 
 
-
-        try {
-            applyTheme(getSelectedTheme());
-        }catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-        }
-
-
 //        Request Permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             try {
@@ -179,6 +307,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         }
 
+
+//        Showing Mini player
         showOrHideMiniPlayer();
 
     }
@@ -299,6 +429,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private void replaceFragment(Fragment fragment){
 //        Inline method
         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
+
     }
 
 //    Briefly method
@@ -703,6 +834,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         try {
             new MaterialAlertDialogBuilder(this)
                     .setTitle("Exit")
+                    .setIcon(R.drawable.exit)
                     .setMessage("Do you want to close this playing session ?")
                     .setPositiveButton("Yes", (dialog, which) -> {
                         // Exit the app
@@ -730,8 +862,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private void showWhatsNewDialog() {
         new MaterialAlertDialogBuilder(this)
-                .setTitle("Whats New!")
-                .setIcon(R.drawable.music_icon)
+                .setTitle("What's New!")
+                .setIcon(R.drawable.icon)
                 .setMessage(R.string.whats_new_description)
                 .setPositiveButton("Ok", (dialog, which) -> {
                     dialog.dismiss();
@@ -742,7 +874,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private void applyTheme(String theme) {
         switch (theme) {
-            case "System Theme":
+            case "      System":
                 try {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                     setDefaultFragment();
@@ -754,7 +886,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case "Dark Theme":
+            case "      Dark":
                 try {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     setDefaultFragment();
@@ -766,7 +898,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case "Light Theme":
+            case "      Light":
                 try {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     setDefaultFragment();
@@ -800,24 +932,25 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 .setIcon(R.drawable.night_mode1)
                 .setMessage("Choose your default theme for app")
                 .setView(spinner)
-                .setPositiveButton("Ok", (dialog, which) -> {
+                .setPositiveButton("OK", (dialog, which) -> {
                     String selectedTheme = themes[spinner.getSelectedItemPosition()];
                     try {
-                        saveSelectedTheme(selectedTheme); // Save the selected theme
+                        // Save the selected theme
+                        saveSelectedTheme(selectedTheme);
 
                     } catch (Exception e){
                         e.printStackTrace();
                         Toast.makeText(this, e.toString() , Toast.LENGTH_SHORT).show();
                     }
                     try {
-                        applyTheme(selectedTheme); // Apply the selected theme
+                        // Apply the selected theme
+                        applyTheme(selectedTheme);
                         Toast.makeText(this, selectedTheme + " Applied Successfully. ", Toast.LENGTH_SHORT).show();
                     } catch (Exception e1){
                         e1.printStackTrace();
                         Toast.makeText(this, e1.toString() , Toast.LENGTH_SHORT).show();
                     }
-//                    replaceFragment(new SongsFragment());
-//                    setDefaultFragment();
+                    setDefaultFragment();
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> {
                     // Exit the app
@@ -860,6 +993,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     }
 
+    @SuppressLint("ResourceAsColor")
     private void showMiniPlayer() {
         SharedPreferences preferences = getSharedPreferences(MUSIC_LAST_PLAYED, MODE_PRIVATE);
         String path = preferences.getString(MUSIC_FILE, null);
@@ -891,20 +1025,24 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if (SHOW_MINI_PLAYER){
             byte[] art = getAlbumArt(PATH_TO_FRAG);
             if (art != null){
-                Glide.with(this).load(art).placeholder(R.drawable.music_note_player).into(albumArt);
+                Glide.with(this).load(art).placeholder(R.drawable.music_note).into(albumArt);
             }
             else {
-                Glide.with(this).load(R.drawable.music_note_player).into(albumArt);
+                Glide.with(this).load(R.drawable.music_note).into(albumArt);
             }
             songName.setText(SONG_NAME_TO_FRAG);
             artistName.setText(ARTIST_TO_FRAG);
 
             if (musicService != null){
                 mini_player_progressBar.setProgress(musicService.getCurrentPosition(), false);
-            }
 
-            if (musicService != null){
+                headerSongTitle.setTextColor(Color.WHITE);
+                headerSongTitle.setText(SONG_NAME_TO_FRAG);
+                headerSongArtist.setText(ARTIST_TO_FRAG);
+
+
                 if (thumb != null){
+                    headerImage.setImageBitmap(thumb);
                     Palette.from(thumb).generate(new Palette.PaletteAsyncListener() {
                         @Override
                         public void onGenerated(Palette palette) {
@@ -935,6 +1073,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                 gradientDrawableMiniPlayer.setCornerRadius(17);
 
                                 NowPlayingFragment.mini_player.setBackground(gradientDrawableMiniPlayer);
+
+                                GradientDrawable gradientDrawableHeader = new GradientDrawable(
+                                        GradientDrawable.Orientation.RIGHT_LEFT,
+                                        new int[]{lightColor1, lightColor4});
+
+                                headerBackground.setBackground(gradientDrawableHeader);
 
                                 // Manipulate colors for gradient (darker at bottom, lighter at top)
 
@@ -979,12 +1123,31 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     });
                 }
             }
+            else {
+                headerSongTitle.setText("Title");
+                headerSongArtist.setText("Artist");
+
+                if (isNight) {
+                    headerSongTitle.setTextColor(Color.WHITE);
+                }
+                else if (isLight) {
+                    headerSongTitle.setTextColor(Color.BLACK);
+                }
+                else {
+                    headerSongTitle.setTextColor(R.color.ar_gray);
+                }
+            }
 
 
         }
     }
 
 
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 7  ||  requestCode == RESULT_OK){}
+//    }
 
 
     @Override
@@ -1085,11 +1248,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             } catch (Exception e){
                 e.printStackTrace();
             }
+        } else if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
 
     }
+
 
 
 }

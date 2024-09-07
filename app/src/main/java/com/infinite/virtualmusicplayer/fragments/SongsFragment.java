@@ -6,7 +6,6 @@ import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isS
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -24,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
 import com.infinite.virtualmusicplayer.adapters.MusicAdapter;
@@ -73,6 +71,15 @@ public class SongsFragment extends Fragment {
 
 
 
+//        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(musicAdapter);
+//        scaleInAnimationAdapter.setDuration(40);
+//        scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator());
+//        scaleInAnimationAdapter.setFirstOnly(true);
+//        recyclerView.setAdapter(scaleInAnimationAdapter);
+
+
+
+
 
 
         playMainBtn.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +107,10 @@ public class SongsFragment extends Fragment {
                         public void onFinish() {
                             swipeRefreshLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_in_refresh));
 
-                            Snackbar.make(swipeRefreshLayout, musicFiles.size()+" Songs Found", Snackbar.LENGTH_SHORT)
-                                    .setAction("OK", view -> {}).setActionTextColor(Color.parseColor("#00B0FF")).show();
+//                            Snackbar.make(swipeRefreshLayout, musicFiles.size()+" Songs Found", Snackbar.LENGTH_SHORT)
+//                                    .setAction("OK", view -> {}).setActionTextColor(Color.parseColor("#00B0FF")).show();
+
+                            Toast.makeText(getContext(), musicFiles.size() +  " Songs Found", Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -136,12 +145,6 @@ public class SongsFragment extends Fragment {
 //                playMainBtn.setVisibility(View.VISIBLE);
 //            }
 
-
-//            ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(musicAdapter);
-//            scaleInAnimationAdapter.setDuration(40);
-//            scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator());
-//            scaleInAnimationAdapter.setFirstOnly(true);
-//            recyclerView.setAdapter(scaleInAnimationAdapter);
 
 
 
