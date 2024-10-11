@@ -16,6 +16,7 @@ import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.ACTION_
 import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.ACTION_PREVIOUS;
 import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.CHANNEL_ID_2;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -326,6 +327,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         editor.putString(ARTIST_NAME, musicServiceFiles.get(currentSongIndex).getArtist());
         editor.putString(SONG_NAME, musicServiceFiles.get(currentSongIndex).getTitle());
         editor.apply();
+
         mediaPlayer = MediaPlayer.create(getBaseContext(), musicServiceUri);
 
     }
@@ -389,6 +391,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
 
 
+    @SuppressLint("ForegroundServiceType")
     public void showNotification(int playPauseBtn, float playbackSpeed) {
 
 //        createMediaSession();

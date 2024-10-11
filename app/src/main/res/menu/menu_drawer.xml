@@ -44,6 +44,12 @@
 
     <item android:title="Connect">
         <menu>
+
+            <item
+                android:id="@+id/music_community"
+                android:icon="@drawable/icon"
+                android:title="WhatsApp Channel" />
+
             <item
                 android:id="@+id/instagram"
                 android:icon="@drawable/instagram"
@@ -56,13 +62,8 @@
 
             <item
                 android:id="@+id/github"
-                android:icon="@drawable/ic_person"
-                android:title="GitHub" />
-
-            <item
-                android:id="@+id/music_community"
-                android:icon="@drawable/icon"
-                android:title="WhatsApp Channel" />
+                android:icon="@drawable/code"
+                android:title="Source code" />
 
             <item
                 android:id="@+id/share"

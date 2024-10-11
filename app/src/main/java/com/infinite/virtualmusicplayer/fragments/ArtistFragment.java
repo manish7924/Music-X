@@ -1,16 +1,19 @@
 package com.infinite.virtualmusicplayer.fragments;
 
+import static com.infinite.virtualmusicplayer.activities.MainActivity.albums;
 import static com.infinite.virtualmusicplayer.activities.MainActivity.artists;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isShuffle;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +32,7 @@ import java.util.Random;
 public class ArtistFragment extends Fragment {
 
     SwipeRefreshLayout swipeRefreshLayout;
-
+    public static ProgressBar progressBarArtist;
 
     RecyclerView recyclerView;
     TextView noArtistsFound;
@@ -50,6 +53,7 @@ public class ArtistFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
         swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
         recyclerView = view.findViewById(R.id.recyclerView);
+        progressBarArtist = view.findViewById(R.id.progressbarArtist);
         noArtistsFound = view.findViewById(R.id.no_artists_found);
         artistShuffleBtn = view.findViewById(R.id.artistShuffleBtn);
 
@@ -58,6 +62,9 @@ public class ArtistFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(artistAdapter);
         recyclerView.setHasFixedSize(true);
+
+        // set color
+        swipeRefreshLayout.setColorSchemeColors(Color.BLACK);
 
 
         artistShuffleBtn.setOnClickListener(view1 -> playAllSongs());
@@ -68,21 +75,23 @@ public class ArtistFragment extends Fragment {
             public void onRefresh() {
 
                 try {
-                    CountDownTimer count = new CountDownTimer(0, 100) {
+                    CountDownTimer count = new CountDownTimer(100, 400) {
                         @Override
                         public void onTick(long l) {
+//                            progressBarArtist.setVisibility(View.VISIBLE);
+                            recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_out));
 
                         }
 
                         @Override
                         public void onFinish() {
-                            swipeRefreshLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_in_refresh));
-
-//                            Snackbar.make(swipeRefreshLayout, artists.size()+" Artists Found", Snackbar.LENGTH_SHORT)
-//                                    .setAction("OK", view -> {}).setActionTextColor(Color.parseColor("#00B0FF")).show();
+//                            progressBarArtist.setVisibility(View.GONE);
+                            recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_in));
 
                             Toast.makeText(getContext(), artists.size() +  " Artists Found", Toast.LENGTH_SHORT).show();
 
+//                            Snackbar.make(swipeRefreshLayout, musicFiles.size()+" Songs Found", Snackbar.LENGTH_SHORT)
+//                                    .setAction("OK", view -> {}).setActionTextColor(Color.parseColor("#00B0FF")).show();
 
                         }
 

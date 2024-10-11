@@ -127,7 +127,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
             private void showMenuMoreBottomSheet() {
                 final Dialog dialog = new Dialog(context);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.menu_more_bottom_sheet_layout);
+                dialog.setContentView(R.layout.more_bottom_sheet_layout);
 
                 fIndex = Music.favouriteChecker(mFiles.get(position).getId());
 
@@ -323,12 +323,31 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
         // Close button
         Button closeButton = dialog.findViewById(R.id.closeButton);
         closeButton.setOnClickListener(v -> dialog.dismiss());
-//
+
+
+        ImageView songImg = dialog.findViewById(R.id.coverImg);
+
+
+
+        byte[] nowPlayingImage = getAlbumArt(mFiles.get(position).getPath());
+        if (nowPlayingImage != null){
+            Glide.with(context)
+                    .load(nowPlayingImage).placeholder(R.drawable.music_note)
+                    .into(songImg);
+            songImg.setPadding(0, 0, 0, 0);
+        }
+        else {
+            songImg.setPadding(12, 12, 12, 12);
+            Glide.with(context)
+                    .load(R.drawable.music_note).centerInside()
+                    .into(songImg);
+        }
+
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        dialog.getWindow().setGravity(Gravity.BOTTOM);
+        dialog.getWindow().setGravity(Gravity.CENTER);
     }
 
 
@@ -342,7 +361,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
 
         if (file.exists()){
 //            Toast.makeText(context, "File exists", Toast.LENGTH_SHORT).show();
-            delete = !delete;
             if (delete) {
 
                 try {

@@ -6,6 +6,7 @@ import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isS
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ public class SongsFragment extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
 
     RecyclerView recyclerView;
+    public static ProgressBar progressBar;
     TextView noSongsFound;
 
     private ViewGroup alertdialog;
@@ -60,23 +63,19 @@ public class SongsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_songs, container, false);
         swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
         recyclerView = view.findViewById(R.id.recyclerView);
+        progressBar = view.findViewById(R.id.progressbar);
         playMainBtn = view.findViewById(R.id.playMainBtn);
         noSongsFound = view.findViewById(R.id.no_songs_found);
 
 
         musicAdapter = new MusicAdapter(getContext(), musicFiles);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(musicAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
 
 
-
-//        ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(musicAdapter);
-//        scaleInAnimationAdapter.setDuration(40);
-//        scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator());
-//        scaleInAnimationAdapter.setFirstOnly(true);
-//        recyclerView.setAdapter(scaleInAnimationAdapter);
-
+        // set color
+        swipeRefreshLayout.setColorSchemeColors(Color.BLACK);
 
 
 
@@ -91,27 +90,28 @@ public class SongsFragment extends Fragment {
 
 
 
-
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
                 try {
-                    CountDownTimer count = new CountDownTimer(0, 100) {
+                    CountDownTimer count = new CountDownTimer(100, 400) {
                         @Override
                         public void onTick(long l) {
+//                            progressBar.setVisibility(View.VISIBLE);
+                            recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_out));
 
                         }
 
                         @Override
                         public void onFinish() {
-                            swipeRefreshLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_in_refresh));
-
-//                            Snackbar.make(swipeRefreshLayout, musicFiles.size()+" Songs Found", Snackbar.LENGTH_SHORT)
-//                                    .setAction("OK", view -> {}).setActionTextColor(Color.parseColor("#00B0FF")).show();
+//                            progressBarArtist.setVisibility(View.GONE);
+                            recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_in));
 
                             Toast.makeText(getContext(), musicFiles.size() +  " Songs Found", Toast.LENGTH_SHORT).show();
 
+//                            Snackbar.make(swipeRefreshLayout, musicFiles.size()+" Songs Found", Snackbar.LENGTH_SHORT)
+//                                    .setAction("OK", view -> {}).setActionTextColor(Color.parseColor("#00B0FF")).show();
 
                         }
 

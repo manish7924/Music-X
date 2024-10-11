@@ -191,7 +191,7 @@
                 android:layout_marginTop="46dp"
                 android:gravity="center"
                 android:paddingHorizontal="14dp"
-                android:text="@string/embedded_lyrics_not_found"
+                android:text="@string/em_lyrics_not_found"
                 android:textAlignment="center"
                 android:fontFamily="@font/open_sans_rg"
                 android:textColor="@android:color/white"
@@ -269,6 +269,24 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/copy"
+            tools:ignore="ImageContrastCheck"
+            tools:targetApi="o" />
+
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/info_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/info"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:tooltipText="Info"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/info"
             tools:ignore="ImageContrastCheck"
             tools:targetApi="o" />
 

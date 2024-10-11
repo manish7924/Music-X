@@ -3,10 +3,11 @@ package com.infinite.virtualmusicplayer.model;
 import com.infinite.virtualmusicplayer.activities.Favourite;
 import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
 
+import java.io.File;
+import java.util.ArrayList;
+
 public class Music {
 
-//    static Music music;
-//    MusicService musicService;
     private String path;
     private String title;
     private String artist;
@@ -15,8 +16,6 @@ public class Music {
     private String id;
     private String year;
     private String size;
-
-//    private String bitrate;
 
 
 
@@ -99,7 +98,55 @@ public class Music {
     }
 
 
-//    public Music() {
+
+    public static int favouriteChecker(String id) {
+        MusicPlayerActivity.isFav = false;
+        for (int i = 0; i < Favourite.favouriteSongs.size(); i++) {
+            if (id.equals(Favourite.favouriteSongs.get(i).getId())) {
+                MusicPlayerActivity.isFav = true;
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static ArrayList<Music> checkAndSetValidSongs(ArrayList<Music> playlist) {
+        for (int i = 0; i < playlist.size(); i++) {
+            File file = new File(playlist.get(i).getPath());
+            if (!file.exists())
+                playlist.remove(i--);
+        }
+        return playlist;
+    }
+
+
+//    public static ArrayList<Music> checkAndSetValidSongs(ArrayList<Music> playlist) {
+//        ArrayList<Music> validSongs = new ArrayList<>();
+//        for (int i = 0; i < playlist.size(); i++) {
+//            File file = new File(playlist.get(i).getPath());
+//            if (file.exists()) {
+//                validSongs.add(playlist.get(i));
+//            }
+//        }
+//        return validSongs;
+//    }
+
+
+//    public void exitApplication() {
+//        if (musicService != null){
+//            try {
+//                audioManager.abandonAudioFocus(musicService);
+//                musicService.stopForeground(true);
+//                musicService.stop();
+//                musicService.release();
+//                musicService = null;
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+
+    //    public Music() {
 //
 //    }
 
@@ -182,45 +229,6 @@ public class Music {
 //            }
 //        }
 //        return -1;
-//    }
-
-
-    public static int favouriteChecker(String id) {
-        MusicPlayerActivity.isFav = false;
-        for (int i = 0; i < Favourite.favouriteSongs.size(); i++) {
-            if (id.equals(Favourite.favouriteSongs.get(i).getId())) {
-                MusicPlayerActivity.isFav = true;
-                return i;
-            }
-        }
-        return -1;
-    }
-
-
-
-
-//    public static ArrayList<Music> checkPlaylist(ArrayList<Music> playlist) {
-//        for (int i = 0; i < playlist.size(); i++) {
-//            File file = new File(playlist.get(i).getPath());
-//            if (!file.exists())
-//                playlist.remove(i--);
-//        }
-//        return playlist;
-//    }
-
-
-//    public void exitApplication() {
-//        if (musicService != null){
-//            try {
-//                audioManager.abandonAudioFocus(musicService);
-//                musicService.stopForeground(true);
-//                musicService.stop();
-//                musicService.release();
-//                musicService = null;
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//        }
 //    }
 
 

@@ -1,6 +1,5 @@
 package com.infinite.virtualmusicplayer.activities;
 
-import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.lightVibrantColor;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.mPalette;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.musicService;
@@ -14,6 +13,7 @@ import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.mini_
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.playPauseBtn;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.songName;
 import static com.infinite.virtualmusicplayer.fragments.SongsFragment.musicAdapter;
+import static com.infinite.virtualmusicplayer.fragments.SongsFragment.progressBar;
 import static com.infinite.virtualmusicplayer.services.MusicService.MUSIC_FILE;
 import static com.infinite.virtualmusicplayer.services.MusicService.MUSIC_LAST_PLAYED;
 
@@ -22,7 +22,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -44,13 +43,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -69,45 +65,64 @@ import com.infinite.virtualmusicplayer.fragments.NowPlayingFragment;
 import com.infinite.virtualmusicplayer.fragments.PlaylistFragment;
 import com.infinite.virtualmusicplayer.fragments.SongsFragment;
 import com.infinite.virtualmusicplayer.model.Music;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
-    MaterialToolbar toolbar;
+    private static final int REQUEST_CODE = 1;
+    int id;
+
+    private MaterialToolbar toolbar;
+    private SearchView searchView;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
 
-    BottomNavigationView bottomNavigationView;
-    FrameLayout frameLayout;
-    private static final int REQUEST_CODE = 1;
-    int id;
-    public static ArrayList<Music> musicFiles = new ArrayList<>();
-    public static ArrayList<Music> artists = new ArrayList<>();
-    public static ArrayList<Music> albums = new ArrayList<>();
-    public static ArrayList<Music> playlists = new ArrayList<>();
-    SearchView searchView;
+    private BottomNavigationView bottomNavigationView;
+    private FrameLayout frameLayout;
 
-//    public static BottomSheetBehavior<View> bottomSheetBehavior;
-//    static View bottomSheet;
-//    public static boolean state;
-
+//    NavigationViewHeader and text and image
     static RelativeLayout headerBackground;
 
     static TextView headerSongTitle;
     static TextView headerSongArtist;
     static ImageView headerImage;
 
+//    allSongs
+    public static ArrayList<Music> musicFiles = new ArrayList<>();
+//    tempSongs
+    private ArrayList<Music> tempSongList = new ArrayList<>();
+//    allValidSongs
+    private ArrayList<Music> validSongs = new ArrayList<>();
+//    allArtists
+    public static ArrayList<Music> artists = new ArrayList<>();
+//    allAlbums
+    public static ArrayList<Music> albums = new ArrayList<>();
+
+    public static ArrayList<Music> playlists = new ArrayList<>();
 
 
-//    Boolean state;
-
-//    private ViewPager viewPager;
-//    Music music;
 
 
-    private final String MY_SORT_PREF = "SortOrder";
+    static SharedPreferences preferences;
+    //    themes
+    private SharedPreferences sharedPreferences;
+
+    //    private SharedPreferences myFavPref;
+    private final String[] themes = {"      System", "      Dark", "      Light"};
+
     public static boolean SHOW_MINI_PLAYER = false;
+    static boolean isSystem = false;
+    static boolean isNight = false;
+    static boolean isLight = false;
+
+    private static final String MY_SORT_PREF = "SortOrder";
     public static String PATH_TO_FRAG = null;
     public static String ARTIST_TO_FRAG = null;
     public static String SONG_NAME_TO_FRAG = null;
@@ -116,15 +131,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public static final String SONG_NAME = "SONG NAME";
 
 
-//    themes
-    private SharedPreferences sharedPreferences;
-//    private SharedPreferences myFavPref;
-    private final String[] themes = {"      System", "      Dark", "      Light"};
 
-    static boolean isPermissionGranted = false;
-    static boolean isSystem = false;
-    static boolean isNight = false;
-    static boolean isLight = false;
 
 
     @SuppressLint("ResourceAsColor")
@@ -236,8 +243,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
                     shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Share song with");
-                    String string = "Try this Music player app Music X with amazing features" +
-                            "" +
+                    String string = "Try this Music player app Music X with amazing features " +
                             "\n\nhttps://github.com/manish7924/Music-X/releases";
                     shareIntent.putExtra(Intent.EXTRA_TEXT, string);
                     startActivity(Intent.createChooser(shareIntent, "Share via"));
@@ -290,28 +296,81 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
 //        Request Permission
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            try {
-                permission();
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-
-        }else {
-            try {
-                legacyPermission();
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }
-
+        permission();
 
 //        Showing Mini player
         showOrHideMiniPlayer();
 
     }
+
+
+
+
+    private void permission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            Dexter.withContext(this)
+                    .withPermissions(
+                            Manifest.permission.POST_NOTIFICATIONS,
+                            Manifest.permission.READ_MEDIA_AUDIO,
+                            Manifest.permission.BLUETOOTH_CONNECT
+                    ).withListener(new MultiplePermissionsListener() {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                            setUpWithSongList();
+
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                            token.continuePermissionRequest();
+
+                        }
+                    }).check();
+        } else {
+            Dexter.withContext(this)
+                    .withPermissions(
+                            Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+
+                    ).withListener(new MultiplePermissionsListener() {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                            setUpWithSongList();
+
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                            token.continuePermissionRequest();
+
+                        }
+                    }).check();
+        }
+
+    }
+
+    private void setUpWithSongList() {
+        try {
+            musicFiles = getAllAudio(MainActivity.this);
+            progressBar.setVisibility(View.VISIBLE);
+
+            new Thread(() -> {
+                validSongs = Music.checkAndSetValidSongs(tempSongList);
+
+                runOnUiThread(() -> {
+                    progressBar.setVisibility(View.INVISIBLE);
+
+                });
+            }).start();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     private void showOrHideMiniPlayer() {
 
@@ -333,97 +392,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
 
-    private void legacyPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-        {
-            try {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}
-                        , REQUEST_CODE);
-            }catch (Exception e){
-                e.printStackTrace();
-//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }
-        else {
-            try {
-                musicFiles = getAllAudio(this);
-                setDefaultFragment();
 
-            } catch (Exception e){
-                e.printStackTrace();
-//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
-
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    private void permission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED)
-        {
-            try {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_MEDIA_AUDIO}
-                        , REQUEST_CODE);
-            }catch (Exception e){
-                e.printStackTrace();
-//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-
-        }
-        else {
-            try {
-                musicFiles = getAllAudio(this);
-                setDefaultFragment();
-
-            } catch (Exception e){
-                e.printStackTrace();
-//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE)
-        {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                try {
-                    musicFiles = getAllAudio(this);
-//                    Important for first time launch
-                    setDefaultFragment();
-
-                } catch (Exception e){
-                    e.printStackTrace();
-//                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-                }
-            }
-            else {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    try {
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_MEDIA_AUDIO}
-                                , REQUEST_CODE);
-                    }catch (Exception e){
-                        e.printStackTrace();
-//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else {
-                    try {
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}
-                                , REQUEST_CODE);
-                    }catch (Exception e){
-                        e.printStackTrace();
-//                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        }
-    }
 
 
     private void replaceFragment(Fragment fragment){
@@ -432,131 +401,56 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     }
 
-//    Briefly method
-    //        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//        fragmentTransaction.replace(R.id.frameLayout, fragment).commit();
-//        fragmentTransaction.commit();
 
-
-//    private void setFullScreen() {
-//        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//    }
-
-
-//    private void initViewPager() {
-//        ViewPager viewPager = findViewById(R.id.viewpager);
-//        TabLayout tabLayout = findViewById(R.id.tab_layout);
-//
-//        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-//
-//        viewPagerAdapter.addFragments(new HomeFragment(), "Home");
-//        viewPagerAdapter.addFragments(new SongsFragment(), "Tracks");
-//        viewPagerAdapter.addFragments(new AlbumFragment(), "Albums");
-//        viewPagerAdapter.addFragments(new ArtistFragment(), "Artists");
-////        viewPagerAdapter.addFragments(new PlaylistFragment(), "Playlists");
-////        viewPagerAdapter.addFragments(new GenresFragment(), "Genres");
-//
-//        viewPager.setAdapter(viewPagerAdapter);
-////        for opening tracks directly
-//        viewPager.setCurrentItem((int) viewPagerAdapter.getItemId(1), true);
-//
-//        tabLayout.setupWithViewPager(viewPager);
-//
-//
-//    }
-//
-//
-//
-//    public static class ViewPagerAdapter extends FragmentPagerAdapter {
-//
-//        private final ArrayList<Fragment> fragments;
-//        private final ArrayList<String> titles;
-//
-//        public ViewPagerAdapter(@NonNull FragmentManager fm) {
-//            super(fm);
-//            this.fragments = new ArrayList<>();
-//            this.titles = new ArrayList<>();
-//        }
-//
-//
-//        void addFragments(Fragment fragment, String title)
-//        {
-//            fragments.add(fragment);
-//            titles.add(title);
-//        }
-//
-//        @NonNull
-//        @Override
-//        public Fragment getItem(int position) {
-//            return fragments.get(position);
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return fragments.size();
-//        }
-//
-//        @Nullable
-//        @Override
-//        public CharSequence getPageTitle(int position) {
-//            return titles.get(position);
-//        }
-//    }
 
     private ArrayList<Music> getAllAudio(Context context) {
-        SharedPreferences preferences = getSharedPreferences(MY_SORT_PREF, MODE_PRIVATE);
+        preferences = getSharedPreferences(MY_SORT_PREF, MODE_PRIVATE);
         String sortOrder = preferences.getString("sorting", "sortByName");
 
         ArrayList<String> duplicate = new ArrayList<>();
         ArrayList<String> artist_duplicate = new ArrayList<>();
-        ArrayList<Music> tempAudioList = new ArrayList<>();
+
 
         try {
             albums.clear();
             artists.clear();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
         }
 
         String order = null;
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
-        switch (sortOrder){
-            case "sortByName":
-                try {
-                    order = MediaStore.MediaColumns.DISPLAY_NAME + " ASC";
-                    setDefaultFragment();
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-            case "sortByDate":
-                try {
-                    order = MediaStore.MediaColumns.DATE_ADDED + " ASC";
-                    setDefaultFragment();
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-                }
-                break;
-
-            case "sortBySize":
-                try {
-                    order = MediaStore.MediaColumns.SIZE + " DESC";
-                    setDefaultFragment();
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-                }
-                break;
+        if (sortOrder.equals("sortByName")){
+            try {
+                order = MediaStore.MediaColumns.DISPLAY_NAME + " ASC";
+                setDefaultFragment();
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            }
         }
+        else if (sortOrder.equals("sortByDate")){
+            try {
+                order = MediaStore.MediaColumns.DATE_ADDED + " ASC";
+                setDefaultFragment();
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if (sortOrder.equals("sortBySize")){
+            try {
+                order = MediaStore.MediaColumns.SIZE + " DESC";
+                setDefaultFragment();
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
 
         String[] projection = {
                 MediaStore.Audio.Media.ALBUM,
@@ -587,19 +481,22 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //                Log.e("path " + path, "Album " + album);
 
                 try {
-                    tempAudioList.add(music);
+                    tempSongList.add(music);
+
                 }catch (Exception e){
                     e.printStackTrace();
-                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 }
 
                 if (!duplicate.contains(album)){
                     try {
                         albums.add(music);
                         duplicate.add(album);
+//                        validSongs = Music.checkAndSetValidSongs(albums);
+
                     }catch (Exception e){
                         e.printStackTrace();
-                        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                     }
 //                    playlists.add(music);
                 }
@@ -608,16 +505,20 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     try {
                         artists.add(music);
                         artist_duplicate.add(artist);
+//                        validSongs = Music.checkAndSetValidSongs(artists);
+
                     }catch (Exception e){
                         e.printStackTrace();
-                        Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                     }
                 }
 
             }
             cursor.close();
         }
-        return tempAudioList;
+
+
+        return tempSongList;
 
     }
 
@@ -865,7 +766,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 .setTitle("What's New!")
                 .setIcon(R.drawable.icon)
                 .setMessage(R.string.whats_new_description)
-                .setPositiveButton("Ok", (dialog, which) -> {
+                .setPositiveButton("OK", (dialog, which) -> {
                     dialog.dismiss();
                 })
                 .show();
@@ -985,11 +886,26 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         return art;
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
         showOrHideMiniPlayer();
+
+        new Thread(() -> {
+            validSongs = Music.checkAndSetValidSongs(tempSongList);
+
+            runOnUiThread(() -> {
+
+            });
+        }).start();
 
     }
 
@@ -1143,11 +1059,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 7  ||  requestCode == RESULT_OK){}
-//    }
 
 
     @Override

@@ -150,7 +150,7 @@ public class ArtistDetailsAdapter extends RecyclerView.Adapter<ArtistDetailsAdap
             private void showMenuMoreBottomSheet() {
                 final Dialog dialog = new Dialog(mContext);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.menu_more_bottom_sheet_layout);
+                dialog.setContentView(R.layout.more_bottom_sheet_layout);
 
                 fIndex = Music.favouriteChecker(artistSongFiles.get(position).getId());
 
@@ -331,7 +331,24 @@ public class ArtistDetailsAdapter extends RecyclerView.Adapter<ArtistDetailsAdap
         // Close button
         Button closeButton = dialog.findViewById(R.id.closeButton);
         closeButton.setOnClickListener(v -> dialog.dismiss());
-//
+
+        ImageView songImg = dialog.findViewById(R.id.coverImg);
+
+
+        byte[] nowPlayingImage = getAlbumArt(artistSongFiles.get(position).getPath());
+        if (nowPlayingImage != null){
+            Glide.with(mContext)
+                    .load(nowPlayingImage).placeholder(R.drawable.music_note)
+                    .into(songImg);
+            songImg.setPadding(0, 0, 0, 0);
+        }
+        else {
+            songImg.setPadding(12, 12, 12, 12);
+            Glide.with(mContext)
+                    .load(R.drawable.music_note).centerInside()
+                    .into(songImg);
+        }
+
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

@@ -66,9 +66,8 @@
     <string name="refresh">Refresh</string>
     <string name="show_volume_bar">Show Volume bar</string>
     <string name="lyrics">Lyrics</string>
-    <string name="embedded_lyrics_not_found">\n\n\nEmbedded Lyrics Not Found
-        \n\n\nℹ️ But you can find lyrics online using <b>search lyrics</b> 🔍 button placed in right side
-        It works only when you are connected to Internet<b>(Mobile Internet or Wifi)</b> \n\n\n</string>
+    <string name="lyrics_info">You can find lyrics online using <b>search lyrics</b> 🔍 button placed in right side
+        It works only when you are connected to Internet<b>(Mobile Internet or Wifi)</b></string>
     <string name="finding_lyrics">\n\nFinding Lyrics\n\n\n\n\n\nIt will take 3 to 5 seconds or based on your Internet Connection</string>
     <string name="lyrics_not_found">\n\n\nLyrics not available for this song</string>
     <string name="check_internet_connection">\n\n\n\nℹ️ Check your Internet Connection or Try again</string>
@@ -88,7 +87,7 @@
     <string name="go_to_album">Go to Album</string>
     <string name="go_to_artist">Go to Artist</string>
     <string name="go_to_folder">Go to Folder</string>
-    <string name="details">Details</string>
+    <string name="details">Song Info</string>
     <string name="delete_from_device">Delete from device</string>
     <string name="sort_by">Sort By</string>
     <string name="name">Name</string>
@@ -212,7 +211,8 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="info">info</string>
+    <string name="em_lyrics_not_found">Embedded Lyrics not found</string>
 
 
 </resources>

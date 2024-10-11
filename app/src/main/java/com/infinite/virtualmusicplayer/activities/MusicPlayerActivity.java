@@ -74,6 +74,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.fragments.NowPlayingFragment;
@@ -96,7 +97,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
     ConnectivityManager connectivityManager;
     AudioManager audioManager;
-    ImageView nextBtn, previousBtn, musicCover, loop, shuffle, shape, rotateAnim, equalizerBtn, info, copyBtn, lyricsBtn, lyrics_gradient, fontSizeBtn, searchLyricsBtn, volumeBtn;
+    ImageView nextBtn, previousBtn, musicCover, loop, shuffle, shape, rotateAnim, equalizerBtn, songInfo, copyBtn, lyricsInfoBtn, lyricsBtn, lyrics_gradient, fontSizeBtn, searchLyricsBtn, volumeBtn;
     ImageView favBtn, backBtn, moreOptionBtn;
 //    Thread playThread, prevThread, nextThread;
     CardView cardView;
@@ -349,9 +350,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         });
 
 
-        info.setOnClickListener(view -> {
+        songInfo.setOnClickListener(view -> {
 //            myVib.vibrate(30);
-            info.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
+            songInfo.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_btn));
 
             showSongDetails();
 
@@ -533,6 +534,15 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         });
 
 
+        lyricsInfoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myVib.vibrate(30);
+                showLyricsInfoDialog();
+            }
+        });
+
+
         favBtn.setOnClickListener(view -> {
             myVib.vibrate(30);
             favBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_smooth));
@@ -653,6 +663,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
 
     }
+
+
 
     private void showNotificationWithPreference() {
         if (musicService != null) {
@@ -859,7 +871,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                 else {
                     lyricsText.setText(R.string.check_internet_connection);
 //                    Snackbar.make(findViewById(R.id.lyricsLayout), "Not Connected to Internet", Snackbar.LENGTH_SHORT).show();
-                    Snackbar.make(findViewById(R.id.lyricsLayout), "Not Connected to Internet", Snackbar.LENGTH_LONG)
+                    Snackbar.make(findViewById(R.id.lyricsLayout), "No Internet", Snackbar.LENGTH_LONG)
                             .setAction("Go to Settings", view -> {
                                 startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                             }).setActionTextColor(Color.parseColor("#00B0FF")).show();
@@ -872,6 +884,18 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         }).start();
 
 
+    }
+
+
+    private void showLyricsInfoDialog() {
+        new MaterialAlertDialogBuilder(MusicPlayerActivity.this)
+                .setTitle("Info")
+                .setIcon(R.drawable.ic_lyrics)
+                .setMessage(R.string.lyrics_info)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
     }
 
 
@@ -906,9 +930,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         seekBar = findViewById(R.id.seekBar);
         backBtn = findViewById(R.id.back);
         shape = findViewById(R.id.shapeBtn);
-        info = findViewById(R.id.information);
+        songInfo = findViewById(R.id.information);
         fontSizeBtn = findViewById(R.id.fontSize);
         copyBtn = findViewById(R.id.copy);
+        lyricsInfoBtn = findViewById(R.id.info_dialog);
         equalizerBtn = findViewById(R.id.equalizerBtn);
         rotateAnim = findViewById(R.id.animBtn);
 
@@ -1142,6 +1167,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         fontSizeBtn.setVisibility(View.VISIBLE);
         searchLyricsBtn.setVisibility(View.VISIBLE);
         copyBtn.setVisibility(View.VISIBLE);
+        lyricsInfoBtn.setVisibility(View.VISIBLE);
 
 //        lyrics_gradient.setVisibility(View.VISIBLE);
 //        lyrics_gradient.setBackground(gradientDrawable);
@@ -1164,6 +1190,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         fontSizeBtn.setVisibility(View.INVISIBLE);
         searchLyricsBtn.setVisibility(View.INVISIBLE);
         copyBtn.setVisibility(View.INVISIBLE);
+        lyricsInfoBtn.setVisibility(View.INVISIBLE);
 
         cardView.setVisibility(View.VISIBLE);
         musicCover.setVisibility(View.VISIBLE);
@@ -1297,7 +1324,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         backBtn.setColorFilter(lightVibrantColor);
                         equalizerBtn.setColorFilter(lightVibrantColor);
                         shape.setColorFilter(lightVibrantColor);
-                        info.setColorFilter(lightVibrantColor);
+                        songInfo.setColorFilter(lightVibrantColor);
 
                         play.setColorFilter(lightVibrantColor);
                         previousBtn.setColorFilter(lightVibrantColor);
@@ -1309,6 +1336,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         moreOptionBtn.setColorFilter(lightVibrantColor);
 
                         copyBtn.setColorFilter(lightVibrantColor);
+                        lyricsInfoBtn.setColorFilter(lightVibrantColor);
                         searchLyricsBtn.setColorFilter(lightVibrantColor);
                         fontSizeBtn.setColorFilter(lightVibrantColor);
 
@@ -1420,7 +1448,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                 backBtn.setColorFilter(Color.WHITE);
                 equalizerBtn.setColorFilter(Color.WHITE);
                 shape.setColorFilter(Color.WHITE);
-                info.setColorFilter(Color.WHITE);
+                songInfo.setColorFilter(Color.WHITE);
 
                 play.setColorFilter(Color.WHITE);
                 previousBtn.setColorFilter(Color.WHITE);
@@ -1432,6 +1460,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                 moreOptionBtn.setColorFilter(Color.WHITE);
 
                 copyBtn.setColorFilter(Color.WHITE);
+                lyricsInfoBtn.setColorFilter(Color.WHITE);
                 searchLyricsBtn.setColorFilter(Color.WHITE);
                 fontSizeBtn.setColorFilter(Color.WHITE);
 
@@ -1500,7 +1529,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                 backBtn.setColorFilter(Color.BLACK);
                 equalizerBtn.setColorFilter(Color.BLACK);
                 shape.setColorFilter(Color.BLACK);
-                info.setColorFilter(Color.BLACK);
+                songInfo.setColorFilter(Color.BLACK);
 
                 play.setColorFilter(Color.BLACK);
                 previousBtn.setColorFilter(Color.BLACK);
@@ -1715,7 +1744,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         }
 
         if (isLyrics){
-            lyricsText.setText(R.string.embedded_lyrics_not_found);
+            lyricsText.setText("Embedded Lyrics not found");
             searchLyrics();
         }
 
@@ -1900,7 +1929,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         }
 
         if (isLyrics){
-            lyricsText.setText(R.string.embedded_lyrics_not_found);
+            lyricsText.setText("Embedded Lyrics not found");
             searchLyrics();
         }
 
@@ -2269,6 +2298,23 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
             dialog.dismiss();
 
         });
+
+        ImageView songImg = dialog.findViewById(R.id.coverImg);
+
+
+        byte[] nowPlayingImage = getAlbumArt(listSongs.get(position).getPath());
+        if (nowPlayingImage != null){
+            Glide.with(this)
+                    .load(nowPlayingImage).placeholder(R.drawable.music_note)
+                    .into(songImg);
+            songImg.setPadding(0, 0, 0, 0);
+        }
+        else {
+            songImg.setPadding(12, 12, 12, 12);
+            Glide.with(this)
+                    .load(R.drawable.music_note).centerInside()
+                    .into(songImg);
+        }
 //
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
