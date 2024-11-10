@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main_bg_color"
+    android:theme="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
     tools:context=".activities.Favourite">
 
     <LinearLayout
@@ -13,6 +15,7 @@
         android:layout_marginTop="2dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -61,6 +64,7 @@
         android:scrollIndicators="right"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linearLayout" />
@@ -82,8 +86,7 @@
         app:icon="@drawable/shuffle_on"
         android:backgroundTint="@color/fab_color"
         app:iconSize="50dp"
-        app:tint="@color/my_blue"
-        app:iconTint="@color/my_blue"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_goneMarginBottom="50dp"

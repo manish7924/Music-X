@@ -113,8 +113,9 @@ public class Music {
     public static ArrayList<Music> checkAndSetValidSongs(ArrayList<Music> playlist) {
         for (int i = 0; i < playlist.size(); i++) {
             File file = new File(playlist.get(i).getPath());
-            if (!file.exists())
+            if (!file.exists()){
                 playlist.remove(i--);
+            }
         }
         return playlist;
     }

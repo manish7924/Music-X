@@ -4,13 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main_bg_color"
+    android:theme="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
     tools:context=".fragments.AlbumFragment">
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar">
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -19,16 +25,50 @@
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:fadeScrollbars="true"
-            android:paddingHorizontal="4dp"
             android:scrollbars="vertical"
             android:scrollIndicators="right"
+            style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
             android:scrollbarStyle="outsideOverlay"
             android:keepScreenOn="true"
             android:nestedScrollingEnabled="true"
-            android:isScrollContainer="true" />
+            android:isScrollContainer="true"/>
+
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/shuffleFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:text="@string/shuffle"
+        app:icon="@drawable/shuffle_on"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="10dp"
+        android:contentDescription="@string/add" />
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/UpFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/up_arrow"
+        android:contentDescription="@string/scroll_to_top"
+        android:visibility="gone"
+        android:scaleType="center"
+        android:layout_marginBottom="130dp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:fabSize="mini"
+        app:fabCustomSize="40dp"/>
 
 
     <TextView
@@ -39,43 +79,13 @@
         android:gravity="center"
         android:text="@string/no_albums_found"
         android:textColor="@color/title"
-        android:textFontWeight="700"
-        android:textSize="23sp"
+        android:textFontWeight="400"
+        android:textSize="17sp"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/refresh_layout"
-        app:layout_constraintTop_toTopOf="@+id/refresh_layout" />
-
-    <ProgressBar
-        android:id="@+id/progressbarAlbum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/refresh_layout"
         tools:targetApi="p" />
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/albumShuffleBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/shuffle"
-        android:src="@drawable/shuffle_on"
-        app:fabSize="normal"
-        android:visibility="visible"
-        android:tooltipText="Shuffle"
-        app:icon="@drawable/shuffle_on"
-        android:backgroundTint="@color/fab_color"
-        app:iconSize="50dp"
-        app:tint="@color/my_blue"
-        app:iconTint="@color/my_blue"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="80dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:targetApi="o" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

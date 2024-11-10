@@ -4,23 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/main_bg_color"
+    android:theme="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
     tools:context=".activities.Favourite">
 
 
-    <LinearLayout
+    <com.google.android.material.circularreveal.CircularRevealLinearLayout
         android:id="@+id/favouriteLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="14dp"
-        android:layout_marginHorizontal="8dp"
-        android:background="@drawable/fav_bg"
-        android:paddingVertical="10dp"
-        android:paddingHorizontal="10dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="UseCompoundDrawables">
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:padding="2dp"
+        android:background="@drawable/playlist_capsule_fav_bg"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
+        android:layout_marginHorizontal="26dp"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -36,23 +34,24 @@
             android:padding="10dp"
             android:text="@string/favourites"
             android:textColor="@color/black"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:textFontWeight="700"/>
 
-    </LinearLayout>
+    </com.google.android.material.circularreveal.CircularRevealLinearLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playlistRv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/favouriteLayout"
         android:layout_marginTop="20dp"
         android:fadeScrollbars="true"
         android:paddingBottom="20dp"
         android:scrollbars="vertical"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/favouriteLayout" />
 
     <TextView
         android:id="@+id/no_songs_found"
@@ -81,9 +80,7 @@
         app:icon="@drawable/add"
         android:src="@drawable/add"
         app:iconSize="50dp"
-        app:tint="@color/my_blue"
-        android:backgroundTint="@color/fab_color"
-        app:iconTint="@color/my_blue"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
         android:layout_marginBottom="80dp"
         android:layout_marginEnd="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -103,9 +100,7 @@
         app:icon="@drawable/insert_link"
         android:src="@drawable/insert_link"
         app:iconSize="50dp"
-        app:tint="@color/my_blue"
-        android:backgroundTint="@color/fab_color"
-        app:iconTint="@color/my_blue"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@id/addPlaylistBtn"

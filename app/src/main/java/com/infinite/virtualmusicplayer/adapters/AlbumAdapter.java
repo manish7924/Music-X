@@ -48,12 +48,15 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
         byte[] image = getAlbumArt(albumFiles.get(position).getPath());
         if (image != null){
             Glide.with(mContext)
-                    .load(image).placeholder(R.drawable.album_art)
+                    .load(image)
+                    .override(400,400)
+                    .placeholder(R.drawable.album_art)
                     .into(holder.album_image);
         }
         else {
             Glide.with(mContext)
                     .load(R.drawable.album_art)
+                    .override(200,200)
                     .into(holder.album_image);
         }
 
@@ -92,14 +95,20 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyHolder> {
     }
 
 
-    private byte[] getAlbumArt(String uri){
+    private byte[] getAlbumArt(String uri) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
+        byte[] art = null;
         try {
-            retriever.release();
+            retriever.setDataSource(uri);
+            art = retriever.getEmbeddedPicture();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return art;
     }

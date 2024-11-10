@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FFFFFF</color>
-    <color name="stroke">#141218</color>
+    <color name="stroke">#00CAFF</color>
     <color name="colorPrimary">#0D0D0D</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="myPrimary">#000000</color>
@@ -46,7 +46,8 @@
     <color name="my_black">#FFFFFF</color>
     <color name="play_bg">#4A4458</color>
     <color name="title">#FFFFFF</color>
-    <color name="my_blue">#00B7FF</color>
+    <color name="my_blue">#00CAFF</color>
+<!--    <color name="my_blue2">#5AD4FF</color>-->
 <!--    <color name="my_blue">#00B0FF</color>-->
 
 

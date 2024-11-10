@@ -1,13 +1,22 @@
 package com.infinite.virtualmusicplayer.adapters;
 
+import static com.infinite.virtualmusicplayer.activities.MainActivity.albums;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.artists;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.tracks;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validAlbums;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validArtists;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validSongs;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.formatMB;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isFav;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isShuffle;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.millisecondsToTime;
 
+import static java.util.Objects.*;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,7 +41,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.activities.ArtistDetails;
 import com.infinite.virtualmusicplayer.activities.Favourite;
@@ -73,7 +84,10 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
         byte[] image = getAlbumArt(albumSongFiles.get(position).getPath());
         if (image != null){
             Glide.with(mContext)
-                    .load(image).placeholder(R.drawable.music_note)
+                    .load(image)
+                    .override(200,200)
+                    .circleCrop()
+                    .placeholder(R.drawable.music_note)
                     .into(holder.album_song_image);
             holder.album_song_image.setPadding(0, 0, 0, 0);
         }
@@ -114,36 +128,6 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
         holder.menu_more_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-//                PopupMenu popupMenu = new PopupMenu(mContext, view);
-//                popupMenu.getMenuInflater().inflate(R.menu.album_menu_more, popupMenu.getMenu());
-//                popupMenu.show();
-//                popupMenu.setOnMenuItemClickListener((item) -> {
-//                    if (item.getItemId() == R.id.add_to_playlist) {
-//                        Toast.makeText(mContext, "Coming soon", Toast.LENGTH_SHORT).show();
-//                    }
-//                    else if (item.getItemId() == R.id.go_to_artist) {
-//                        goToArtist();
-//                    }
-//                    else if (item.getItemId() == R.id.go_to_folder) {
-//                        Toast.makeText(mContext, "Coming soon", Toast.LENGTH_SHORT).show();
-//                    }
-////                    else if (item.getItemId() == R.id.equalizer) {
-//////                        showEqualizer();
-////                    }
-//                    else if (item.getItemId() == R.id.share) {
-//                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-//                        shareIntent.setType("audio/*");
-//                        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(albumSongFiles.get(position).getPath()));
-//                        mContext.startActivity(Intent.createChooser(shareIntent, "Sharing Music File via"));
-//                    }
-//                    else if (item.getItemId() == R.id.delete_from_device) {
-//                        deleteMusicFile(position, view);
-//                    }
-//                    else if (item.getItemId() == R.id.details) {
-//                        showSongDetails(position);
-//                    }
-//                    return true;
-//                });
 
                 showMenuMoreBottomSheet();
 
@@ -151,7 +135,7 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
 
 
             private void showMenuMoreBottomSheet() {
-                final Dialog dialog = new Dialog(mContext);
+                final BottomSheetDialog dialog = new BottomSheetDialog(mContext);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.more_bottom_sheet_layout);
 
@@ -166,8 +150,10 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
 
 
                 if (isFav){
+                    if (addToFavourite == null) throw new AssertionError();
                     addToFavourite.setImageResource(R.drawable.favourite_on);
                 }else {
+                    if (addToFavourite == null) throw new AssertionError();
                     addToFavourite.setImageResource(R.drawable.ic_favorite);
                 }
 
@@ -177,11 +163,13 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
                 LinearLayout goToArtist = dialog.findViewById(R.id.go_to_artist);
                 LinearLayout goToFolder = dialog.findViewById(R.id.go_to_folder);
                 LinearLayout goToFavourite = dialog.findViewById(R.id.go_to_favourite);
+                LinearLayout editTags = dialog.findViewById(R.id.edit_tags);
                 LinearLayout share = dialog.findViewById(R.id.share);
                 LinearLayout deleteFromDevice = dialog.findViewById(R.id.delete_from_device);
                 LinearLayout details = dialog.findViewById(R.id.details);
 
 
+                if (addToPlaylist == null) throw new AssertionError();
                 addToPlaylist.setOnClickListener(view -> Toast.makeText(mContext, "Coming Soon", Toast.LENGTH_SHORT).show());
 
                 addToFavourite.setOnClickListener(view -> {
@@ -202,49 +190,85 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
                 });
 
 
+                if (goToAlbum == null) throw new AssertionError();
                 goToAlbum.setOnClickListener(view -> {
 //                        goToAlbum();
                     Toast.makeText(mContext, "Already in Album", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 });
 
+                if (goToArtist == null) throw new AssertionError();
                 goToArtist.setOnClickListener(view -> {
                     goToArtist();
                     dialog.dismiss();
                 });
 
+                if (goToFolder == null) throw new AssertionError();
                 goToFolder.setOnClickListener(view -> {
                     Toast.makeText(mContext, "Coming Soon", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 });
 
+                if (goToFavourite == null) throw new AssertionError();
                 goToFavourite.setOnClickListener(view -> {
                     Intent intent = new Intent(mContext, Favourite.class);
                     mContext.startActivity(intent);
                     dialog.dismiss();
                 });
 
+                if (editTags == null) throw new AssertionError();
+                editTags.setOnClickListener(view -> {
+                    showEditTagsDialog(position);
+                    dialog.dismiss();
+                });
+
+                if (share == null) throw new AssertionError();
                 share.setOnClickListener(view -> {
                     shareFiles();
                     dialog.dismiss();
                 });
 
+                if (deleteFromDevice == null) throw new AssertionError();
                 deleteFromDevice.setOnClickListener(view -> {
-                    deleteMusicFile(position, view);
-//                        dialog.dismiss();
+                    new MaterialAlertDialogBuilder(mContext)
+                            .setTitle("Do you want to delete this file ?")
+                            .setIcon(R.drawable.delete)
+                            .setMessage("This is permanent and cannot be undone.")
+                            .setPositiveButton("Delete", (dialogInterface, which) -> {
+//                                delete
+                                deleteMusicFile(position, view);
+
+                                dialog.dismiss();
+
+                            })
+                            .setNegativeButton("Cancel", (dialogInterface, which) -> {
+                                // Exit the app
+                                dialog.dismiss();
+                            })
+                            .show();
                 });
 
-                selectedSongImg.setOnClickListener(view -> showSongDetails(position));
+                if (selectedSongImg == null) throw new AssertionError();
+                selectedSongImg.setOnClickListener(view -> {
+                    showSongDetails(position);
+                    dialog.dismiss();
+                });
 
+                if (details == null) throw new AssertionError();
                 details.setOnClickListener(view -> {
                     showSongDetails(position);
                     dialog.dismiss();
                 });
 
 
+                if (nowPlayingSongName == null) throw new AssertionError();
                 nowPlayingSongName.setText(albumSongFiles.get(position).getTitle());
-                nowPlayingSongName.setSelected(true);
+                requireNonNull(nowPlayingSongName).setSelected(true);
+
+                if (nowPlayingSongArtist == null) throw new AssertionError();
                 nowPlayingSongArtist.setText(albumSongFiles.get(position).getArtist());
+
+                if (nowPlayingSongDuration == null) throw new AssertionError();
                 nowPlayingSongDuration.setText("• "+millisecondsToTime(Integer.parseInt(albumSongFiles.get(position).getDuration())));
 
 
@@ -252,19 +276,22 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
                 if (nowPlayingImage != null){
                     selectedSongImg.setPadding(0, 0, 0, 0);
                     Glide.with(mContext)
-                            .load(nowPlayingImage).placeholder(R.drawable.music_note)
+                            .load(nowPlayingImage)
+                            .circleCrop()
+                            .placeholder(R.drawable.music_note)
                             .into(selectedSongImg);
                 }
                 else {
                     selectedSongImg.setPadding(12, 12, 12, 12);
                     Glide.with(mContext)
-                            .load(R.drawable.music_note).centerInside()
+                            .load(R.drawable.music_note)
+                            .centerInside()
                             .into(selectedSongImg);
                 }
 
 
                 dialog.show();
-                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                requireNonNull(dialog.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
                 dialog.getWindow().setGravity(Gravity.BOTTOM);
@@ -305,6 +332,48 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
 
     }
 
+    private void showEditTagsDialog(int position) {
+        // Inflate the custom dialog layout
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+        View dialogView = inflater.inflate(R.layout.dialog_tag_editor, null);
+
+        // Initialize the EditText fields
+        EditText editTitle = dialogView.findViewById(R.id.edit_title);
+        EditText editArtist = dialogView.findViewById(R.id.edit_artist);
+        EditText editAlbum = dialogView.findViewById(R.id.edit_album);
+        EditText editYear = dialogView.findViewById(R.id.edit_year);
+
+        // Set current metadata values to EditText fields
+        editTitle.setText(albumSongFiles.get(position).getTitle());
+        editArtist.setText(albumSongFiles.get(position).getArtist());
+        editAlbum.setText(albumSongFiles.get(position).getAlbum());
+        editYear.setText(albumSongFiles.get(position).getYear());
+
+        // Build the dialog
+        new MaterialAlertDialogBuilder(mContext)
+                .setTitle("Edit Song Info")
+                .setIcon(R.drawable.edit_tags)
+                .setView(dialogView)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    // Retrieve updated values from the user
+                    String newTitle = editTitle.getText().toString();
+                    String newArtist = editArtist.getText().toString();
+                    String newAlbum = editAlbum.getText().toString();
+                    String newYear = editYear.getText().toString();
+
+                    // Get the path of the song
+                    String songPath = albumSongFiles.get(position).getPath();
+                    Uri songUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Long.parseLong(albumSongFiles.get(position).getId()));
+
+                    // Update the song metadata
+//                    updateSongMetadata(songUri, newTitle, newArtist, newAlbum, newYear, position);
+
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+
 
     @SuppressLint("SetTextI18n")
     private void showSongDetails(int position) {
@@ -344,62 +413,72 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
         byte[] nowPlayingImage = getAlbumArt(albumSongFiles.get(position).getPath());
         if (nowPlayingImage != null){
             Glide.with(mContext)
-                    .load(nowPlayingImage).placeholder(R.drawable.music_note)
+                    .load(nowPlayingImage)
+                    .placeholder(R.drawable.music_note)
                     .into(songImg);
             songImg.setPadding(0, 0, 0, 0);
         }
         else {
             songImg.setPadding(12, 12, 12, 12);
             Glide.with(mContext)
-                    .load(R.drawable.music_note).centerInside()
+                    .load(R.drawable.music_note)
+                    .centerInside()
                     .into(songImg);
         }
 
         dialog.show();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        requireNonNull(dialog.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void deleteMusicFile(int position, View view){
 
         Uri contentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 Long.parseLong(albumSongFiles.get(position).getId()));
         File file = new File(albumSongFiles.get(position).getPath());
-        boolean delete = file.delete();
+        ContentResolver contentResolver = mContext.getContentResolver();
 
-        if (file.exists()){
-            delete = !delete;
-            if (delete) {
+        // Check if the file exists before attempting to delete
+        if (file.exists()) {
+            boolean isDelete = file.delete(); // Attempt to delete the file
+
+            if (isDelete) {
                 try {
-                    mContext.getContentResolver().delete(contentUri, null, null);
-                    albumSongFiles.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, albumSongFiles.size());
-                    Snackbar.make(view, "File Deleted From device" ,Snackbar.LENGTH_SHORT).show();
-                }catch (Exception e){
+                    int deletedRows = contentResolver.delete(contentUri, null, null);
+                    if (deletedRows > 0) {
+                        albumSongFiles.remove(position);
+                        notifyItemRemoved(position);
+                        validSongs = Music.checkAndSetValidSongs(tracks);
+                        validAlbums = Music.checkAndSetValidSongs(albums);
+                        validArtists = Music.checkAndSetValidSongs(artists);
+                        notifyDataSetChanged();
+//                        Snackbar.make(view, "File Deleted From device", Snackbar.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "File Deleted From device", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(mContext, "Failed to delete file from device", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (SecurityException e) {
                     e.printStackTrace();
-//                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
-                    Snackbar.make(view, e.toString() ,Snackbar.LENGTH_SHORT).show();
-
+                    Toast.makeText(mContext, "Permission issue: Grant the manage all files access permission " + e.toString(), Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Toast.makeText(mContext, "Failed to delete file from device", Toast.LENGTH_SHORT).show();
             }
-            else {
-                Snackbar.make(view, "File Can't be Deleted" ,Snackbar.LENGTH_SHORT).show();
-            }
-        }
-        else {
-            Snackbar.make(view, "File doesn't exist" ,Snackbar.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(mContext, "File doesn't exist", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     @Override
     public int getItemCount() {
         return albumSongFiles.size();
     }
 
-    public class MyHolder extends RecyclerView.ViewHolder {
+    public static class MyHolder extends RecyclerView.ViewHolder {
 
         TextView album_song_name, songArtist, songDuration;
         ImageView album_song_image, menu_more_btn;
@@ -414,15 +493,22 @@ public class AlbumDetailsAdapter extends RecyclerView.Adapter<AlbumDetailsAdapte
     }
 
 
-    private byte[] getAlbumArt(String uri){
+    private byte[] getAlbumArt(String uri) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
+        byte[] art = null;
         try {
-            retriever.release();
+            retriever.setDataSource(uri);
+            art = retriever.getEmbeddedPicture();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return art;
     }
+
 }

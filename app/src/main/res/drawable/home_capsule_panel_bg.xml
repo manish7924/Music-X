@@ -5,7 +5,7 @@
     <solid android:color="@color/main_bg_color"/>
 
     <stroke
-        android:width="2dp"
+        android:width="1.25dp"
         android:color="@color/stroke" />
 
 </shape>

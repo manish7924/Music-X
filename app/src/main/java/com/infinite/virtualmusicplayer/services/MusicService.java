@@ -9,7 +9,7 @@ import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isP
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.listSongs;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.musicService;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.thumb;
-import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.albumArt;
+import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.miniPlayerCoverArt;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.songName;
 import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.ACTION_NEXT;
 import static com.infinite.virtualmusicplayer.receivers.ApplicationClass.ACTION_PLAY;
@@ -69,7 +69,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     @Override
     public void onCreate() {
         super.onCreate();
-
 
     }
 
@@ -227,10 +226,10 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
             if (SHOW_MINI_PLAYER){
                 byte[] art = getAlbumArt(PATH_TO_FRAG);
                 if (art != null){
-                    Glide.with(this).load(art).into(albumArt);
+                    Glide.with(this).load(art).into(miniPlayerCoverArt);
                 }
                 else {
-                    Glide.with(this).load(R.drawable.music_note).into(albumArt);
+                    Glide.with(this).load(R.drawable.music_note).into(miniPlayerCoverArt);
                 }
                 songName.setText(SONG_NAME_TO_FRAG);
                 NowPlayingFragment.artistName.setText(ARTIST_TO_FRAG);
@@ -370,10 +369,10 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 if (SHOW_MINI_PLAYER){
                     byte[] art = getAlbumArt(PATH_TO_FRAG);
                     if (art != null){
-                        Glide.with(this).load(art).into(albumArt);
+                        Glide.with(this).load(art).into(miniPlayerCoverArt);
                     }
                     else {
-                        Glide.with(this).load(R.drawable.music_note).into(albumArt);
+                        Glide.with(this).load(R.drawable.music_note).into(miniPlayerCoverArt);
                     }
                     songName.setText(SONG_NAME_TO_FRAG);
                     NowPlayingFragment.artistName.setText(ARTIST_TO_FRAG);
@@ -434,6 +433,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 //
 //        }
 
+
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID_2)
                 .setSmallIcon(R.drawable.icon)
                 .setLargeIcon(thumb)
@@ -446,23 +446,24 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSession.getSessionToken()))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.EXTRA_MEDIA_SESSION)
+                .setCategory(NotificationCompat.CATEGORY_TRANSPORT) // Fixed category
+
                 .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOnlyAlertOnce(true)
                 .build();
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-            mediaSession.setMetadata(new MediaMetadataCompat.Builder().putLong(MediaMetadataCompat.METADATA_KEY_DURATION, (long) getDuration())
+            mediaSession.setMetadata(new MediaMetadataCompat.Builder()
+                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, (long) getDuration())
                     .putString(MediaMetadataCompat.METADATA_KEY_TITLE,  musicServiceFiles.get(currentSongIndex).getTitle())
-                            .putText(MediaMetadataCompat.METADATA_KEY_ARTIST,  musicServiceFiles.get(currentSongIndex).getArtist())
-                            .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, thumb)
+                    .putText(MediaMetadataCompat.METADATA_KEY_ARTIST,  musicServiceFiles.get(currentSongIndex).getArtist())
+                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ART, thumb)
                     .build());
 
-
             if (isPlaying){
-                mediaSession.setPlaybackState(new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PLAYING, getSeekBarCurrentPosition(), playbackSpeed)
+                mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
+                        .setState(PlaybackStateCompat.STATE_PLAYING, getSeekBarCurrentPosition(), playbackSpeed)
                         .setActions(PlaybackStateCompat.ACTION_PAUSE |
                                 PlaybackStateCompat.ACTION_PLAY |
                                 PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
@@ -471,7 +472,8 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                                 PlaybackStateCompat.ACTION_SEEK_TO)
                         .build());
             } else {
-                mediaSession.setPlaybackState(new PlaybackStateCompat.Builder().setState(PlaybackStateCompat.STATE_PAUSED, getSeekBarCurrentPosition(), playbackSpeed)
+                mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
+                        .setState(PlaybackStateCompat.STATE_PAUSED, getSeekBarCurrentPosition(), playbackSpeed)
                         .setActions(PlaybackStateCompat.ACTION_PLAY |
                                 PlaybackStateCompat.ACTION_PAUSE |
                                 PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
@@ -497,7 +499,7 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                     }
                     super.onPlay();
                 }
-//
+                //
                 @Override
                 public void onPause() {
                     if (musicService != null){
@@ -543,10 +545,10 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
         }
 
-        startForeground(13, notification);
-
 //        .addAction(R.drawable.repeat_on, "Repeat", repeatPending)
 //                .addAction(R.drawable.shuffle_on, "Shuffle", shufflePending)
+
+        startForeground(13, notification);
 
 //        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 //        notificationManager.notify(0, notification);
@@ -555,17 +557,24 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
 
-    private byte[] getAlbumArt(String uri){
+    private byte[] getAlbumArt(String uri) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
+        byte[] art = null;
         try {
-            retriever.release();
+            retriever.setDataSource(uri);
+            art = retriever.getEmbeddedPicture();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return art;
     }
+
 
     public void nextBtnClicked(){
         if (musicService != null){

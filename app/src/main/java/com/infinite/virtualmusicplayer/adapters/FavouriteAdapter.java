@@ -50,12 +50,15 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         byte[] image = getAlbumArt(favouriteFiles.get(position).getPath());
         if (image != null){
             Glide.with(context)
-                    .load(image).placeholder(R.drawable.music_note_placeholder)
+                    .load(image)
+                    .override(400,400)
+                    .placeholder(R.drawable.music_note_placeholder)
                     .into(holder.favSongImg);
         }
         else {
             Glide.with(context).asBitmap()
                     .load(R.drawable.music_note)
+                    .override(200,200)
                     .into(holder.favSongImg);
         }
 
@@ -98,14 +101,20 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         }
     }
 
-    private byte[] getAlbumArt(String uri){
+    private byte[] getAlbumArt(String uri) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
+        byte[] art = null;
         try {
-            retriever.release();
+            retriever.setDataSource(uri);
+            art = retriever.getEmbeddedPicture();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return art;
     }

@@ -213,6 +213,21 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="info">info</string>
     <string name="em_lyrics_not_found">Embedded Lyrics not found</string>
+    <string name="connect">Connect</string>
+    <string name="instagram">Instagram</string>
+    <string name="linkedin">LinkedIN</string>
+    <string name="github">Github</string>
+    <string name="source_code">Source code</string>
+    <string name="rate">Rate</string>
+    <string name="whatsapp_channel">WhatsApp Channel</string>
+    <string name="x_twitter">X (Twitter)</string>
+    <string name="edit_tags">Edit Tags</string>
+    <string name="genre">Genre</string>
+    <string name="add_to_playing_queue">Add to playing queue</string>
+    <string name="edit_lyrics">Edit Lyrics</string>
+    <string name="scroll_to_top">Scroll to Top</string>
+    <string name="add">Add</string>
+    <string name="next">Next</string>
 
 
 </resources>

@@ -2,7 +2,7 @@
 <resources>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="stroke">#F7F1FF</color>
+    <color name="stroke">#00CAFF</color>
     <color name="colorPrimary">#F7F1FF</color>
     <color name="colorPrimaryDark">#F4EBFF</color>
     <color name="myPrimary">#FFFFFF</color>
@@ -63,8 +63,9 @@
     <color name="p_music">#06E8E6</color>
     <color name="play_bg">#E8DEF8</color>
     <color name="title">#00B0FF</color>
-    <color name="my_blue">#00B7FF</color>
     <color name="blue_grad">#D0F4FF</color>
+    <color name="my_blue">#00CAFF</color>
+    <!--    <color name="my_blue2">#5AD4FF</color>-->
 
     <color name="orange">#E65100</color>
     <color name="btn">#000000</color>

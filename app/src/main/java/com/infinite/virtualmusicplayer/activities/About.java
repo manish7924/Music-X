@@ -45,7 +45,7 @@ public class About extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void whatsappCommunity(View view) {
+    public void whatsapp(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://whatsapp.com/channel/0029VaQCaJZCnA7zDT0OjE34"));
         startActivity(intent);
     }
@@ -62,4 +62,8 @@ public class About extends AppCompatActivity {
     }
 
 
+    public void xBtn(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://x.com/Manishx792"));
+        startActivity(intent);
+    }
 }

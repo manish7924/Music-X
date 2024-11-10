@@ -6,14 +6,13 @@ import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.mus
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.thumb;
 import static com.infinite.virtualmusicplayer.fragments.AlbumFragment.albumAdapter;
 import static com.infinite.virtualmusicplayer.fragments.ArtistFragment.artistAdapter;
-import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.albumArt;
+import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.miniPlayerCoverArt;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.artistName;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.mini_player;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.mini_player_progressBar;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.playPauseBtn;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.songName;
 import static com.infinite.virtualmusicplayer.fragments.SongsFragment.musicAdapter;
-import static com.infinite.virtualmusicplayer.fragments.SongsFragment.progressBar;
 import static com.infinite.virtualmusicplayer.services.MusicService.MUSIC_FILE;
 import static com.infinite.virtualmusicplayer.services.MusicService.MUSIC_LAST_PLAYED;
 
@@ -22,35 +21,46 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.Icon;
 import android.media.MediaMetadataRetriever;
 import android.media.audiofx.AudioEffect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.palette.graphics.Palette;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -61,53 +71,64 @@ import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.fragments.AlbumFragment;
 import com.infinite.virtualmusicplayer.fragments.ArtistFragment;
 import com.infinite.virtualmusicplayer.fragments.HomeFragment;
+import com.infinite.virtualmusicplayer.fragments.MusicPlayerBottomSheetFragment;
 import com.infinite.virtualmusicplayer.fragments.NowPlayingFragment;
 import com.infinite.virtualmusicplayer.fragments.PlaylistFragment;
 import com.infinite.virtualmusicplayer.fragments.SongsFragment;
 import com.infinite.virtualmusicplayer.model.Music;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
-    private static final int REQUEST_CODE = 1;
-    int id;
+    private static final int REQUEST_CODE_PERMISSIONS = 1;
+    private boolean permissionGranted = false;
 
-    private MaterialToolbar toolbar;
     private SearchView searchView;
-    private NavigationView navigationView;
     private DrawerLayout drawerLayout;
 
-    private BottomNavigationView bottomNavigationView;
-    private FrameLayout frameLayout;
+    protected ViewPager2 viewPager;
+    protected BottomNavigationView bottomNavigationView;
+//    private FrameLayout frameLayout;
 
 //    NavigationViewHeader and text and image
+    @SuppressLint("StaticFieldLeak")
     static RelativeLayout headerBackground;
 
+    @SuppressLint("StaticFieldLeak")
     static TextView headerSongTitle;
+    @SuppressLint("StaticFieldLeak")
     static TextView headerSongArtist;
+    @SuppressLint("StaticFieldLeak")
     static ImageView headerImage;
 
 //    allSongs
     public static ArrayList<Music> musicFiles = new ArrayList<>();
 //    tempSongs
-    private ArrayList<Music> tempSongList = new ArrayList<>();
-//    allValidSongs
-    private ArrayList<Music> validSongs = new ArrayList<>();
-//    allArtists
-    public static ArrayList<Music> artists = new ArrayList<>();
+    public static ArrayList<Music> tracks = new ArrayList<>();
+    //    allValidSongs
+    public static ArrayList<Music> validSongs = new ArrayList<>();
+
 //    allAlbums
     public static ArrayList<Music> albums = new ArrayList<>();
+    //    all valid Albums
+    public static ArrayList<Music> validAlbums = new ArrayList<>();
+
+//    allArtists
+    public static ArrayList<Music> artists = new ArrayList<>();
+//    all valid Artists
+    public static ArrayList<Music> validArtists = new ArrayList<>();
 
     public static ArrayList<Music> playlists = new ArrayList<>();
 
+    SongsFragment songsFragment;
+    AlbumFragment albumFragment;
+    ArtistFragment artistFragment;
 
+    private Boolean isGranted = false;
 
 
     static SharedPreferences preferences;
@@ -132,25 +153,27 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
 
-
-
+    @RequiresApi(api = Build.VERSION_CODES.R)
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setFullScreen();
         setContentView(R.layout.activity_main);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        setTheme(com.google.android.material.R.style.Theme_Material3_DynamicColors_DayNight_NoActionBar);
+
+//        getWindow().setStatusBarColor(Color.TRANSPARENT);
 
         sharedPreferences = getSharedPreferences("ThemePrefs", Context.MODE_PRIVATE);
 
-        toolbar = findViewById(R.id.toolbar);
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        viewPager = findViewById(R.id.viewPager);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        frameLayout = findViewById(R.id.frameLayout);
+//        frameLayout = findViewById(R.id.frameLayout);
         drawerLayout = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.navigation_view);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
 
 //        Action bar
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -165,98 +188,103 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         headerSongArtist = headerView.findViewById(R.id.header_songArtist);
         headerImage = headerView.findViewById(R.id.header_imageView);
 
+        bottomNavigationView.setSelectedItemId(R.id.ac_home);
 
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
 
-                // Navigation drawer item click listener
-                int id = item.getItemId();
+        navigationView.setNavigationItemSelectedListener(item -> {
 
-                if (id == R.id.ac_home) {
-                    replaceFragment(new HomeFragment());
-                    bottomNavigationView.setSelectedItemId(R.id.ac_home);
+            // Navigation drawer item click listener
+            int id = item.getItemId();
 
-                }
-                else if (id == R.id.ac_tracks) {
-                    replaceFragment(new SongsFragment());
-                    bottomNavigationView.setSelectedItemId(R.id.ac_tracks);
-
-                }
-                else if (id == R.id.ac_albums) {
-                    replaceFragment(new AlbumFragment());
-                    bottomNavigationView.setSelectedItemId(R.id.ac_albums);
-
-                }
-                else if (id == R.id.ac_artists) {
-                    replaceFragment(new ArtistFragment());
-                    bottomNavigationView.setSelectedItemId(R.id.ac_artists);
-
-                }
-                else if (id == R.id.ac_playlist) {
-                    replaceFragment(new PlaylistFragment());
-                    bottomNavigationView.setSelectedItemId(R.id.ac_playlist);
-
-                }
-                else if (id == R.id.ac_favourite) {
-                    Intent intent = new Intent(MainActivity.this, Favourite.class);
-                    startActivity(intent);
-                }
-
-                else if (id == R.id.ac_equalizer) {
-                    if (musicService != null) {
-                        try {
-                            Intent eqIntent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
-                            eqIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, musicService.mediaPlayer.getAudioSessionId());
-                            eqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getBaseContext().getPackageName());
-                            eqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
-                            startActivityForResult(eqIntent, 7);
-                        }
-                        catch (Exception e){
-                            Toast.makeText(MainActivity.this, "Play any Song for use Equalizer", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    else {
-                        Toast.makeText(MainActivity.this, "Play any song for using Equalizer", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-                else if (id == R.id.instagram) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/mr._stark7?igsh=YzljYTk1ODg3Zg=="));
-                    startActivity(intent);
-                }
-                else if (id == R.id.linkedin) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/manish-chidar-393b1525b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"));
-                    startActivity(intent);
-                }
-                else if (id == R.id.github) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/manish7924/Music-X"));
-                    startActivity(intent);
-                }
-                else if (id == R.id.music_community) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://whatsapp.com/channel/0029VaQCaJZCnA7zDT0OjE34"));
-                    startActivity(intent);
-                }
-                else if (id == R.id.share) {
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.setType("text/plain");
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Share song with");
-                    String string = "Try this Music player app Music X with amazing features " +
-                            "\n\nhttps://github.com/manish7924/Music-X/releases";
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, string);
-                    startActivity(Intent.createChooser(shareIntent, "Share via"));
-                }
-                else if (id == R.id.rate) {
-                    Toast.makeText(MainActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
-                }
-
-
-                drawerLayout.closeDrawer(GravityCompat.START);
-                return true;
+            if (id == R.id.ac_home) {
+                viewPager.setCurrentItem(0);
+                updateIcons(id);
             }
+            else if (id == R.id.ac_tracks) {
+                viewPager.setCurrentItem(1);
+                updateIcons(id);
+            }
+            else if (id == R.id.ac_albums) {
+                viewPager.setCurrentItem(2);
+                updateIcons(id);
+            }
+            else if (id == R.id.ac_artists) {
+                viewPager.setCurrentItem(3);
+                updateIcons(id);
+            }
+            else if (id == R.id.ac_playlist) {
+                viewPager.setCurrentItem(4);
+                updateIcons(id);
+            }
+            else if (id == R.id.ac_favourite) {
+                Intent intent = new Intent(MainActivity.this, Favourite.class);
+                startActivity(intent);
+            }
+
+            else if (id == R.id.ac_equalizer) {
+                if (musicService != null) {
+                    try {
+                        Intent eqIntent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+                        eqIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION, musicService.mediaPlayer.getAudioSessionId());
+                        eqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME, getBaseContext().getPackageName());
+                        eqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE, AudioEffect.CONTENT_TYPE_MUSIC);
+                        startActivityForResult(eqIntent, 7);
+                    }
+                    catch (Exception e){
+                        Toast.makeText(MainActivity.this, "Play any Song for use Equalizer", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "Play any song for using Equalizer", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            else if (id == R.id.whatsapp_community) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://whatsapp.com/channel/0029VaQCaJZCnA7zDT0OjE34"));
+                startActivity(intent);
+            }
+            else if (id == R.id.instagram) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.instagram.com/mr._stark7?igsh=YzljYTk1ODg3Zg=="));
+                startActivity(intent);
+            }
+            else if (id == R.id.linkedin) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/manish-chidar-393b1525b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"));
+                startActivity(intent);
+            }
+            else if (id == R.id.github) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/manish7924"));
+                startActivity(intent);
+            }
+            else if (id == R.id.twitter) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://x.com/Manishx792"));
+                startActivity(intent);
+            }
+            else if (id == R.id.source_code) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/manish7924/Music-X"));
+                startActivity(intent);
+            }
+            else if (id == R.id.share) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Share song with");
+                String string = "Try this Music player app Music X with amazing features " +
+                        "\n\nhttps://github.com/manish7924/Music-X/releases";
+                shareIntent.putExtra(Intent.EXTRA_TEXT, string);
+                startActivity(Intent.createChooser(shareIntent, "Share via"));
+            }
+            else if (id == R.id.rate) {
+                Toast.makeText(MainActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+                MusicPlayerBottomSheetFragment musicPlayerBottomSheet = MusicPlayerBottomSheetFragment.newInstance();
+                musicPlayerBottomSheet.show(getSupportFragmentManager(), musicPlayerBottomSheet.getTag());
+            }
+
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
+
 
 
         try {
@@ -267,36 +295,61 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
 
 
+        viewPager.setAdapter(new ScreenSlidePagerAdapter(this));
+        viewPager.setOffscreenPageLimit(1);
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                updateIcons(bottomNavigationView.getMenu().getItem(position).getItemId());
+            }
+        });
+
+
+
 
         bottomNavigationView.setOnItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) item -> {
 
-            id = item.getItemId();
+            int id = item.getItemId();
 
             if (id == R.id.ac_home){
-                replaceFragment(new HomeFragment());
+                viewPager.setCurrentItem(0);
+                updateIcons(id);
 
             } else if (id == R.id.ac_tracks) {
-                replaceFragment(new SongsFragment());
+                viewPager.setCurrentItem(1);
+                updateIcons(id);
 
             } else if (id == R.id.ac_albums) {
-                replaceFragment(new AlbumFragment());
+                viewPager.setCurrentItem(2);
+                updateIcons(id);
 
             } else if (id == R.id.ac_artists) {
-                replaceFragment(new ArtistFragment());
+                viewPager.setCurrentItem(3);
+                updateIcons(id);
 
             } else if (id == R.id.ac_playlist) {
-                replaceFragment(new PlaylistFragment());
+                viewPager.setCurrentItem(4);
+                updateIcons(id);
             }
 
             return true;
         });
 
 
-        bottomNavigationView.setOnItemReselectedListener((BottomNavigationView.OnNavigationItemReselectedListener) item -> id = item.getItemId());
+        bottomNavigationView.setOnItemReselectedListener((BottomNavigationView.OnNavigationItemReselectedListener) item -> {
+            int id = item.getItemId();
+        });
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            setupShortcuts();
+        }
 
 //        Request Permission
-        permission();
+        RequestPermissions();
 
 //        Showing Mini player
         showOrHideMiniPlayer();
@@ -305,71 +358,161 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void updateIcons(int selectedItemId) {
+        for (int i = 0; i < bottomNavigationView.getMenu().size(); i++) {
+            MenuItem item = bottomNavigationView.getMenu().getItem(i);
+            if (item.getItemId() == selectedItemId) {
+                item.setIcon(getResources().getDrawable(getFilledIcon(item.getItemId()), getTheme()));
+            } else {
+                item.setIcon(getResources().getDrawable(getOutlinedIcon(item.getItemId()), getTheme()));
+            }
+        }
+    }
 
-    private void permission() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Dexter.withContext(this)
-                    .withPermissions(
-                            Manifest.permission.POST_NOTIFICATIONS,
-                            Manifest.permission.READ_MEDIA_AUDIO,
-                            Manifest.permission.BLUETOOTH_CONNECT
-                    ).withListener(new MultiplePermissionsListener() {
-                        @Override
-                        public void onPermissionsChecked(MultiplePermissionsReport report) {
+    @SuppressLint("NonConstantResourceId")
+    private int getFilledIcon(int itemId) {
+        int id = itemId;
 
-                            setUpWithSongList();
+        if (id == R.id.ac_home){
+            return R.drawable.ic_home_filled;
 
-                        }
+        } else if (id == R.id.ac_tracks) {
+            return R.drawable.ic_tracks_filled;
 
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                            token.continuePermissionRequest();
+        } else if (id == R.id.ac_albums) {
+            return R.drawable.ic_album_filled;
 
-                        }
-                    }).check();
+        } else if (id == R.id.ac_artists) {
+            return R.drawable.ic_artist_filled;
+
+        } else if (id == R.id.ac_playlist) {
+            return R.drawable.ic_playlist_filled;
+
+        }
+        return itemId;
+    }
+
+    private int getOutlinedIcon(int itemId) {
+        int id = itemId;
+
+        if (id == R.id.ac_home){
+            return R.drawable.ic_home_outlined;
+
+        } else if (id == R.id.ac_tracks) {
+            return R.drawable.ic_tracks_outlined;
+
+        } else if (id == R.id.ac_albums) {
+            return R.drawable.ic_album_outlined;
+
+        } else if (id == R.id.ac_artists) {
+            return R.drawable.ic_artist_outlined;
+
+        } else if (id == R.id.ac_playlist) {
+            return R.drawable.ic_playlist_outlined;
+
+        }
+        return itemId;
+    }
+
+
+    private void RequestPermissions() {
+        List<String> permissionsToRequest = new ArrayList<>();
+
+        // Check for READ_MEDIA_AUDIO or READ_EXTERNAL_STORAGE based on API level
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Android 13+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_AUDIO)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.READ_MEDIA_AUDIO);
+            }
         } else {
-            Dexter.withContext(this)
-                    .withPermissions(
-                            Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE
-
-                    ).withListener(new MultiplePermissionsListener() {
-                        @Override
-                        public void onPermissionsChecked(MultiplePermissionsReport report) {
-
-                            setUpWithSongList();
-
-                        }
-
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                            token.continuePermissionRequest();
-
-                        }
-                    }).check();
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
         }
 
+        // Check for POST_NOTIFICATIONS for Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+
+        // Check for Bluetooth permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // Android 12+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
+                    != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.BLUETOOTH_CONNECT);
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
+                    != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN)
+                            != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(Manifest.permission.BLUETOOTH);
+                permissionsToRequest.add(Manifest.permission.BLUETOOTH_ADMIN);
+            }
+        }
+
+        // Request all necessary permissions if not granted
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(this,
+                    permissionsToRequest.toArray(new String[0]), REQUEST_CODE_PERMISSIONS);
+        }
+        else {
+            permissionGranted = true;
+            loadMusicFiles();
+        }
+
+        // Request Manage All Files permission
+        showManageAllFilesPermissionDialog();
     }
 
-    private void setUpWithSongList() {
+    private void showManageAllFilesPermissionDialog() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle("Manage All Files Access")
+                    .setIcon(R.drawable.manage_file)
+                    .setMessage("This permission is required to access and manage all files on your device. Do you want to proceed?"+"\n\n"+"Note: Without this Rename & Delete features doesn't work")
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        // User clicked OK, request Manage All Files permission
+                        requestManageAllFilesPermission();
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> {
+                        // User clicked Cancel, do nothing
+                        Toast.makeText(MainActivity.this, "Permission denied to manage all files.", Toast.LENGTH_SHORT).show();
+                    })
+                    .show();
+        } else {
+            // If Manage All Files permission is already granted, load music files
+            permissionGranted = true;
+            loadMusicFiles();
+        }
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    private void requestManageAllFilesPermission() {
         try {
-            musicFiles = getAllAudio(MainActivity.this);
-            progressBar.setVisibility(View.VISIBLE);
-
-            new Thread(() -> {
-                validSongs = Music.checkAndSetValidSongs(tempSongList);
-
-                runOnUiThread(() -> {
-                    progressBar.setVisibility(View.INVISIBLE);
-
-                });
-            }).start();
-
-        } catch (Exception e){
+            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
+        }catch (Exception e){
             e.printStackTrace();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
         }
     }
+
+    private void loadMusicFiles() {
+        musicFiles = getAllAudio(this);
+    }
+
 
 
     private void showOrHideMiniPlayer() {
@@ -393,13 +536,81 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
+    private void setupShortcuts() {
+        ShortcutManager shortcutManager = getSystemService(ShortcutManager.class);
 
+        // Shortcut for "Songs"
+        ShortcutInfo songsShortcut = new ShortcutInfo.Builder(this, "shortcut_songs")
+                .setShortLabel("Songs")
+                .setLongLabel("Open Songs")
+                .setIcon(Icon.createWithResource(this, R.drawable.ic_tracks_filled))  // Set icon for shortcut
+                .setIntent(new Intent(this, MainActivity.class)  // Set your Songs activity here
+                        .setAction(Intent.ACTION_VIEW)
+                        .putExtra("navigateTo", "songs"))
+                .build();
 
-    private void replaceFragment(Fragment fragment){
-//        Inline method
-        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
+        // Shortcut for "Albums"
+        ShortcutInfo albumsShortcut = new ShortcutInfo.Builder(this, "shortcut_albums")
+                .setShortLabel("Albums")
+                .setLongLabel("Open Albums")
+                .setIcon(Icon.createWithResource(this, R.drawable.ic_album_filled))  // Set icon for shortcut
+                .setIntent(new Intent(this, MainActivity.class)  // Set your Albums activity here
+                        .setAction(Intent.ACTION_VIEW)
+                        .putExtra("navigateTo", "albums"))
+                .build();
 
+        // Shortcut for "Artists"
+        ShortcutInfo artistsShortcut = new ShortcutInfo.Builder(this, "shortcut_artists")
+                .setShortLabel("Artists")
+                .setLongLabel("Open Artists")
+                .setIcon(Icon.createWithResource(this, R.drawable.ic_artist_filled))  // Set icon for shortcut
+                .setIntent(new Intent(this, MainActivity.class)  // Set your Artists activity here
+                        .setAction(Intent.ACTION_VIEW)
+                        .putExtra("navigateTo", "artists"))
+                .build();
+
+        // Add all shortcuts to ShortcutManager
+        if (shortcutManager != null) {
+            shortcutManager.setDynamicShortcuts(Arrays.asList(songsShortcut, albumsShortcut, artistsShortcut));
+        }
     }
+
+
+    private void openSongsView() {
+        viewPager.setCurrentItem(1);
+    }
+
+    private void openAlbumsView() {
+        viewPager.setCurrentItem(2);
+    }
+
+    private void openArtistsView() {
+        viewPager.setCurrentItem(3);
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            permissionGranted = true;
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    permissionGranted = false;
+                    break;
+                }
+            }
+            if (permissionGranted) {
+                loadMusicFiles();
+            } else {
+                Toast.makeText(this, "Permissions are required to access media files.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
 
 
@@ -407,49 +618,48 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         preferences = getSharedPreferences(MY_SORT_PREF, MODE_PRIVATE);
         String sortOrder = preferences.getString("sorting", "sortByName");
 
-        ArrayList<String> duplicate = new ArrayList<>();
-        ArrayList<String> artist_duplicate = new ArrayList<>();
+        tracks.clear();
+        albums.clear();
+        artists.clear();
 
-
-        try {
-            albums.clear();
-            artists.clear();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
-        }
 
         String order = null;
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
 
-        if (sortOrder.equals("sortByName")){
-            try {
-                order = MediaStore.MediaColumns.DISPLAY_NAME + " ASC";
-                setDefaultFragment();
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }
-        else if (sortOrder.equals("sortByDate")){
-            try {
-                order = MediaStore.MediaColumns.DATE_ADDED + " ASC";
-                setDefaultFragment();
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-        }
-        else if (sortOrder.equals("sortBySize")){
-            try {
-                order = MediaStore.MediaColumns.SIZE + " DESC";
-                setDefaultFragment();
-            }catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-            }
+        switch (sortOrder) {
+            case "sortByName":
+                try {
+                    order = MediaStore.MediaColumns.DISPLAY_NAME + " ASC";
+//                setDefaultFragment();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case "sortByDate":
+                try {
+                    order = MediaStore.MediaColumns.DATE_ADDED + " ASC";
+//                setDefaultFragment();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case "sortBySize":
+                try {
+                    order = MediaStore.MediaColumns.SIZE + " DESC";
+//                setDefaultFragment();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
 
+
+        ArrayList<String> track_duplicate = new ArrayList<>();
+        ArrayList<String> album_duplicate = new ArrayList<>();
+        ArrayList<String> artist_duplicate = new ArrayList<>();
 
 
         String[] projection = {
@@ -481,44 +691,32 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 //                Log.e("path " + path, "Album " + album);
 
                 try {
-                    tempSongList.add(music);
-
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
-                }
-
-                if (!duplicate.contains(album)){
-                    try {
-                        albums.add(music);
-                        duplicate.add(album);
-//                        validSongs = Music.checkAndSetValidSongs(albums);
-
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+//                    adding songs on trackslist
+                    if (!track_duplicate.contains(title)){
+                        tracks.add(music);
+                        track_duplicate.add(title);
                     }
-//                    playlists.add(music);
-                }
 
-                if (!artist_duplicate.contains(artist)){
-                    try {
+                    if (!album_duplicate.contains(album)){
+                        albums.add(music);
+                        album_duplicate.add(album);
+                    }
+
+                    if (!artist_duplicate.contains(artist)){
                         artists.add(music);
                         artist_duplicate.add(artist);
-//                        validSongs = Music.checkAndSetValidSongs(artists);
-
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                     }
+
+                } catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
                 }
 
             }
             cursor.close();
         }
 
-
-        return tempSongList;
+        return tracks;
 
     }
 
@@ -529,6 +727,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         MenuItem menuItem = menu.findItem(R.id.search);
 
         searchView = (SearchView) menuItem.getActionView();
+        if (searchView == null) throw new AssertionError();
         searchView.setQueryHint("Search Music (Tracks, Albums, Artists)");
         searchView.setOnQueryTextListener(this);
 
@@ -537,31 +736,67 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        String userInput = query.toLowerCase();
+        ArrayList<Music> myFiles = new ArrayList<>();
+        for (Music song: musicFiles) {
+            if (bottomNavigationView.getSelectedItemId() == R.id.ac_tracks) {
+                if (musicAdapter != null) {
+                    if (song.getTitle().toLowerCase().contains(userInput)){
+                        myFiles.add(song);
+                        musicAdapter.updateList(myFiles);
+                    }
+                }
+                else {
+                    Toast.makeText(this, "Result Not found", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else if (bottomNavigationView.getSelectedItemId() == R.id.ac_albums) {
+                if (albumAdapter != null) {
+                    if (song.getAlbum().toLowerCase().contains(userInput)){
+                        myFiles.add(song);
+                        albumAdapter.updateList(myFiles);
+                    }
+                }
+            }
+            else if (bottomNavigationView.getSelectedItemId() == R.id.ac_artists) {
+                if (artistAdapter != null) {
+                    if (song.getArtist().toLowerCase().contains(userInput)){
+                        myFiles.add(song);
+                        artistAdapter.updateList(myFiles);
+                    }
+                }
+            }
+        }
         return true;
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        String userInput = newText.toLowerCase();
+    public boolean onQueryTextChange(String query) {
+        String userInput = query.toLowerCase();
         ArrayList<Music> myFiles = new ArrayList<>();
-        for (Music song: musicFiles)
-        {
-            if (song.getTitle().toLowerCase().contains(userInput)  ||  song.getArtist().toLowerCase().contains(userInput)  ||  song.getAlbum().toLowerCase().contains(userInput))
-            {
-                try {
-                    myFiles.add(song);
-                    if (musicAdapter != null){
+        for (Music song: musicFiles) {
+            if (bottomNavigationView.getSelectedItemId() == R.id.ac_tracks) {
+                if (musicAdapter != null) {
+                    if (song.getTitle().toLowerCase().contains(userInput)){
+                        myFiles.add(song);
                         musicAdapter.updateList(myFiles);
                     }
-                    if (albumAdapter != null){
+                }
+            }
+            else if (bottomNavigationView.getSelectedItemId() == R.id.ac_albums) {
+                if (albumAdapter != null) {
+                    if (song.getAlbum().toLowerCase().contains(userInput)){
+                        myFiles.add(song);
                         albumAdapter.updateList(myFiles);
                     }
-                    if (artistAdapter != null){
+                }
+            }
+            else if (bottomNavigationView.getSelectedItemId() == R.id.ac_artists) {
+                if (artistAdapter != null) {
+                    if (song.getArtist().toLowerCase().contains(userInput)){
+                        myFiles.add(song);
                         artistAdapter.updateList(myFiles);
                     }
-                }catch (Exception e){
-                    e.printStackTrace();
-                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -584,7 +819,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         editor.putString("sorting", "sortByName");
                         editor.apply();
                         this.recreate();
-                        setDefaultFragment();
+//                        setDefaultFragment();
                     }catch (Exception e){
                         e.printStackTrace();
                         Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -595,7 +830,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         editor.putString("sorting", "sortByName");
                         editor.apply();
                         this.recreate();
-                        setDefaultFragment();
+//                        setDefaultFragment();
                     }catch (Exception e){
                         e.printStackTrace();
                         Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -607,7 +842,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     editor.putString("sorting", "sortByName");
                     editor.apply();
                     this.recreate();
-                    setDefaultFragment();
+//                    setDefaultFragment();
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -623,7 +858,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         editor.putString("sorting", "sortByDate");
                         editor.apply();
                         this.recreate();
-                        setDefaultFragment();
+//                        setDefaultFragment();
                     }catch (Exception e){
                         e.printStackTrace();
                         Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -633,7 +868,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         editor.putString("sorting", "sortByDate");
                         editor.apply();
                         this.recreate();
-                        setDefaultFragment();
+//                        setDefaultFragment();
                     }catch (Exception e){
                         e.printStackTrace();
                         Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -645,7 +880,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     editor.putString("sorting", "sortByDate");
                     editor.apply();
                     this.recreate();
-                    setDefaultFragment();
+//                    setDefaultFragment();
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -661,7 +896,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         editor.putString("sorting", "sortBySize");
                         editor.apply();
                         this.recreate();
-                        setDefaultFragment();
+//                        setDefaultFragment();
                     }catch (Exception e){
                         e.printStackTrace();
                         Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -671,7 +906,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                         editor.putString("sorting", "sortBySize");
                         editor.apply();
                         this.recreate();
-                        setDefaultFragment();
+//                        setDefaultFragment();
                     }catch (Exception e){
                         e.printStackTrace();
                         Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -684,7 +919,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     editor.putString("sorting", "sortBySize");
                     editor.apply();
                     this.recreate();
-                    setDefaultFragment();
+//                    setDefaultFragment();
                 }catch (Exception e){
                     e.printStackTrace();
                     Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -696,16 +931,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             showThemeSelectionDialog();
         }
 
-//        else if(id == R.id.ac_refresh) {
-//            // Implement your desired functionality here
-//
-//            return true;
-//        }
-
         else if (id == R.id.ac_about) {
             Intent intent = new Intent(this, About.class);
             startActivity(intent);
-//            startActivity(new Intent(this,About.class));
             return true;
         }
         else if (id == R.id.ac_whats_new) {
@@ -736,7 +964,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             new MaterialAlertDialogBuilder(this)
                     .setTitle("Exit")
                     .setIcon(R.drawable.exit)
-                    .setMessage("Do you want to close this playing session ?")
+                    .setMessage("Are you want to sure to Exit app ?")
                     .setPositiveButton("Yes", (dialog, which) -> {
                         // Exit the app
                         exitApplication();
@@ -747,14 +975,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     })
                     .show();
 
-            //     new AlertDialog.Builder(this)
-//                    .setMessage("Do you want to exit the app?")
-//                    .setPositiveButton("Yes", (dialog, which) -> {
-//                        // Exit the app
-//                        finish();
-//                    })
-//                    .setNegativeButton("No", null)
-//                    .show();
         }catch (Exception e){
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -766,9 +986,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 .setTitle("What's New!")
                 .setIcon(R.drawable.icon)
                 .setMessage(R.string.whats_new_description)
-                .setPositiveButton("OK", (dialog, which) -> {
-                    dialog.dismiss();
-                })
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
@@ -778,7 +996,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             case "      System":
                 try {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                    setDefaultFragment();
                     isSystem = true;
                     isNight = false;
                     isLight = false;
@@ -790,7 +1007,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             case "      Dark":
                 try {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    setDefaultFragment();
                     isNight = true;
                     isLight = false;
                     isSystem = false;
@@ -802,7 +1018,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             case "      Light":
                 try {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    setDefaultFragment();
                     isLight = true;
                     isNight = false;
                     isSystem = false;
@@ -814,51 +1029,62 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
     }
 
-    private void setDefaultFragment() {
-//        replaceFragment(new SongsFragment());
-        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, new SongsFragment()).commit();
-        bottomNavigationView.setSelectedItemId(R.id.ac_tracks);
-//        frameLayout.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
-    }
 
 
     private void showThemeSelectionDialog() {
-        final Spinner spinner = new Spinner(this);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, themes);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        // LinearLayout to wrap the RadioGroup
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        int paddingHorizontal = (int) getResources().getDimension(R.dimen.dialog_horizontal_padding);
+        int paddingVertical = (int) getResources().getDimension(R.dimen.dialog_vertical_padding);
+        layout.setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
+
+        // RadioGroup
+        RadioGroup radioGroup = new RadioGroup(this);
+
+        // Dynamically created radio buttons based on the themes array
+        for (String theme : themes) {
+            RadioButton radioButton = new RadioButton(this);
+            radioButton.setText(theme);
+            radioGroup.addView(radioButton);
+        }
+
+        // Add the RadioGroup to the layout
+        layout.addView(radioGroup);
 
         new MaterialAlertDialogBuilder(this)
                 .setTitle("Theme")
                 .setIcon(R.drawable.night_mode1)
-                .setMessage("Choose your default theme for app")
-                .setView(spinner)
+                .setMessage("Choose your default theme for the app")
+                .setView(layout)
                 .setPositiveButton("OK", (dialog, which) -> {
-                    String selectedTheme = themes[spinner.getSelectedItemPosition()];
-                    try {
-                        // Save the selected theme
-                        saveSelectedTheme(selectedTheme);
+                    // Find the selected radio button
+                    int selectedRadioButtonId = radioGroup.getCheckedRadioButtonId();
+                    if (selectedRadioButtonId != -1) {
+                        RadioButton selectedRadioButton = radioGroup.findViewById(selectedRadioButtonId);
+                        String selectedTheme = selectedRadioButton.getText().toString();
+                        try {
+                            // Save the selected theme
+                            saveSelectedTheme(selectedTheme);
 
-                    } catch (Exception e){
-                        e.printStackTrace();
-                        Toast.makeText(this, e.toString() , Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                        try {
+                            // Apply the selected theme
+                            applyTheme(selectedTheme);
+                            Toast.makeText(this, selectedTheme + " Applied Successfully.", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                            Toast.makeText(this, e1.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "No theme selected!", Toast.LENGTH_SHORT).show();
                     }
-                    try {
-                        // Apply the selected theme
-                        applyTheme(selectedTheme);
-                        Toast.makeText(this, selectedTheme + " Applied Successfully. ", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e1){
-                        e1.printStackTrace();
-                        Toast.makeText(this, e1.toString() , Toast.LENGTH_SHORT).show();
-                    }
-                    setDefaultFragment();
                 })
-                .setNegativeButton("Cancel", (dialog, which) -> {
-                    // Exit the app
-                    dialog.dismiss();
-                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                 .show();
-
     }
 
 
@@ -874,14 +1100,20 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
 
-    private byte[] getAlbumArt(String uri){
+    private byte[] getAlbumArt(String uri) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
+        byte[] art = null;
         try {
-            retriever.release();
+            retriever.setDataSource(uri);
+            art = retriever.getEmbeddedPicture();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return art;
     }
@@ -893,14 +1125,36 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     }
 
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
 
+
+        Intent intent = getIntent();
+        if (intent != null && Objects.requireNonNull(intent.getAction()).equals(Intent.ACTION_VIEW)) {
+            String navigateTo = intent.getStringExtra("navigateTo");
+
+            if ("songs".equals(navigateTo)) {
+                // Open Songs view
+                openSongsView();
+            } else if ("albums".equals(navigateTo)) {
+                // Open Albums view
+                openAlbumsView();
+            } else if ("artists".equals(navigateTo)) {
+                // Open Artists view
+                openArtistsView();
+            }
+        }
+
         showOrHideMiniPlayer();
 
         new Thread(() -> {
-            validSongs = Music.checkAndSetValidSongs(tempSongList);
+            validSongs = Music.checkAndSetValidSongs(tracks);
+            validAlbums = Music.checkAndSetValidSongs(albums);
+            validArtists = Music.checkAndSetValidSongs(artists);
 
             runOnUiThread(() -> {
 
@@ -941,24 +1195,35 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if (SHOW_MINI_PLAYER){
             byte[] art = getAlbumArt(PATH_TO_FRAG);
             if (art != null){
-                Glide.with(this).load(art).placeholder(R.drawable.music_note).into(albumArt);
+                Glide.with(this)
+                        .load(art)
+                        .override(200,200)
+                        .placeholder(R.drawable.music_note)
+                        .into(miniPlayerCoverArt);
             }
             else {
-                Glide.with(this).load(R.drawable.music_note).into(albumArt);
+                Glide.with(this)
+                        .load(R.drawable.music_note)
+                        .override(200,200)
+                        .into(miniPlayerCoverArt);
             }
             songName.setText(SONG_NAME_TO_FRAG);
             artistName.setText(ARTIST_TO_FRAG);
+            headerSongTitle.setText(SONG_NAME_TO_FRAG);
+            headerSongArtist.setText(ARTIST_TO_FRAG);
+
 
             if (musicService != null){
                 mini_player_progressBar.setProgress(musicService.getCurrentPosition(), false);
 
-                headerSongTitle.setTextColor(Color.WHITE);
-                headerSongTitle.setText(SONG_NAME_TO_FRAG);
-                headerSongArtist.setText(ARTIST_TO_FRAG);
-
-
                 if (thumb != null){
-                    headerImage.setImageBitmap(thumb);
+                    Glide.with(this)
+                            .load(thumb)
+                            .override(200,200)
+                            .circleCrop()
+                            .placeholder(R.drawable.music_note)
+                            .into(headerImage);
+
                     Palette.from(thumb).generate(new Palette.PaletteAsyncListener() {
                         @Override
                         public void onGenerated(Palette palette) {
@@ -988,7 +1253,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                                 gradientDrawableMiniPlayer.setCornerRadius(17);
 
-                                NowPlayingFragment.mini_player.setBackground(gradientDrawableMiniPlayer);
+                                mini_player.setBackground(gradientDrawableMiniPlayer);
 
                                 GradientDrawable gradientDrawableHeader = new GradientDrawable(
                                         GradientDrawable.Orientation.RIGHT_LEFT,
@@ -1003,6 +1268,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                 if (thumb != null){
                                     songName.setTextColor(lightVibrantColor);
                                     artistName.setTextColor(manipulateColor(lightVibrantColor, 1f));
+                                    headerSongTitle.setTextColor(lightVibrantColor);
+                                    headerSongArtist.setTextColor(manipulateColor(lightVibrantColor, 1f));
                                     playPauseBtn.setColorFilter(lightVibrantColor);
                                     NowPlayingFragment.nextBtn.setColorFilter(lightVibrantColor);
                                     NowPlayingFragment.prevBtn.setColorFilter(lightVibrantColor);
@@ -1012,6 +1279,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                                 else {
                                     songName.setTextColor(Color.WHITE);
                                     artistName.setTextColor(Color.WHITE);
+                                    headerSongTitle.setTextColor(Color.WHITE);
+                                    headerSongArtist.setTextColor(Color.WHITE);
                                     playPauseBtn.setColorFilter(Color.WHITE);
                                     NowPlayingFragment.nextBtn.setColorFilter(Color.WHITE);
                                     NowPlayingFragment.prevBtn.setColorFilter(Color.WHITE);
@@ -1038,6 +1307,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                     });
                 }
+                else {
+                    Glide.with(this)
+                            .load(R.drawable.music_note)
+                            .placeholder(R.drawable.music_note)
+                            .into(headerImage);
+                }
             }
             else {
                 headerSongTitle.setText("Title");
@@ -1045,12 +1320,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
                 if (isNight) {
                     headerSongTitle.setTextColor(Color.WHITE);
+                    headerSongArtist.setTextColor(Color.WHITE);
                 }
                 else if (isLight) {
                     headerSongTitle.setTextColor(Color.BLACK);
+                    headerSongArtist.setTextColor(Color.BLACK);
                 }
                 else {
                     headerSongTitle.setTextColor(R.color.ar_gray);
+                    headerSongArtist.setTextColor(R.color.ar_gray);
                 }
             }
 
@@ -1167,6 +1445,33 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     }
 
+    private static class ScreenSlidePagerAdapter extends FragmentStateAdapter {
+        public ScreenSlidePagerAdapter(MainActivity activity) {
+            super(activity);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            switch (position) {
+                case 1:
+                    return new SongsFragment();
+                case 2:
+                    return new AlbumFragment();
+                case 3:
+                    return new ArtistFragment();
+                case 4:
+                    return new PlaylistFragment();
+                default:
+                    return new HomeFragment();
+            }
 
 
+        }
+
+        @Override
+        public int getItemCount() {
+            return 5; // Number of fragments
+        }
+    }
 }

@@ -4,25 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/artist_items"
     android:layout_width="match_parent"
-    android:layout_height="190dp"
+    android:layout_height="200dp"
     app:cardCornerRadius="18dp"
     app:cardElevation="10dp"
     android:background="?selectableItemBackground"
     android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="8dp"
+    android:theme="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
     tools:ignore="MissingDefaultResource">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/relative_layout_cardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary">
+        android:background="@android:color/transparent"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
             android:layout_width="match_parent"
-            android:layout_height="153dp"
+            android:layout_height="165dp"
             android:background="@color/myTint2"
+            style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -58,7 +61,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+            tools:targetApi="p" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

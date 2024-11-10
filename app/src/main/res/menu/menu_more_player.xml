@@ -5,7 +5,7 @@
     <item
         android:id="@+id/add_to_playlist"
         android:title="@string/add_to_playlist"
-        android:icon="@drawable/ic_nav_playlist" />
+        android:icon="@drawable/ic_playlist_outlined" />
 
 
     <item
@@ -34,6 +34,10 @@
         android:icon="@drawable/ic_equalizer"
         android:title="@string/equalizer" />
 
+    <item
+        android:id="@+id/editTags"
+        android:title="@string/edit_tags"
+        android:icon="@drawable/edit_tags" />
 
     <item
         android:id="@+id/share"

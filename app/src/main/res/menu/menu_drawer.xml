@@ -5,28 +5,28 @@
         <item
             android:id="@+id/ac_home"
             android:title="@string/home"
-            android:icon="@drawable/ic_nav_home" />
+            android:icon="@drawable/ic_home_outlined" />
 
 
         <item
             android:id="@+id/ac_tracks"
             android:title="@string/tracks"
-            android:icon="@drawable/ic_nav_tracks" />
+            android:icon="@drawable/ic_tracks_outlined" />
 
         <item
             android:id="@+id/ac_albums"
             android:title="@string/albums"
-            android:icon="@drawable/ic_nav_album" />
+            android:icon="@drawable/ic_album_outlined" />
 
         <item
             android:id="@+id/ac_artists"
             android:title="@string/artists"
-            android:icon="@drawable/ic_nav_artist" />
+            android:icon="@drawable/ic_artist_outlined" />
 
         <item
             android:id="@+id/ac_playlist"
             android:title="@string/playlists"
-            android:icon="@drawable/ic_nav_playlist" />
+            android:icon="@drawable/ic_playlist_outlined" />
 
         <item
             android:id="@+id/ac_favourite"
@@ -42,38 +42,49 @@
 
     </group>
 
-    <item android:title="Connect">
+    <item android:title="@string/connect">
         <menu>
 
-            <item
-                android:id="@+id/music_community"
-                android:icon="@drawable/icon"
-                android:title="WhatsApp Channel" />
 
             <item
                 android:id="@+id/instagram"
-                android:icon="@drawable/instagram"
-                android:title="Instagram" />
+                android:icon="@drawable/instagram_svg"
+                android:title="@string/instagram" />
 
             <item
                 android:id="@+id/linkedin"
-                android:icon="@drawable/linkedin"
-                android:title="LinkedIN" />
+                android:icon="@drawable/linkedin_svg"
+                android:title="@string/linkedin" />
+
+            <item
+                android:id="@+id/twitter"
+                android:icon="@drawable/x"
+                android:title="@string/x_twitter" />
+
+            <item
+                android:id="@+id/whatsapp_community"
+                android:icon="@drawable/whatsapp"
+                android:title="@string/whatsapp_channel" />
 
             <item
                 android:id="@+id/github"
+                android:icon="@drawable/github"
+                android:title="@string/github" />
+
+            <item
+                android:id="@+id/source_code"
                 android:icon="@drawable/code"
-                android:title="Source code" />
+                android:title="@string/source_code" />
 
             <item
                 android:id="@+id/share"
                 android:icon="@drawable/share"
-                android:title="Share" />
+                android:title="@string/share" />
 
             <item
                 android:id="@+id/rate"
                 android:icon="@drawable/rate"
-                android:title="Rate" />
+                android:title="@string/rate" />
         </menu>
 
     </item>

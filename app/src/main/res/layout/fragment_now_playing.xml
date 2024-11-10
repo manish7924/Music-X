@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/mini_player"
     android:background="@drawable/now_playing_bg"
+    android:theme="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
     tools:context=".fragments.NowPlayingFragment">
 
     <RelativeLayout
@@ -13,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="2.7dp"
         android:paddingHorizontal="7.79dp"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
         android:layout_below="@id/card_relative_layout">
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -21,6 +23,7 @@
             android:layout_height="wrap_content"
             app:indicatorColor="@color/title"
             app:trackColor="@android:color/transparent"
+            style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
             android:foregroundGravity="bottom" />
 
     </RelativeLayout>
@@ -30,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingHorizontal="1dp"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
         android:paddingVertical="1dp">
 
         <com.google.android.material.card.MaterialCardView
@@ -39,6 +43,7 @@
             app:cardCornerRadius="9dp"
             app:cardBackgroundColor="@android:color/transparent"
             app:strokeColor="@android:color/transparent"
+            style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
             android:layout_marginTop="5dp"

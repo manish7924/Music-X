@@ -6,11 +6,14 @@ import static com.infinite.virtualmusicplayer.activities.MainActivity.headerSong
 import static com.infinite.virtualmusicplayer.activities.MainActivity.headerSongTitle;
 import static com.infinite.virtualmusicplayer.activities.MainActivity.isLight;
 import static com.infinite.virtualmusicplayer.activities.MainActivity.isNight;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validAlbums;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validArtists;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validSongs;
 import static com.infinite.virtualmusicplayer.adapters.AlbumDetailsAdapter.albumSongFiles;
 import static com.infinite.virtualmusicplayer.adapters.ArtistDetailsAdapter.artistSongFiles;
 import static com.infinite.virtualmusicplayer.adapters.FavouriteAdapter.favouriteFiles;
-import static com.infinite.virtualmusicplayer.adapters.MusicAdapter.mFiles;
-import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.albumArt;
+import static com.infinite.virtualmusicplayer.adapters.MusicAdapter.songFiles;
+import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.miniPlayerCoverArt;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.artistName;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.mini_player_progressBar;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.playPauseBtn;
@@ -26,6 +29,7 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -52,12 +56,14 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -91,33 +97,48 @@ import java.util.Random;
 
 public class MusicPlayerActivity extends AppCompatActivity implements ActionPlaying, ServiceConnection {
 
-    TextView songTitleTv, artistTv, lyricsTitle, lyricsText, currentTimeTv, totalTimeTv;
-    SeekBar seekBar, seekVol;
-    static ImageView play;
+    private TextView songTitleTv, artistTv, lyricsTitle, lyricsText, currentTimeTv, totalTimeTv;
+    private SeekBar seekBar, seekVol;
+    private static ImageView play;
 
-    ConnectivityManager connectivityManager;
-    AudioManager audioManager;
-    ImageView nextBtn, previousBtn, musicCover, loop, shuffle, shape, rotateAnim, equalizerBtn, songInfo, copyBtn, lyricsInfoBtn, lyricsBtn, lyrics_gradient, fontSizeBtn, searchLyricsBtn, volumeBtn;
-    ImageView favBtn, backBtn, moreOptionBtn;
+    private ConnectivityManager connectivityManager;
+    private AudioManager audioManager;
+    private static ImageView nextBtn;
+    private static ImageView previousBtn;
+    private static ImageView musicCover;
+    public static ImageView loop;
+    public static ImageView shuffle;
+    private static ImageView shape;
+    private static ImageView rotateAnim;
+    private static ImageView equalizerBtn;
+    private static ImageView songInfo;
+    private static ImageView copyBtn;
+    private static ImageView lyricsInfoBtn;
+    private static ImageView lyricsBtn;
+    private static ImageView lyrics_gradient;
+    private static ImageView fontSizeBtn;
+    private static ImageView searchLyricsBtn;
+    private static ImageView volumeBtn;
+    private ImageView favBtn, backBtn, moreOptionBtn;
 //    Thread playThread, prevThread, nextThread;
-    CardView cardView;
+    private CardView cardView;
 
-    GradientDrawable gradientDrawable;
-    ConstraintLayout mContainer, buttonPanel;
-    ScrollView scrollView;
-    LinearLayout linearBtnLayout;
+    private GradientDrawable gradientDrawable;
+    private ConstraintLayout mContainer, buttonPanel;
+    private ScrollView scrollView;
+    private LinearLayout linearBtnLayout;
     public static ArrayList<Music> listSongs = new ArrayList<>();
 //    static ArrayList<Music> favouriteSongs = new ArrayList<>();
-    static Uri uri;
+    private static Uri uri;
     public static MusicService musicService;
-    ProgressBar lyricsProg;
+    private ProgressBar lyricsProg;
 
     public static Bitmap thumb;
 
     private final Handler handler = new Handler();
 
 
-    Vibrator myVib;
+    private Vibrator myVib;
 
     static Palette mPalette;
 
@@ -142,7 +163,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 //    private boolean isPlay = false;
     private boolean isLyrics = false;
     private boolean isVol = false;
-    static boolean isAnim = false;
+    private static boolean isAnim = false;
     private static final int SEEK_DURATION = 10000;   // 10 sec
 
     //    private static PowerManager.WakeLock wakeLock;
@@ -315,7 +336,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
                 isLoop = true;
                 loop.setColorFilter(lightVibrantColor);
-                loop.setImageResource(R.drawable.repeat_on);
+                loop.setImageResource(R.drawable.repeat_one);
 
             }
         });
@@ -398,6 +419,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     shareIntent();
                     return true;
                 }
+
+                if (id == R.id.editTags){
+                    showEditTagsDialog(position);
+                    return true;
+                }
 //                        shape menu
                 if (id == R.id.very_small) {
                     cardView.setRadius(12);
@@ -444,7 +470,21 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                     return true;
                 }
                 if (id == R.id.delete_from_device) {
-                    deleteMusicFile(position, MusicPlayerActivity.this);
+                    new MaterialAlertDialogBuilder(this)
+                            .setTitle("Do you want to delete this file ?")
+                            .setIcon(R.drawable.delete)
+                            .setMessage("This is permanent and cannot be undone.")
+                            .setPositiveButton("Delete", (dialogInterface, which) -> {
+//                                delete
+                                deleteMusicFile(position, MusicPlayerActivity.this);
+                                nextBtnClicked();
+
+                            })
+                            .setNegativeButton("Cancel", (dialogInterface, which) -> {
+                                // Exit the app
+                            })
+                            .show();
+
                     return true;
                 }
 
@@ -664,6 +704,47 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
     }
 
+    private void showEditTagsDialog(int position) {
+        // Inflate the custom dialog layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_tag_editor, null);
+
+        // Initialize the EditText fields
+        EditText editTitle = dialogView.findViewById(R.id.edit_title);
+        EditText editArtist = dialogView.findViewById(R.id.edit_artist);
+        EditText editAlbum = dialogView.findViewById(R.id.edit_album);
+        EditText editYear = dialogView.findViewById(R.id.edit_year);
+
+        // Set current metadata values to EditText fields
+        editTitle.setText(listSongs.get(position).getTitle());
+        editArtist.setText(listSongs.get(position).getArtist());
+        editAlbum.setText(listSongs.get(position).getAlbum());
+        editYear.setText(listSongs.get(position).getYear());
+
+        // Build the dialog
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Edit Song Info")
+                .setIcon(R.drawable.edit_tags)
+                .setView(dialogView)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    // Retrieve updated values from the user
+                    String newTitle = editTitle.getText().toString();
+                    String newArtist = editArtist.getText().toString();
+                    String newAlbum = editAlbum.getText().toString();
+                    String newYear = editYear.getText().toString();
+
+                    // Get the path of the song
+                    String songPath = listSongs.get(position).getPath();
+                    Uri songUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, Long.parseLong(listSongs.get(position).getId()));
+
+                    // Update the song metadata
+//                    updateSongMetadata(songUri, newTitle, newArtist, newAlbum, newYear, position);
+
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
 
 
     private void showNotificationWithPreference() {
@@ -873,7 +954,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 //                    Snackbar.make(findViewById(R.id.lyricsLayout), "Not Connected to Internet", Snackbar.LENGTH_SHORT).show();
                     Snackbar.make(findViewById(R.id.lyricsLayout), "No Internet", Snackbar.LENGTH_LONG)
                             .setAction("Go to Settings", view -> {
-                                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                startActivity(new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS));
                             }).setActionTextColor(Color.parseColor("#00B0FF")).show();
 
                 }
@@ -999,7 +1080,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         }
 
         else if (mainPlayIntent != null && mainPlayIntent.equals("MainPlayIntent")) {
-            listSongs = mFiles;
+            listSongs = songFiles;
             startPlaying();
         }
 
@@ -1009,7 +1090,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         }
 
         else {
-            listSongs = mFiles;
+            listSongs = songFiles;
             startPlaying();
         }
 
@@ -1031,7 +1112,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
         if (isLoop || isShuffle){
             if (isLoop){
-                loop.setImageResource(R.drawable.repeat_on);
+                loop.setImageResource(R.drawable.repeat_one);
             }else {
                 loop.setImageResource(R.drawable.repeat_off);
             }
@@ -1255,8 +1336,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
             musicCover.setPadding(0, 0, 0, 0);
 
             musicCover.setImageBitmap(thumb);
+
             //        settingImageArt on Mini player
-            albumArt.setImageBitmap(thumb);
+            miniPlayerCoverArt.setImageBitmap(thumb);
+
             headerImage.setImageBitmap(thumb);
 
             Palette.from(thumb).generate(new Palette.PaletteAsyncListener() {
@@ -1321,6 +1404,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         totalTimeTv.setTextColor(lightVibrantColor);
                         currentTimeTv.setTextColor(lightVibrantColor);
 
+                        headerSongTitle.setTextColor(lightVibrantColor);
+                        headerSongArtist.setTextColor(lightVibrantColor);
+
                         backBtn.setColorFilter(lightVibrantColor);
                         equalizerBtn.setColorFilter(lightVibrantColor);
                         shape.setColorFilter(lightVibrantColor);
@@ -1349,6 +1435,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         if (thumb != null){
                             songName.setTextColor(lightVibrantColor);
                             artistName.setTextColor(manipulateColor(lightVibrantColor, 1f));
+                            headerSongTitle.setTextColor(lightVibrantColor);
+                            headerSongArtist.setTextColor(manipulateColor(lightVibrantColor, 1f));
                             playPauseBtn.setColorFilter(lightVibrantColor);
                             NowPlayingFragment.nextBtn.setColorFilter(lightVibrantColor);
                             NowPlayingFragment.prevBtn.setColorFilter(lightVibrantColor);
@@ -1358,6 +1446,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         else {
                             songName.setTextColor(Color.WHITE);
                             artistName.setTextColor(Color.WHITE);
+                            headerSongTitle.setTextColor(Color.WHITE);
+                            headerSongArtist.setTextColor(Color.WHITE);
                             playPauseBtn.setColorFilter(Color.WHITE);
                             NowPlayingFragment.nextBtn.setColorFilter(Color.WHITE);
                             NowPlayingFragment.prevBtn.setColorFilter(Color.WHITE);
@@ -1400,7 +1490,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 //            getWindow().setStatusBarColor(Color.BLACK);
 
             musicCover.setImageResource(R.drawable.music_note_player);
-            albumArt.setImageResource(R.drawable.music_note);
+            miniPlayerCoverArt.setImageResource(R.drawable.music_note);
             headerImage.setImageResource(R.drawable.music_note);
 
             if (isNight) {
@@ -1411,7 +1501,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 //                );
 
                 musicCover.setImageResource(R.drawable.music_note_player);
-                albumArt.setImageResource(R.drawable.music_note);
+                miniPlayerCoverArt.setImageResource(R.drawable.music_note);
                 headerImage.setImageResource(R.drawable.music_note);
 
                 GradientDrawable gradientDrawable = new GradientDrawable(
@@ -1444,6 +1534,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                 lyricsText.setTextColor(Color.WHITE);
                 currentTimeTv.setTextColor(Color.WHITE);
                 totalTimeTv.setTextColor(Color.WHITE);
+
+                headerSongTitle.setTextColor(Color.WHITE);
+                headerSongArtist.setTextColor(R.color.ar_gray);
 
                 backBtn.setColorFilter(Color.WHITE);
                 equalizerBtn.setColorFilter(Color.WHITE);
@@ -1494,7 +1587,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
             } else if (isLight) {
 
                 musicCover.setImageResource(R.drawable.music_note);
-                albumArt.setImageResource(R.drawable.music_note);
+                miniPlayerCoverArt.setImageResource(R.drawable.music_note);
                 headerImage.setImageResource(R.drawable.music_note);
 
                 GradientDrawable gradientDrawable = new GradientDrawable(
@@ -1518,13 +1611,15 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                 NowPlayingFragment.mini_player.setBackground(gradientDrawableMiniPlayer);
                 headerBackground.setBackground(gradientDrawableMiniPlayer);
 
-
                 songTitleTv.setTextColor(Color.BLACK);
                 artistTv.setTextColor(Color.BLACK);
                 lyricsTitle.setTextColor(Color.BLACK);
                 lyricsText.setTextColor(Color.BLACK);
                 currentTimeTv.setTextColor(Color.BLACK);
                 totalTimeTv.setTextColor(Color.BLACK);
+
+                headerSongTitle.setTextColor(Color.BLACK);
+                headerSongArtist.setTextColor(R.color.ar_gray);
 
                 backBtn.setColorFilter(Color.BLACK);
                 equalizerBtn.setColorFilter(Color.BLACK);
@@ -1541,6 +1636,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                 moreOptionBtn.setColorFilter(Color.BLACK);
 
                 copyBtn.setColorFilter(Color.BLACK);
+                lyricsInfoBtn.setColorFilter(Color.BLACK);
                 searchLyricsBtn.setColorFilter(Color.BLACK);
                 fontSizeBtn.setColorFilter(Color.BLACK);
 
@@ -1598,6 +1694,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
             musicService.stop();
             musicService.release();
 
+            if (isLoop) {
+                isLoop = false;
+                loop.setImageResource(R.drawable.repeat_off);
+            }
 
             if (isShuffle && !isLoop) {
                 try {
@@ -1667,6 +1767,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
         }
         else {
+
+            if (isLoop) {
+                isLoop = false;
+                loop.setImageResource(R.drawable.repeat_off);
+            }
 
             if (isShuffle && !isLoop) {
                 try {
@@ -1777,6 +1882,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
             musicService.stop();
             musicService.release();
 
+            if (isLoop) {
+                isLoop = false;
+                loop.setImageResource(R.drawable.repeat_off);
+            }
+
             if (isShuffle && !isLoop) {
                 try {
                     if (listSongs != null) {
@@ -1847,6 +1957,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
             setImageArt();
 
         } else {
+
+            if (isLoop) {
+                isLoop = false;
+                loop.setImageResource(R.drawable.repeat_off);
+            }
 
             if (isShuffle && !isLoop) {
                 try {
@@ -1938,10 +2053,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
 
     private void setImageArt() {
         if (thumb != null){
-            Glide.with(getBaseContext()).load(thumb).into(albumArt);
+            Glide.with(getBaseContext())
+                    .load(thumb)
+                    .into(miniPlayerCoverArt);
         }
         else {
-            Glide.with(getBaseContext()).load(R.drawable.music_note_player).into(albumArt);
+            Glide.with(getBaseContext())
+                    .load(R.drawable.music_note_player)
+                    .into(miniPlayerCoverArt);
         }
     }
 
@@ -2138,6 +2257,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         bindService(intent, this, BIND_AUTO_CREATE);
         super.onResume();
 
+        validSongs = Music.checkAndSetValidSongs(listSongs);
+        validAlbums = Music.checkAndSetValidSongs(listSongs);
+        validArtists = Music.checkAndSetValidSongs(listSongs);
+
 //        playThreadBtn();
 //        prevThreadBtn();
 //        nextThreadBtn();
@@ -2305,14 +2428,16 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         byte[] nowPlayingImage = getAlbumArt(listSongs.get(position).getPath());
         if (nowPlayingImage != null){
             Glide.with(this)
-                    .load(nowPlayingImage).placeholder(R.drawable.music_note)
+                    .load(nowPlayingImage)
+                    .placeholder(R.drawable.music_note)
                     .into(songImg);
             songImg.setPadding(0, 0, 0, 0);
         }
         else {
             songImg.setPadding(12, 12, 12, 12);
             Glide.with(this)
-                    .load(R.drawable.music_note).centerInside()
+                    .load(R.drawable.music_note)
+                    .centerInside()
                     .into(songImg);
         }
 //
@@ -2323,48 +2448,59 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
 
+
+    @SuppressLint("NotifyDataSetChanged")
     private void deleteMusicFile(int position, Context context){
 
         Uri contentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                Long.parseLong(mFiles.get(position).getId()));
-        File file = new File(mFiles.get(position).getPath());
-        boolean delete = file.delete();
+                Long.parseLong(songFiles.get(position).getId()));
+        File file = new File(songFiles.get(position).getPath());
+        ContentResolver contentResolver = context.getContentResolver();
 
-        if (file.exists()){
-            delete = !delete;
-            if (delete) {
-                try {
-                    context.getContentResolver().delete(contentUri, null, null);
-                    mFiles.remove(position);
-//                    notifyItemRemoved(position);
-//                    notifyItemRangeChanged(position, mFiles.size());
-                    Toast.makeText(this, "File Deleted From device", Toast.LENGTH_SHORT).show();
-                }catch (Exception e){
-                    e.printStackTrace();
-//                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
-                    Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+        // Check if the file exists before attempting to delete
+        if (file.exists()) {
+            boolean isDelete = file.delete(); // Attempt to delete the file
 
-
+            try {
+                if (isDelete) {
+                    int deletedRows = contentResolver.delete(contentUri, null, null);
+                    if (deletedRows > 0) {
+                        songFiles.remove(position);
+                        validSongs = Music.checkAndSetValidSongs(listSongs);
+                        validAlbums = Music.checkAndSetValidSongs(listSongs);
+                        validArtists = Music.checkAndSetValidSongs(listSongs);
+                        Toast.makeText(context, "File Deleted From device", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-            else {
-                Toast.makeText(this, "File Can't be Deleted", Toast.LENGTH_SHORT).show();
+                else{
+                    Toast.makeText(context, "Failed to delete file from device", Toast.LENGTH_SHORT).show();
+                }
+            }catch (SecurityException e) {
+                e.printStackTrace();
+                Toast.makeText(context, "Permission issue: Grant the manage all files access permission " + e.toString(), Toast.LENGTH_SHORT).show();
             }
         }
+
         else {
-            Toast.makeText(this, "File doesn't exist", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "File doesn't exist", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-    private byte[] getAlbumArt(String uri){
+    private byte[] getAlbumArt(String uri) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
+        byte[] art = null;
         try {
-            retriever.release();
+            retriever.setDataSource(uri);
+            art = retriever.getEmbeddedPicture();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return art;
     }

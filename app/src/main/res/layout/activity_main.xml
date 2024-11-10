@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
     tools:context=".activities.MainActivity"
+    android:background="@color/main_bg_color"
+    android:theme="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
     tools:openDrawer="start">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,45 +18,54 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             app:title="@string/app_name"
-            app:titleTextColor="@color/my_blue"
             app:menu="@menu/menu_main"
+            android:background="@color/main_bg_color"
+            style="@style/Theme.Material3.DayNight.NoActionBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
 
-        <FrameLayout
-            android:id="@+id/frameLayout"
+<!--        <FrameLayout-->
+<!--            android:id="@+id/frameLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:background="@color/nav"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/toolbar" />-->
+
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/nav"
-            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            style="@style/Theme.Material3.DayNight.NoActionBar"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            app:itemIconTint="@color/my_blue"
-            app:itemTextColor="@color/my_blue"
-            app:itemBackground="@color/item_bg_color"
+            app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView.ActiveIndicator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:menu="@menu/bottom_navigation_menu" />
+            app:menu="@menu/bottom_navigation_menu"
+            style="@style/Theme.Material3.DayNight.NoActionBar"
+            tools:ignore="VisualLintBottomNav" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/design_bottom_sheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:layout_marginHorizontal="4dp"
+            style="@style/Theme.Material3.DayNight.NoActionBar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView">
@@ -66,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 tools:layout="@layout/fragment_now_playing"
-                tools:ignore="MissingConstraints" />
+                tools:ignore="FragmentTagUsage,MissingConstraints" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -80,7 +91,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:menu="@menu/menu_drawer"
-        style="@style/Theme.Material3.DayNight.NoActionBar"
+        android:background="@color/main_bg_color"
+        app:drawerLayoutCornerSize="0dp"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
         app:headerLayout="@layout/drawer_header" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

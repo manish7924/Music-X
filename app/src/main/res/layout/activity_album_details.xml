@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_bg_color"
+    android:theme="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
     android:id="@+id/mAlbumContainer"
     tools:context=".activities.AlbumDetails">
 
@@ -14,21 +15,26 @@
         android:layout_height="wrap_content"
         android:scrollIndicators="right"
         android:scrollbars="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        tools:ignore="UselessParent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginBottom="40dp"
+            style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar">
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/albumCardViewLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar">
 
                 <ImageView
                     android:id="@+id/back"
@@ -40,6 +46,8 @@
                     android:onClick="backToHome"
                     android:padding="10dp"
                     android:translationZ="10dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:src="@drawable/back_btn"
                     android:contentDescription="@string/back"
                     app:tint="@color/wb" />
@@ -54,6 +62,8 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:translationZ="10dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:src="@drawable/more_vert"
                     android:contentDescription="@string/more_options"
                     app:tint="@color/wb" />
@@ -64,7 +74,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
                     android:background="@drawable/album_gradient_bg"
-                    android:layout_alignTop="@id/albumCardViewLayout"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/albumCardViewLayout"
                     android:contentDescription="@string/gradient_1_light"
                     tools:ignore="NotSibling" />
 
@@ -75,10 +87,12 @@
                     app:cardCornerRadius="17dp"
                     android:layout_marginTop="60dp"
                     app:cardBackgroundColor="@color/myTint2"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/albumCardViewLayout"
                     android:layout_marginHorizontal="40dp"
                     app:strokeColor="@android:color/transparent"
+                    style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
                     app:strokeWidth="2dp"
                     app:cardElevation="10dp">
 
@@ -101,7 +115,7 @@
                     android:fontFamily="@font/poppins_rg"
                     android:gravity="center_horizontal"
                     android:layout_marginTop="23dp"
-                    android:layout_below="@id/albumCardView"
+                    app:layout_constraintTop_toBottomOf="@id/albumCardView"
                     android:text="@string/album"
                     android:layout_marginHorizontal="40dp"
                     android:maxLines="2"
@@ -119,7 +133,7 @@
                     android:fontFamily="@font/poppins_rg"
                     android:gravity="center_horizontal"
                     android:singleLine="true"
-                    android:layout_below="@id/albumTitle"
+                    app:layout_constraintTop_toBottomOf="@id/albumTitle"
                     android:text="@string/year"
                     android:textColor="@color/black"
                     android:textFontWeight="400"
@@ -128,22 +142,28 @@
 
 
 
-            </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/headingLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/albumCardViewLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar">
 
                 <TextView
                     android:id="@+id/songsTitleHeading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
                     android:fontFamily="@font/poppins_rg"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:singleLine="true"
                     android:text="@string/songs"
                     android:textColor="@color/black"
@@ -156,10 +176,11 @@
                     android:id="@+id/no_of_album_songs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="23dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:fontFamily="@font/poppins_rg"
                     android:singleLine="true"
                     android:text="@string/no_of_song"
@@ -171,15 +192,20 @@
                     tools:ignore="RelativeOverlap" />
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/songsTitleHeading" />
 
-            </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/headingLayout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
@@ -188,7 +214,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_marginEnd="14dp"
         android:layout_marginBottom="76dp"
         android:contentDescription="@string/play"
@@ -198,13 +223,11 @@
         app:icon="@drawable/play_bottom"
         android:src="@drawable/play_bottom"
         app:iconSize="70dp"
-        app:tint="@color/title"
-        android:backgroundTint="@color/fab_color"
-        app:iconTint="@color/title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
         app:layout_goneMarginBottom="50dp"
         tools:targetApi="o" />
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,42 +1,47 @@
 package com.infinite.virtualmusicplayer.fragments;
 
-import static com.infinite.virtualmusicplayer.activities.MainActivity.albums;
 import static com.infinite.virtualmusicplayer.activities.MainActivity.artists;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validArtists;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isShuffle;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
 import com.infinite.virtualmusicplayer.adapters.ArtistAdapter;
+import com.infinite.virtualmusicplayer.model.Music;
 
 import java.util.Random;
 
 public class ArtistFragment extends Fragment {
 
-    SwipeRefreshLayout swipeRefreshLayout;
-    public static ProgressBar progressBarArtist;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    RecyclerView recyclerView;
-    TextView noArtistsFound;
-    FloatingActionButton artistShuffleBtn;
+    private RecyclerView recyclerView;
+    private TextView noArtistsFound;
+
+    private ExtendedFloatingActionButton shuffleExtendedFab;
+    private FloatingActionButton fabUp;
+
+    private boolean isFabVisible = true; // to track the main FAB visibility
+    private boolean isFabUpVisible = false; // to
 
     public static ArtistAdapter artistAdapter;
     int mainPosition = 0;
@@ -53,83 +58,99 @@ public class ArtistFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_artist, container, false);
         swipeRefreshLayout = view.findViewById(R.id.refresh_layout);
         recyclerView = view.findViewById(R.id.recyclerView);
-        progressBarArtist = view.findViewById(R.id.progressbarArtist);
         noArtistsFound = view.findViewById(R.id.no_artists_found);
-        artistShuffleBtn = view.findViewById(R.id.artistShuffleBtn);
+
+        shuffleExtendedFab = view.findViewById(R.id.shuffleFab);
+        fabUp = view.findViewById(R.id.UpFab);
+        recyclerView = view.findViewById(R.id.recyclerView);
 
 
-        artistAdapter = new ArtistAdapter(getContext(), artists);
+        validArtists = Music.checkAndSetValidSongs(artists);
+
+
+        artistAdapter = new ArtistAdapter(getContext(), validArtists);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(artistAdapter);
         recyclerView.setHasFixedSize(true);
 
+        setUpArtists();
+
+
         // set color
         swipeRefreshLayout.setColorSchemeColors(Color.BLACK);
+        shuffleExtendedFab.setAnimateShowBeforeLayout(true);
 
 
-        artistShuffleBtn.setOnClickListener(view1 -> playAllSongs());
+
+        shuffleExtendedFab.setOnClickListener(view1 -> playAllSongs());
 
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
-                try {
-                    CountDownTimer count = new CountDownTimer(100, 400) {
-                        @Override
-                        public void onTick(long l) {
-//                            progressBarArtist.setVisibility(View.VISIBLE);
-                            recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_out));
-
-                        }
-
-                        @Override
-                        public void onFinish() {
-//                            progressBarArtist.setVisibility(View.GONE);
-                            recyclerView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_in));
-
-                            Toast.makeText(getContext(), artists.size() +  " Artists Found", Toast.LENGTH_SHORT).show();
-
-//                            Snackbar.make(swipeRefreshLayout, musicFiles.size()+" Songs Found", Snackbar.LENGTH_SHORT)
-//                                    .setAction("OK", view -> {}).setActionTextColor(Color.parseColor("#00B0FF")).show();
-
-                        }
-
-                    };
-                    count.start();
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
+                validArtists = Music.checkAndSetValidSongs(artists);
 
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
 
-//            ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(artistAdapter);
-//            scaleInAnimationAdapter.setDuration(40);
-//            scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator());
-//            scaleInAnimationAdapter.setFirstOnly(true);
-//            recyclerView.setAdapter(scaleInAnimationAdapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // Hide the main FAB when scrolling down, show it when scrolling up
+                if (dy > 0) {
+                    hideFab();
+
+                } else if (dy < 0) {
+                    showFab();
+                }
+
+                // Show the "Up Arrow" FAB when scrolled beyond a certain point
+//                if (GridLayoutManager > 7) {
+//                    if (!isFabUpVisible) {
+//                        showFabUp();
+//                    }
+//                } else {
+//                    if (isFabUpVisible) {
+//                        hideFabUp();
+//                    }
+//                }
+            }
+        });
 
 
-        if (artists != null  &&  artists.size() >= 1)
+
+
+        // Set onClickListener for the "Up Arrow" FAB to scroll to the top
+//        fabUp.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                recyclerView.smoothScrollToPosition(0); // Scroll to the top
+//            }
+//        });
+
+        return view;
+    }
+
+    public void setUpArtists() {
+        if (artists != null  && !artists.isEmpty())
         {
             noArtistsFound.setVisibility(View.GONE);
+            shuffleExtendedFab.setVisibility(View.VISIBLE);
+
             int cacheSize = artists.size();
             recyclerView.setItemViewCacheSize(cacheSize);
-//        recyclerView.setHorizontalScrollBarEnabled(true);
-            recyclerView.setVerticalScrollBarEnabled(true);
-            recyclerView.setScrollbarFadingEnabled(true);
-            recyclerView.setScrollContainer(true);
 
         }
         else {
-//            playMainBtn.setVisibility(View.INVISIBLE);
+            shuffleExtendedFab.setVisibility(View.INVISIBLE);
             noArtistsFound.setVisibility(View.VISIBLE);
         }
 
-
-        return view;
     }
 
 
@@ -138,7 +159,7 @@ public class ArtistFragment extends Fragment {
         if (!isLoop) {
             mainPosition = getRandom(artists.size() - 1);
         }
-        if (!(artists.size() < 1)){
+        if (!(artists.isEmpty())){
             Intent intent = new Intent(getContext(), MusicPlayerActivity.class);
             intent.putExtra("position", mainPosition);
             intent.putExtra("mainPlayIntent", "MainPlayIntent");
@@ -149,12 +170,42 @@ public class ArtistFragment extends Fragment {
             Toast.makeText(getContext(), "You hava not any song", Toast.LENGTH_SHORT).show();
         }
 
+    }
 
 
+    private void hideFab() {
+        shuffleExtendedFab.setExtended(false);
+        ObjectAnimator.ofFloat(shuffleExtendedFab, "translationX", 0).start();
+    }
+
+    private void showFab() {
+        shuffleExtendedFab.setExtended(true);
+        ObjectAnimator.ofFloat(shuffleExtendedFab, "translationY", 0).start();
+    }
+
+    private void hideFabUp() {
+        isFabUpVisible = false;
+        fabUp.setVisibility(View.GONE); // Hide "Up Arrow" FAB
+    }
+
+    private void showFabUp() {
+        isFabUpVisible = true;
+        fabUp.setVisibility(View.VISIBLE); // Show "Up Arrow" FAB
     }
 
     private int getRandom(int i) {
         Random random = new Random();
         return random.nextInt(i + 1);
     }
+
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (recyclerView == null){
+//            setUpArtists();
+//        }
+//    }
+
+
 }

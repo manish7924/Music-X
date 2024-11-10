@@ -1,36 +1,54 @@
 package com.infinite.virtualmusicplayer.fragments;
 
+import static com.infinite.virtualmusicplayer.activities.MainActivity.artists;
 import static com.infinite.virtualmusicplayer.activities.MainActivity.musicFiles;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.infinite.virtualmusicplayer.adapters.AlbumAdapter;
-import com.infinite.virtualmusicplayer.adapters.ArtistAdapter;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.infinite.virtualmusicplayer.activities.Favourite;
 import com.infinite.virtualmusicplayer.R;
+import com.infinite.virtualmusicplayer.adapters.ArtistAdapter;
+import com.infinite.virtualmusicplayer.adapters.MusicAdapter;
+import com.infinite.virtualmusicplayer.model.Music;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 public class HomeFragment extends Fragment {
 
-    ImageView historyBtn, favBtn, mostPlayedBtn, shuffleBtn, goToFav;
-    RecyclerView home_musicRV;
-    RecyclerView home_albumsRV;
-    RecyclerView home_artistsRV;
+    private ImageView historyBtn, favBtn, mostPlayedBtn, shuffleBtn, goToFav;
+    private TextView userName;
+    private EditText editName;
+    private RecyclerView recentlyAddedRV, recentlyPlayedRV, recentArtistsRV, favouritesRV;
+//    private MusicAdapter recentlyAddedAdapter, recentlyPlayedAdapter, recentArtistsAdapter, favoritesAdapter;
+    private MusicAdapter recentlyAddedAdapter;
+    private MusicAdapter recentlyPlayedAdapter;
+    private ArtistAdapter recentArtistsAdapter;
+    private ArtistAdapter favoritesAdapter;
 
-    RelativeLayout relativeLayout;
-//    HomeMusicAdapter homeMusicAdapter;
-    AlbumAdapter albumAdapter;
-    ArtistAdapter artistAdapter;
+//    private List<Music> recentlyAddedSongs, recentlyPlayedAlbums, recentArtists, favoriteSongs;
+
+    private View dialogView;
+
+    private RelativeLayout relativeLayout;
+
 
 
     public HomeFragment() {
@@ -50,38 +68,57 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        home_musicRV = view.findViewById(R.id.homeRV);
+
+//        RecyclerView
+        recentlyAddedRV = view.findViewById(R.id.recently_added_songs_rv);
+        recentlyPlayedRV = view.findViewById(R.id.recently_played_albums_rv);
+        recentArtistsRV = view.findViewById(R.id.recent_artists_rv);
+        favouritesRV = view.findViewById(R.id.favourites_rv);
+
         favBtn = view.findViewById(R.id.homeFavBtn);
         relativeLayout = view.findViewById(R.id.recent_favorites);
         goToFav = view.findViewById(R.id.go_to_favourite_recent);
+        userName = view.findViewById(R.id.userName);
+        dialogView = inflater.inflate(R.layout.dialog_user_name, null);
 
-        home_albumsRV = view.findViewById(R.id.home_albums_RV);
-        home_artistsRV = view.findViewById(R.id.home_artist_RV);
+        editName = dialogView.findViewById(R.id.edit_name);
 
 
-        int cacheSize = musicFiles.size();
-        home_musicRV.setHasFixedSize(true);
+//        int cacheSize = musicFiles.size();
+//        recentlyAddedRV.setHasFixedSize(true);
+//        recentlyAddedRV.setItemViewCacheSize(cacheSize);
+////        recyclerView.setHorizontalScrollBarEnabled(true);
+//        recentlyAddedRV.setVerticalScrollBarEnabled(true);
+//        recentlyAddedRV.setScrollbarFadingEnabled(true);
+//        recentlyAddedRV.setScrollContainer(true);
+//        recentlyAddedRV.setScrollIndicators(cacheSize);
 
-        home_musicRV.setItemViewCacheSize(cacheSize);
-//        recyclerView.setHorizontalScrollBarEnabled(true);
-        home_musicRV.setVerticalScrollBarEnabled(true);
-        home_musicRV.setScrollbarFadingEnabled(true);
-        home_musicRV.setScrollContainer(true);
-        home_musicRV.setScrollIndicators(cacheSize);
 
-//        homeMusicAdapter = new HomeMusicAdapter(getContext(),musicFiles);
+//        Getting the saved preference
+        SharedPreferences getSharedPref = getContext().getSharedPreferences("name", Context.MODE_PRIVATE);
+        String value = getSharedPref.getString("str", "User Name");
+        userName.setText(value);
+
+
+
+//        setupRecyclerViews();
+
+
+//        recentlyAddedRV.setLayoutManager(new GridLayoutManager(getContext(), 1));
+//        recentlyAddedRV.setLayoutManager(new RecyclerView.LayoutManager() {
+//            @Override
+//            public RecyclerView.LayoutParams generateDefaultLayoutParams() {
+//                return null;
+//            }
+//        });
+
+
+        //        homeMusicAdapter = new HomeMusicAdapter(getContext(),musicFiles);
 //        musicFiles = new ArrayList<>();
 //        musicFiles.add(new Music("", "Tulsi Kumar Mashup", "Tulsi Kumar", "", "", "", "", ""));
 //        home_musicRV.setAdapter(homeMusicAdapter);
 //        home_musicRV.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        home_musicRV.setLayoutManager(new GridLayoutManager(getContext(), 1));
-        home_musicRV.setLayoutManager(new RecyclerView.LayoutManager() {
-            @Override
-            public RecyclerView.LayoutParams generateDefaultLayoutParams() {
-                return null;
-            }
-        });
 //
 //        artistAdapter = new ArtistAdapter(getContext(), artists);
 //        home_artistsRV.setAdapter(artistAdapter);
@@ -104,11 +141,19 @@ public class HomeFragment extends Fragment {
 //        });
 
 
-//            ScaleInAnimationAdapter scaleInAnimationAdapter = new ScaleInAnimationAdapter(artistAdapter);
-//            scaleInAnimationAdapter.setDuration(40);
-//            scaleInAnimationAdapter.setInterpolator(new OvershootInterpolator());
-//            scaleInAnimationAdapter.setFirstOnly(true);
-//            recyclerView.setAdapter(scaleInAnimationAdapter);
+
+        userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    editName.setText(userName.getText());
+                    showEditNameDialog();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+        });
 
 
 
@@ -134,9 +179,80 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         return view;
     }
 
+    private void showEditNameDialog() {
+        try {
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Edit User Name")
+                    .setIcon(R.drawable.edit_tags)
+                    .setView(dialogView)
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        String newName = editName.getText().toString();
 
+                        SharedPreferences shrd = getContext().getSharedPreferences("name", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = shrd.edit();
+
+                        editor.putString("str", newName);
+                        editor.apply();
+
+                        userName.setText(newName);
+
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+//    private void setupRecyclerViews() {
+//        // Setup for Recently Added Songs
+////        musicFiles = new ArrayList<>();
+//        recentlyAddedAdapter = new MusicAdapter(getContext(), musicFiles);
+//        recentlyAddedRV.setAdapter(recentlyAddedAdapter);
+//        recentlyAddedRV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+//
+//        // Setup for Recently Played Albums
+////        musicFiles = new ArrayList<>();
+//        recentlyPlayedAdapter = new MusicAdapter(getContext(), musicFiles);
+//        recentlyPlayedRV.setAdapter(recentlyPlayedAdapter);
+//        recentlyPlayedRV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+//
+//        // Setup for Recent Artists
+////        artists = new ArrayList<>();
+//        recentArtistsAdapter = new ArtistAdapter(getContext(), artists);
+//        recentArtistsRV.setAdapter(recentArtistsAdapter);
+//        recentArtistsRV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+//
+//        // Setup for Favorites
+////        artists = new ArrayList<>();
+//        favoritesAdapter = new ArtistAdapter(getContext(), artists);
+//        favouritesRV.setAdapter(favoritesAdapter);
+//        favouritesRV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+//  }
+
+
+//    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
+//            builder.setTitle("Edit User Name");
+//            builder.setIcon(R.drawable.edit_tags);
+//            builder.setView(dialogView);
+//            builder.setPositiveButton("OK", (dialog, which) -> {
+//                String newName = editName.getText().toString();
+//
+//                SharedPreferences shrd = getContext().getSharedPreferences("name", Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = shrd.edit();
+//
+//                editor.putString("str", newName);
+//                editor.apply();
+//
+//                userName.setText(newName);
+//
+//            });
+//            builder.setNegativeButton("Cancel", null);
+//
+//            builder.show();
 }

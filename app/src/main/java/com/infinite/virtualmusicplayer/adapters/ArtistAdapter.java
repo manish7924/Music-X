@@ -47,15 +47,17 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyArtistVi
 
         byte[] image = getAlbumArt(artistFiles.get(position).getPath());
         if (image != null){
-            holder.artist_image.setPadding(0, 0, 0, 0);
             Glide.with(mContext)
-                    .load(image).placeholder(R.drawable.artist_art)
+                    .load(image)
+                    .override(400,400)
+                    .circleCrop()
+                    .placeholder(R.drawable.artist_art)
                     .into(holder.artist_image);
         }
         else {
-            holder.artist_image.setPadding(30, 30, 30, 30);
             Glide.with(mContext)
                     .load(R.drawable.artist_art)
+                    .placeholder(R.drawable.artist_art)
                     .into(holder.artist_image);
         }
 
@@ -91,17 +93,25 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.MyArtistVi
     }
 
 
-    private byte[] getAlbumArt(String uri){
+    private byte[] getAlbumArt(String uri) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
+        byte[] art = null;
         try {
-            retriever.release();
+            retriever.setDataSource(uri);
+            art = retriever.getEmbeddedPicture();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return art;
     }
+
+
 
     @SuppressLint("NotifyDataSetChanged")
     public void updateList(ArrayList<Music> musicArrayList)

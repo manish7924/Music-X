@@ -1,6 +1,12 @@
 package com.infinite.virtualmusicplayer.activities;
 
+import static com.infinite.virtualmusicplayer.activities.MainActivity.albums;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.artists;
 import static com.infinite.virtualmusicplayer.activities.MainActivity.musicFiles;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.tracks;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validAlbums;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validArtists;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validSongs;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isShuffle;
 
@@ -75,6 +81,7 @@ public class AlbumDetails extends AppCompatActivity {
 
         for (int i = 0; i < musicFiles.size(); i++)
         {
+            assert albumName != null;
             if (albumName.equals(musicFiles.get(i).getAlbum()))
             {
                 albumSongs.add(j, musicFiles.get(i));
@@ -92,15 +99,23 @@ public class AlbumDetails extends AppCompatActivity {
         if (image != null)
         {
             Glide.with(this)
-                    .load(image).placeholder(R.drawable.album_art)
+                    .load(image)
+                    .override(500,500)
+                    .placeholder(R.drawable.album_art)
                     .into(albumPhoto);
         }
         else
         {
             Glide.with(this)
                     .load(R.drawable.album_art)
+                    .override(200,200)
                     .into(albumPhoto);
         }
+
+
+        validSongs = Music.checkAndSetValidSongs(tracks);
+        validAlbums = Music.checkAndSetValidSongs(albums);
+        validArtists = Music.checkAndSetValidSongs(artists);
 
 
         moreOptions.setOnClickListener(view -> {
@@ -142,7 +157,7 @@ public class AlbumDetails extends AppCompatActivity {
         if (!isLoop) {
             mainPosition = getRandom(albumSongs.size() - 1);
         }
-        if (!(albumSongs.size() < 1)){
+        if (!(albumSongs.isEmpty())){
             Intent intent = new Intent(AlbumDetails.this, MusicPlayerActivity.class);
             intent.putExtra("albumSender","albumDetails");
             intent.putExtra("position", mainPosition);
@@ -192,21 +207,28 @@ public class AlbumDetails extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (!(albumSongs.size() < 1)){
+        if (!(albumSongs.isEmpty())){
             albumDetailsAdapter = new AlbumDetailsAdapter(this, albumSongs);
             recyclerView.setAdapter(albumDetailsAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         }
     }
 
-    private byte[] getAlbumArt(String uri){
+
+    private byte[] getAlbumArt(String uri) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
+        byte[] art = null;
         try {
-            retriever.release();
+            retriever.setDataSource(uri);
+            art = retriever.getEmbeddedPicture();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return art;
     }

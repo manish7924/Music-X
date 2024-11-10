@@ -48,7 +48,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
     @SuppressLint("StaticFieldLeak")
     public static ImageView prevBtn;
     @SuppressLint("StaticFieldLeak")
-    public static ImageView albumArt;
+    public static ImageView miniPlayerCoverArt;
     @SuppressLint("StaticFieldLeak")
     public static TextView artistName;
     @SuppressLint("StaticFieldLeak")
@@ -80,7 +80,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
         view = inflater.inflate(R.layout.fragment_now_playing, container, false);
         songName = view.findViewById(R.id.song_name_mini_player);
         artistName = view.findViewById(R.id.song_artist_mini_player);
-        albumArt = view.findViewById(R.id.bottom_art);
+        miniPlayerCoverArt = view.findViewById(R.id.bottom_art);
         nextBtn = view.findViewById(R.id.nextBtn_bottom);
         prevBtn = view.findViewById(R.id.previousBtn_bottom);
         playPauseBtn = view.findViewById(R.id.play_pause_miniplayer);
@@ -242,10 +242,10 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
             if (SHOW_MINI_PLAYER){
 
                 if (thumb != null){
-                    Glide.with(requireContext()).load(thumb).into(albumArt);
+                    Glide.with(requireContext()).load(thumb).into(miniPlayerCoverArt);
                 }
                 else {
-                    Glide.with(requireContext()).load(R.drawable.music_note).into(albumArt);
+                    Glide.with(requireContext()).load(R.drawable.music_note).into(miniPlayerCoverArt);
                 }
                 songName.setText(SONG_NAME_TO_FRAG);
                 NowPlayingFragment.artistName.setText(ARTIST_TO_FRAG);
@@ -275,10 +275,10 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
             if (PATH_TO_FRAG != null){
                 byte[] art = getAlbumArt(PATH_TO_FRAG);
                 if (art != null){
-                    Glide.with(requireContext()).load(art).into(albumArt);
+                    Glide.with(requireContext()).load(art).into(miniPlayerCoverArt);
                 }
                 else {
-                    Glide.with(requireContext()).load(R.drawable.music_note).into(albumArt);
+                    Glide.with(requireContext()).load(R.drawable.music_note).into(miniPlayerCoverArt);
                 }
                 songName.setText(SONG_NAME_TO_FRAG);
                 artistName.setText(ARTIST_TO_FRAG);
@@ -294,14 +294,20 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
 
 
 
-    private byte[] getAlbumArt(String uri){
+    private byte[] getAlbumArt(String uri) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri);
-        byte[] art = retriever.getEmbeddedPicture();
+        byte[] art = null;
         try {
-            retriever.release();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            retriever.setDataSource(uri);
+            art = retriever.getEmbeddedPicture();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return art;
     }
