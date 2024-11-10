@@ -1,0 +1,12 @@
+<!-- res/drawable/scroller_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#ACD7FF" /> <!-- Semi-transparent black background -->
+
+    <corners android:radius="20dp" /> <!-- Rounded corners -->
+
+    <padding
+        android:left="8dp"
+        android:right="8dp"
+        android:top="8dp"
+        android:bottom="8dp" />
+</shape>

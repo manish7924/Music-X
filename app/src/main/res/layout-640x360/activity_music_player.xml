@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/mContainer"
+    android:background="@color/main_player_bg"
+    android:theme="@style/Theme.Material3.DayNight.NoActionBar"
+    tools:context=".activities.MusicPlayerActivity">
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/back"
+        android:padding="4dp"
+        android:paddingVertical="5dp"
+        android:layout_marginStart="5dp"
+        android:tooltipText="Back"
+        android:src="@drawable/back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.015"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.192"
+        tools:ignore="RtlHardcoded"
+        tools:targetApi="o" />
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/equalizerBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:contentDescription="@string/theme"
+        android:padding="4dp"
+        android:paddingVertical="5dp"
+        android:src="@drawable/ic_equalizer"
+        android:tooltipText="@string/equalizer"
+        app:layout_constraintEnd_toStartOf="@id/shapeBtn"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/back"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlHardcoded"
+        tools:targetApi="o" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/shapeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/shape"
+        android:padding="4dp"
+        android:paddingVertical="5dp"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/shape"
+        android:tooltipText="@string/shape"
+        app:layout_constraintEnd_toStartOf="@id/information"
+        app:layout_constraintHorizontal_bias="0.010"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlHardcoded"
+        tools:targetApi="o" />
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:padding="4dp"
+        android:paddingVertical="5dp"
+        android:tooltipText="Song Info"
+        android:contentDescription="@string/details"
+        android:src="@drawable/info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlHardcoded"
+        tools:targetApi="o" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cardConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="340dp"
+        android:layout_marginTop="35dp"
+        android:padding="0dp"
+        android:foregroundGravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardView"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            app:cardElevation="0dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/Cover"
+            android:foregroundGravity="center_horizontal"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="16dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <ImageView
+                android:id="@+id/cover_art"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/Cover"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+
+        <TextView
+            android:id="@+id/lyricsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="60dp"
+            android:background="@android:color/transparent"
+            android:text="@string/lyrics"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:fadingEdgeLength="20dp"
+            android:fontFamily="@font/poppins_rg"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:shadowColor="@color/black"
+            android:singleLine="true"
+            android:textFontWeight="500"
+            android:textIsSelectable="false"
+            android:textSize="19sp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="p" />
+
+        <ProgressBar
+            android:id="@+id/lyricsProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:progressTint="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/cardView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lyricsTitle" />
+
+        <ScrollView
+            android:id="@+id/lyricsLayout"
+            android:layout_width="400dp"
+            android:layout_height="340dp"
+            android:layout_marginTop="2dp"
+            android:background="@android:color/transparent"
+            android:fadeScrollbars="true"
+            android:labelFor="@+id/Lyrics"
+            android:maxHeight="400dp"
+            android:scrollbars="vertical"
+            android:verticalScrollbarPosition="right"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lyricsTitle">
+
+
+            <TextView
+                android:id="@+id/lyricsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/open_sans_rg"
+                android:gravity="center"
+                android:paddingHorizontal="14dp"
+                android:text="@string/em_lyrics_not_found"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textEditPasteWindowLayout="@color/btn_off"
+                android:textIsSelectable="false"
+                android:textSize="17sp"
+                android:visibility="invisible"
+                tools:targetApi="p" />
+
+
+        </ScrollView>
+
+        <ImageView
+            android:id="@+id/lyrics_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:visibility="invisible"
+            android:paddingHorizontal="14dp"
+            android:layout_marginHorizontal="30dp"
+            android:layout_alignBottom="@id/lyricsLayout"
+            android:background="@drawable/lyrics_gradient_bg"
+            android:contentDescription="@string/gradient_1_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/fontSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/font_size"
+            android:padding="0dp"
+            android:visibility="invisible"
+            android:scaleType="fitCenter"
+            android:tooltipText="Text Size"
+            app:layout_constraintTop_toBottomOf="@+id/lyricsTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/font_size"
+            tools:ignore="ImageContrastCheck"
+            tools:targetApi="o" />
+
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/searchLyrics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="16dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/search_lyrics"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:tooltipText="Search Lyrics"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/copy"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/search_lyrics"
+            tools:ignore="ImageContrastCheck"
+            tools:targetApi="o" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/copy"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:tooltipText="Copy"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/copy"
+            tools:ignore="ImageContrastCheck"
+            tools:targetApi="o" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/info_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:contentDescription="@string/info"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:tooltipText="Info"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/info"
+            tools:ignore="ImageContrastCheck"
+            tools:targetApi="o" />
+
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <SeekBar
+        android:id="@+id/seekVol"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:foregroundGravity="center"
+        android:layout_marginTop="2dp"
+        android:visibility="invisible"
+        android:layout_marginHorizontal="40dp"
+        android:progressTint="@android:color/white"
+        android:thumb="@drawable/outline_circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardConstraintLayout"
+        app:layout_constraintVertical_bias="0.23" />
+
+    <TextView
+        android:id="@+id/songTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginHorizontal="40dp"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:fadingEdgeLength="20dp"
+        android:fontFamily="@font/poppins_rg"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:shadowColor="@color/black"
+        android:singleLine="true"
+        android:text="@string/song_name"
+        android:tooltipText="@string/song_name"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textIsSelectable="false"
+        android:textSize="23sp"
+        android:textFontWeight="600"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.534"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekVol"
+        tools:targetApi="p" />
+
+    <TextView
+        android:id="@+id/artistTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_marginHorizontal="40dp"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:fadingEdgeLength="20dp"
+        android:fontFamily="@font/poppins_rg"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingVertical="2dp"
+        android:paddingHorizontal="0dp"
+        android:scrollHorizontally="true"
+        android:shadowColor="@color/black"
+        android:singleLine="true"
+        android:textAlignment="center"
+        android:textIsSelectable="false"
+        android:textStyle="normal"
+        android:text="@string/artist_name"
+        android:tooltipText="@string/artist_name"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:background="@android:color/transparent"
+        android:textFontWeight="400"
+        app:layout_constraintHorizontal_bias="0.534"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/songTitle"
+        tools:targetApi="p" />
+
+    <RelativeLayout
+        android:id="@+id/seekBar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="10dp"
+        android:foregroundGravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/artistTitle">
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:foregroundGravity="center_horizontal"
+            android:progressTint="@android:color/white"
+            android:thumb="@drawable/circle_thumb" />
+
+        <TextView
+            android:id="@+id/currentDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seekBar"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="0dp"
+            android:fontFamily="@font/poppins_rg"
+            android:gravity="center"
+            android:text="@string/_00_00"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:textFontWeight="500"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/seekBar"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar"
+            tools:ignore="TextSizeCheck"
+            tools:targetApi="p" />
+
+        <TextView
+            android:id="@+id/totalDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/seekBar"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/poppins_rg"
+            android:gravity="center"
+            android:text="@string/_00_00"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:textFontWeight="500"
+            app:layout_constraintEnd_toEndOf="@+id/seekBar"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar"
+            tools:ignore="TextSizeCheck"
+            tools:targetApi="p" />
+
+    </RelativeLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buttonPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginHorizontal="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.circularreveal.CircularRevealLinearLayout
+            android:id="@+id/linearBtnLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            android:tooltipText=" "
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="o">
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/loopBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/repeat"
+                android:paddingVertical="27dp"
+                android:scaleType="fitCenter"
+                android:tooltipText="Loop"
+                app:srcCompat="@drawable/repeat_off"
+                tools:ignore="ImageContrastCheck" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/previousBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/previous"
+                android:paddingVertical="20dp"
+                android:scaleType="fitCenter"
+                android:tooltipText="skip Previous"
+                app:srcCompat="@drawable/skip_previous"
+                tools:ignore="ImageContrastCheck" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/playPauseBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/play_pause"
+                android:padding="2dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/pause"
+                tools:ignore="ImageContrastCheck" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/nextBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/next_song"
+                android:paddingVertical="20dp"
+                android:scaleType="fitCenter"
+                android:tooltipText="skip Next"
+                app:srcCompat="@drawable/skip_next"
+                tools:ignore="ImageContrastCheck" />
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/shuffleBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/previous"
+                android:paddingVertical="27dp"
+                android:scaleType="fitCenter"
+                android:tooltipText="Shuffle"
+                app:srcCompat="@drawable/shuffle_off"
+                tools:ignore="ImageContrastCheck" />
+
+        </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+
+
+        <com.google.android.material.circularreveal.CircularRevealLinearLayout
+            android:id="@+id/btnLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginHorizontal="48dp"
+            android:layout_marginBottom="0dp"
+            android:paddingVertical="1dp"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearBtnLayout">
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/volume"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/previous"
+                android:paddingVertical="19dp"
+                android:scaleType="fitCenter"
+                android:tooltipText="Volume Bar"
+                app:srcCompat="@drawable/volume_off"
+                tools:ignore="ImageContrastCheck"
+                tools:targetApi="o" />
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/lyrics"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/previous"
+                android:paddingVertical="19dp"
+                android:scaleType="fitCenter"
+                android:tooltipText="@string/lyrics"
+                app:srcCompat="@drawable/lyrics_off"
+                tools:ignore="ImageContrastCheck"
+                tools:targetApi="o" />
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/favourite"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/previous"
+                android:paddingVertical="19dp"
+                android:scaleType="fitCenter"
+                android:tooltipText="Add to Favourite"
+                app:srcCompat="@drawable/favourite_off"
+                tools:ignore="ImageContrastCheck"
+                tools:targetApi="o" />
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/animBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/previous"
+                android:paddingVertical="19dp"
+                android:tooltipText="@string/rotateAnim"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/anim_off"
+                tools:ignore="ImageContrastCheck"
+                tools:targetApi="o" />
+
+
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/more_op_tooltip"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/previous"
+                android:paddingVertical="19dp"
+                android:scaleType="fitCenter"
+                android:tooltipText="More options"
+                app:srcCompat="@drawable/more_horiz"
+                tools:ignore="ImageContrastCheck"
+                tools:targetApi="o" />
+
+
+        </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+
+        
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
