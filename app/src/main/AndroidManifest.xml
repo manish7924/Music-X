@@ -56,9 +56,7 @@
             android:name=".activities.PlaylistDetails"
             android:exported="false"
             android:parentActivityName=".activities.MainActivity" />
-        <activity
-            android:name=".activities.Playlist"
-            android:exported="false" />
+
         <activity
             android:name=".activities.Favourite"
             android:exported="false"
