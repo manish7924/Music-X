@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FFFFFF</color>
+    <color name="alterBlack">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text">#EFF9FF</color>
+    <color name="title">#FFFFFF</color>
+    <color name="item_text">#00B0FF</color>
+    <color name="whiteOrBlack">#000000</color>
     <color name="stroke">#00CAFF</color>
     <color name="colorPrimary">#0D0D0D</color>
     <color name="colorPrimaryDark">#000000</color>
@@ -13,7 +19,7 @@
     <color name="nav">#000000</color>
     <color name="fab_color">#141218</color>
     <color name="mini_player">#FF0E1419</color>
-    <color name="myTint">#FFAAAAAA</color>
+    <color name="myTint">#FF7878</color>
     <color name="myTint2">#121314</color>
     <color name="myTint4">#8DABBB</color>
 
@@ -45,7 +51,6 @@
     <color name="bot_btn_off">#A6A7A7</color>
     <color name="my_black">#FFFFFF</color>
     <color name="play_bg">#4A4458</color>
-    <color name="title">#FFFFFF</color>
     <color name="my_blue">#00CAFF</color>
 <!--    <color name="my_blue2">#5AD4FF</color>-->
 <!--    <color name="my_blue">#00B0FF</color>-->
@@ -54,7 +59,6 @@
 
     <color name="p_music">#06E8E6</color>
     <color name="orange">#FF6410</color>
-    <color name="white">#FFFFFF</color>
     <color name="chat_200">#FF24242A</color>
     <color name="teal_200">#071A29</color>
     <color name="teal_green">#128C7E</color>
@@ -69,4 +73,8 @@
     <color name="btn_input">#EDEEFF</color>
     <color name="p_btn">#00B4BB</color>
     <color name="bg">#000000</color>
+
+    <color name="defaultDominantColor">#FF6200EE</color> <!-- Purple -->
+    <color name="defaultColor">#FFFFFFFF</color> <!-- White -->
+
 </resources>

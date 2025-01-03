@@ -2,10 +2,12 @@ package com.infinite.virtualmusicplayer.fragments;
 
 import static com.infinite.virtualmusicplayer.activities.MainActivity.artists;
 import static com.infinite.virtualmusicplayer.activities.MainActivity.validArtists;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validSongs;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isShuffle;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,10 +23,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
+import com.infinite.virtualmusicplayer.adapters.AlbumAdapter;
 import com.infinite.virtualmusicplayer.adapters.ArtistAdapter;
 import com.infinite.virtualmusicplayer.model.Music;
 
@@ -37,8 +39,8 @@ public class ArtistFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView noArtistsFound;
 
-    private ExtendedFloatingActionButton shuffleExtendedFab;
-    private FloatingActionButton fabUp;
+
+    private FloatingActionButton shuffleExtendedFab, fabUp;
 
     private boolean isFabVisible = true; // to track the main FAB visibility
     private boolean isFabUpVisible = false; // to
@@ -78,8 +80,6 @@ public class ArtistFragment extends Fragment {
 
         // set color
         swipeRefreshLayout.setColorSchemeColors(Color.BLACK);
-        shuffleExtendedFab.setAnimateShowBeforeLayout(true);
-
 
 
         shuffleExtendedFab.setOnClickListener(view1 -> playAllSongs());
@@ -136,11 +136,18 @@ public class ArtistFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setUpArtists() {
-        if (artists != null  && !artists.isEmpty())
+        validArtists = Music.checkAndSetValidSongs(artists);
+
+        if (validArtists != null  && !validArtists.isEmpty())
         {
             noArtistsFound.setVisibility(View.GONE);
             shuffleExtendedFab.setVisibility(View.VISIBLE);
+
+            artistAdapter = new ArtistAdapter(getContext(), validSongs);
+            recyclerView.setAdapter(artistAdapter);
+            artistAdapter.notifyDataSetChanged();
 
             int cacheSize = artists.size();
             recyclerView.setItemViewCacheSize(cacheSize);
@@ -174,12 +181,10 @@ public class ArtistFragment extends Fragment {
 
 
     private void hideFab() {
-        shuffleExtendedFab.setExtended(false);
         ObjectAnimator.ofFloat(shuffleExtendedFab, "translationX", 0).start();
     }
 
     private void showFab() {
-        shuffleExtendedFab.setExtended(true);
         ObjectAnimator.ofFloat(shuffleExtendedFab, "translationY", 0).start();
     }
 
@@ -199,13 +204,13 @@ public class ArtistFragment extends Fragment {
     }
 
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (recyclerView == null){
-//            setUpArtists();
-//        }
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (recyclerView == null){
+            setUpArtists();
+        }
+    }
 
 
 }

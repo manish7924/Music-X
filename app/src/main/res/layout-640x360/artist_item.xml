@@ -41,7 +41,7 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
         android:text="@string/artist"
-        android:textColor="@color/black"
+        android:textColor="@color/text"
         android:textFontWeight="700"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/artist_image"

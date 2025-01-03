@@ -19,6 +19,20 @@ public class Music {
 
 
 
+    public static class Playlist{
+        public String name;
+        public String createdBy;
+        public String createdOn;
+        public ArrayList<Music> myPlaylist;
+    }
+
+
+    public static class MusicPlaylist{
+        public ArrayList<Playlist> ref = new ArrayList<>();
+    }
+
+
+
     public Music(String path, String title, String artist, String album, String duration, String id, String year, String size) {
         this.path = path;
         this.title = title;
@@ -121,16 +135,6 @@ public class Music {
     }
 
 
-//    public static ArrayList<Music> checkAndSetValidSongs(ArrayList<Music> playlist) {
-//        ArrayList<Music> validSongs = new ArrayList<>();
-//        for (int i = 0; i < playlist.size(); i++) {
-//            File file = new File(playlist.get(i).getPath());
-//            if (file.exists()) {
-//                validSongs.add(playlist.get(i));
-//            }
-//        }
-//        return validSongs;
-//    }
 
 
 //    public void exitApplication() {
@@ -147,68 +151,6 @@ public class Music {
 //        }
 //    }
 
-    //    public Music() {
-//
-//    }
-
-//    static class Playlist {
-//        private String name;
-//        private ArrayList<Music> playlist;
-//        private String createdBy;
-//        private String createdOn;
-//
-//        public void setName(String name) {
-//            this.name = name;
-//        }
-//
-////        public void setPlaylist(ArrayList<Music> playlist) {
-////            this.playlist = playlist;
-////        }
-////
-////        public void setCreatedBy(String createdBy) {
-////            this.createdBy = createdBy;
-////        }
-////
-////        public void setCreatedOn(String createdOn) {
-////            this.createdOn = createdOn;
-////        }
-//
-//        public String getName() {
-//            return name;
-//        }
-//
-////        public ArrayList<Music> getPlaylist() {
-////            return playlist;
-////        }
-//
-////        public String getCreatedBy() {
-////            return createdBy;
-////        }
-////
-////        public String getCreatedOn() {
-////            return createdOn;
-////        }
-//    }
-
-//    public static class MusicPlaylist {
-//        private ArrayList<Playlist> ref = new ArrayList<>();
-//
-////        public void setRef(ArrayList<Playlist> ref) {
-////            this.ref = ref;
-////        }
-//
-//        public ArrayList<Playlist> getRef() {
-//            return ref;
-//        }
-//    }
-
-
-
-//    public byte[] getImageArt(String uri){
-//        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-//        retriever.setDataSource(uri);
-//        return retriever.getEmbeddedPicture();
-//    }
 
 //    public String getBitrate() {
 //        return bitrate;
@@ -218,19 +160,6 @@ public class Music {
 //        this.bitrate = bitrate;
 //    }
 
-
-
-//    public int favouriteChecker(String id) {
-//        for (int index = 0; index < favouriteSongs.size(); index++){
-//            MusicPlayerActivity.isFav = false;
-//            music = favouriteSongs.get(index);
-//            if (id.equals(music.id)){
-//                MusicPlayerActivity.isFav = true;
-//                return index;
-//            }
-//        }
-//        return -1;
-//    }
 
 
 

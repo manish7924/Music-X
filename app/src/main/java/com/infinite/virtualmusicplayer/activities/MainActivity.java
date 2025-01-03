@@ -1,9 +1,12 @@
 package com.infinite.virtualmusicplayer.activities;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.lightVibrantColor;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.mPalette;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.musicService;
+import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.position;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.thumb;
+import static com.infinite.virtualmusicplayer.fragments.SongsFragment.musicAdapter;
 import static com.infinite.virtualmusicplayer.fragments.AlbumFragment.albumAdapter;
 import static com.infinite.virtualmusicplayer.fragments.ArtistFragment.artistAdapter;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.miniPlayerCoverArt;
@@ -12,9 +15,10 @@ import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.mini_
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.mini_player_progressBar;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.playPauseBtn;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.songName;
-import static com.infinite.virtualmusicplayer.fragments.SongsFragment.musicAdapter;
 import static com.infinite.virtualmusicplayer.services.MusicService.MUSIC_FILE;
 import static com.infinite.virtualmusicplayer.services.MusicService.MUSIC_LAST_PLAYED;
+
+import static java.security.AccessController.getContext;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -39,6 +43,7 @@ import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -58,6 +63,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.palette.graphics.Palette;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -67,6 +73,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.fragments.AlbumFragment;
 import com.infinite.virtualmusicplayer.fragments.ArtistFragment;
@@ -77,6 +85,7 @@ import com.infinite.virtualmusicplayer.fragments.PlaylistFragment;
 import com.infinite.virtualmusicplayer.fragments.SongsFragment;
 import com.infinite.virtualmusicplayer.model.Music;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -160,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
 //        setFullScreen();
         setContentView(R.layout.activity_main);
-        setTheme(com.google.android.material.R.style.Theme_Material3_DynamicColors_DayNight_NoActionBar);
+//        setTheme(com.google.android.material.R.style.Theme_Material3_DynamicColors_DayNight_NoActionBar);
 
 //        getWindow().setStatusBarColor(Color.TRANSPARENT);
 
@@ -173,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 //        frameLayout = findViewById(R.id.frameLayout);
         drawerLayout = findViewById(R.id.drawer_layout);
+        bottomNavigationView.setSelectedItemId(R.id.ac_home);
         NavigationView navigationView = findViewById(R.id.navigation_view);
 
 //        Action bar
@@ -188,7 +198,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         headerSongArtist = headerView.findViewById(R.id.header_songArtist);
         headerImage = headerView.findViewById(R.id.header_imageView);
 
-        bottomNavigationView.setSelectedItemId(R.id.ac_home);
+//        getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new HomeFragment()).commit();
+
+        viewPager.setCurrentItem(1);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new SongsFragment()).commit();
+        bottomNavigationView.setSelectedItemId(R.id.ac_tracks);
+        updateIcons(bottomNavigationView.getId());
 
 
 
@@ -199,22 +214,32 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             if (id == R.id.ac_home) {
                 viewPager.setCurrentItem(0);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new HomeFragment()).commit();
+                bottomNavigationView.setSelectedItemId(R.id.ac_home);
                 updateIcons(id);
             }
             else if (id == R.id.ac_tracks) {
                 viewPager.setCurrentItem(1);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new SongsFragment()).commit();
+                bottomNavigationView.setSelectedItemId(R.id.ac_tracks);
                 updateIcons(id);
             }
             else if (id == R.id.ac_albums) {
                 viewPager.setCurrentItem(2);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new AlbumFragment()).commit();
+                bottomNavigationView.setSelectedItemId(R.id.ac_albums);
                 updateIcons(id);
             }
             else if (id == R.id.ac_artists) {
                 viewPager.setCurrentItem(3);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new ArtistFragment()).commit();
+                bottomNavigationView.setSelectedItemId(R.id.ac_artists);
                 updateIcons(id);
             }
             else if (id == R.id.ac_playlist) {
                 viewPager.setCurrentItem(4);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new PlaylistFragment()).commit();
+                bottomNavigationView.setSelectedItemId(R.id.ac_playlist);
                 updateIcons(id);
             }
             else if (id == R.id.ac_favourite) {
@@ -289,6 +314,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
         try {
             applyTheme(getSelectedTheme());
+
+            Favourite.favouriteSongs = new ArrayList<>();
+            SharedPreferences sharedPreferences = getSharedPreferences("FAVOURITES", MODE_PRIVATE);
+            String jsonString = sharedPreferences.getString("FavouriteSongs", null);
+
+            if (jsonString != null) {
+                Type typeToken = new TypeToken<ArrayList<Music>>() {}.getType();
+                ArrayList<Music> data = new GsonBuilder().create().fromJson(jsonString, typeToken);
+                Favourite.favouriteSongs.addAll(data);
+            }
+
         }catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -307,8 +343,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         });
 
-
-
+//        viewPager.unregisterOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+//            }
+//        });
 
         bottomNavigationView.setOnItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) item -> {
 
@@ -316,27 +356,33 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
             if (id == R.id.ac_home){
                 viewPager.setCurrentItem(0);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new HomeFragment()).commit();
                 updateIcons(id);
 
             } else if (id == R.id.ac_tracks) {
                 viewPager.setCurrentItem(1);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new SongsFragment()).commit();
                 updateIcons(id);
 
             } else if (id == R.id.ac_albums) {
                 viewPager.setCurrentItem(2);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new AlbumFragment()).commit();
                 updateIcons(id);
 
             } else if (id == R.id.ac_artists) {
                 viewPager.setCurrentItem(3);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new ArtistFragment()).commit();
                 updateIcons(id);
 
             } else if (id == R.id.ac_playlist) {
                 viewPager.setCurrentItem(4);
+//                getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new PlaylistFragment()).commit();
                 updateIcons(id);
             }
 
             return true;
         });
+
 
 
         bottomNavigationView.setOnItemReselectedListener((BottomNavigationView.OnNavigationItemReselectedListener) item -> {
@@ -544,7 +590,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         ShortcutInfo songsShortcut = new ShortcutInfo.Builder(this, "shortcut_songs")
                 .setShortLabel("Songs")
                 .setLongLabel("Open Songs")
-                .setIcon(Icon.createWithResource(this, R.drawable.ic_tracks_filled))  // Set icon for shortcut
+                .setIcon(Icon.createWithResource(this, R.drawable.ic_tracks_sc))  // Set icon for shortcut
                 .setIntent(new Intent(this, MainActivity.class)  // Set your Songs activity here
                         .setAction(Intent.ACTION_VIEW)
                         .putExtra("navigateTo", "songs"))
@@ -554,7 +600,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         ShortcutInfo albumsShortcut = new ShortcutInfo.Builder(this, "shortcut_albums")
                 .setShortLabel("Albums")
                 .setLongLabel("Open Albums")
-                .setIcon(Icon.createWithResource(this, R.drawable.ic_album_filled))  // Set icon for shortcut
+                .setIcon(Icon.createWithResource(this, R.drawable.ic_album_sc))  // Set icon for shortcut
                 .setIntent(new Intent(this, MainActivity.class)  // Set your Albums activity here
                         .setAction(Intent.ACTION_VIEW)
                         .putExtra("navigateTo", "albums"))
@@ -564,7 +610,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         ShortcutInfo artistsShortcut = new ShortcutInfo.Builder(this, "shortcut_artists")
                 .setShortLabel("Artists")
                 .setLongLabel("Open Artists")
-                .setIcon(Icon.createWithResource(this, R.drawable.ic_artist_filled))  // Set icon for shortcut
+                .setIcon(Icon.createWithResource(this, R.drawable.ic_artist_sc))  // Set icon for shortcut
                 .setIntent(new Intent(this, MainActivity.class)  // Set your Artists activity here
                         .setAction(Intent.ACTION_VIEW)
                         .putExtra("navigateTo", "artists"))
@@ -579,14 +625,23 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private void openSongsView() {
         viewPager.setCurrentItem(1);
+//        getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new SongsFragment()).commit();
+        bottomNavigationView.setSelectedItemId(R.id.ac_tracks);
+        updateIcons(bottomNavigationView.getId());
     }
 
     private void openAlbumsView() {
         viewPager.setCurrentItem(2);
+//        getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new AlbumFragment()).commit();
+        bottomNavigationView.setSelectedItemId(R.id.ac_albums);
+        updateIcons(bottomNavigationView.getId());
     }
 
     private void openArtistsView() {
         viewPager.setCurrentItem(3);
+//        getSupportFragmentManager().beginTransaction().replace(R.id.viewPager, new ArtistFragment()).commit();
+        bottomNavigationView.setSelectedItemId(R.id.ac_artists);
+        updateIcons(bottomNavigationView.getId());
     }
 
 
@@ -719,6 +774,92 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         return tracks;
 
     }
+
+
+
+//    private ArrayList<Music> getAllAudio(Context context) {
+//        preferences = context.getSharedPreferences(MY_SORT_PREF, MODE_PRIVATE);
+//        String sortOrder = preferences.getString("sorting", "sortByName");
+//
+//        tracks.clear();
+//        albums.clear();
+//        artists.clear();
+//
+//        String order = null;
+//        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+//
+//        // Determine sort order
+//        switch (sortOrder) {
+//            case "sortByName":
+//                order = MediaStore.Audio.Media.TITLE + " ASC";
+//                break;
+//            case "sortByDate":
+//                order = MediaStore.Audio.Media.DATE_ADDED + " DESC";
+//                break;
+//            case "sortBySize":
+//                order = MediaStore.Audio.Media.SIZE + " DESC";
+//                break;
+//            default:
+//                order = MediaStore.Audio.Media.TITLE + " ASC";
+//        }
+//
+//        // Avoiding duplication
+//        ArrayList<String> trackDuplicate = new ArrayList<>();
+//        ArrayList<String> albumDuplicate = new ArrayList<>();
+//        ArrayList<String> artistDuplicate = new ArrayList<>();
+//
+//        String[] projection = {
+//                MediaStore.Audio.Media.ALBUM,
+//                MediaStore.Audio.Media.TITLE,
+//                MediaStore.Audio.Media.DURATION,
+//                MediaStore.Audio.Media.DATA,
+//                MediaStore.Audio.Media.ARTIST,
+//                MediaStore.Audio.Media._ID,
+//                MediaStore.Audio.Media.YEAR,
+//                MediaStore.Audio.Media.SIZE
+//        };
+//
+//        try (Cursor cursor = context.getContentResolver().query(uri, projection, null, null, order)) {
+//            if (cursor != null && cursor.moveToFirst()) {
+//                do {
+//                    String album = cursor.getString(0);
+//                    String title = cursor.getString(1);
+//                    String duration = cursor.getString(2);
+//                    String path = cursor.getString(3);
+//                    String artist = cursor.getString(4);
+//                    String id = cursor.getString(5);
+//                    String year = cursor.getString(6);
+//                    String size = cursor.getString(7);
+//
+//                    // Validate data
+//                    if (path == null || title == null || duration == null) continue;
+//
+//                    Music music = new Music(path, title, artist, album, duration, id, year, size);
+//
+//                    // Add to tracks, albums, and artists without duplication
+//                    if (!trackDuplicate.contains(title)) {
+//                        tracks.add(music);
+//                        trackDuplicate.add(title);
+//                    }
+//
+//                    if (!albumDuplicate.contains(album)) {
+//                        albums.add(music);
+//                        albumDuplicate.add(album);
+//                    }
+//
+//                    if (!artistDuplicate.contains(artist)) {
+//                        artists.add(music);
+//                        artistDuplicate.add(artist);
+//                    }
+//                } while (cursor.moveToNext());
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Toast.makeText(context, "Error fetching audio files: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//        }
+//
+//        return musicFiles;
+//    }
 
 
     @Override
@@ -1147,7 +1288,56 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 // Open Artists view
                 openArtistsView();
             }
+            else {
+                try {
+                    if (musicService != null  &&  SHOW_MINI_PLAYER){
+                        try {
+                            Intent openPlayer = new Intent(getBaseContext(), MusicPlayerActivity.class);
+                            openPlayer.putExtra("position", position);
+                            openPlayer.putExtra("nowPlaying","NowPlaying");
+                            this.startActivity(openPlayer);
+                        }
+                        catch (Exception e){
+                            e.printStackTrace();
+                            Toast.makeText(getBaseContext(), "No Composition Found " + e, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), "Please Play any song from Track list" , Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                    else {
+                        try {
+                            Toast.makeText(getBaseContext(), "No Composition Found ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), "Please Play any song from Track list" , Toast.LENGTH_SHORT).show();
+                        }catch (Exception e){
+                            Toast.makeText(getBaseContext(), "No Composition Found " + e, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), "Please Play any song from Track list" , Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(getBaseContext(), "No Composition Found " + e, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Please Play any song from Track list" , Toast.LENGTH_SHORT).show();
+
+                }
+            }
         }
+        else {
+            if (intent == null){
+                intent = new Intent(getBaseContext(), MainActivity.class);
+                this.startActivity(intent);
+            }
+
+        }
+
+
+        // For storing favourites data using SharedPreferences
+        SharedPreferences.Editor editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit();
+        String jsonString = new GsonBuilder().create().toJson(Favourite.favouriteSongs);
+        editor.putString("FavouriteSongs", jsonString);
+//        String jsonStringPlaylist = new GsonBuilder().create().toJson(PlaylistActivity.musicPlaylist);
+//        editor.putString("MusicPlaylist", jsonStringPlaylist);
+        editor.apply();
+
 
         showOrHideMiniPlayer();
 
@@ -1376,6 +1566,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             }
         }
 
+
+
+
     }
 
     private void exitApplication() {
@@ -1453,17 +1646,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            switch (position) {
-                case 1:
-                    return new SongsFragment();
-                case 2:
-                    return new AlbumFragment();
-                case 3:
-                    return new ArtistFragment();
-                case 4:
-                    return new PlaylistFragment();
-                default:
-                    return new HomeFragment();
+
+            if (position == 1) {
+                return new SongsFragment();
+            } else if (position == 2) {
+                return new AlbumFragment();
+            } else if (position == 3) {
+                return new ArtistFragment();
+            } else if (position == 4) {
+                return new PlaylistFragment();
+            }
+            else {
+                return new HomeFragment();
             }
 
 
@@ -1474,4 +1668,5 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             return 5; // Number of fragments
         }
     }
+
 }

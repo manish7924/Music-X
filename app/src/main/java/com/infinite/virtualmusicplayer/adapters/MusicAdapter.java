@@ -60,6 +60,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
 
     private final Context context;
     public static ArrayList<Music> songFiles;
+
     View view;
 
     int fIndex = -1;

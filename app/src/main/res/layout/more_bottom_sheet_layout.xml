@@ -148,62 +148,62 @@
         app:layout_constraintTop_toBottomOf="@id/now_playing_relative_layout"/>
 
 
-    <LinearLayout
-        android:id="@+id/play_next"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="6dp"
-        android:padding="10dp"
-        android:background="?android:selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@+id/now_playing_relative_layout"
-        tools:layout_editor_absoluteX="10dp"
-        tools:ignore="UseCompoundDrawables">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/play_next"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginTop="6dp"-->
+<!--        android:padding="10dp"-->
+<!--        android:background="?android:selectableItemBackground"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/now_playing_relative_layout"-->
+<!--        tools:layout_editor_absoluteX="10dp"-->
+<!--        tools:ignore="UseCompoundDrawables">-->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/play_next"
-            android:contentDescription="@string/add_to_playlist" />
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/play_next"-->
+<!--            android:contentDescription="@string/add_to_playlist" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/play_next"
-            android:textColor="@color/black"
-            android:layout_marginStart="20dp"
-            android:textSize="15sp" />
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/play_next"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginStart="20dp"-->
+<!--            android:textSize="15sp" />-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
 
-    <LinearLayout
-        android:id="@+id/add_to_playing_queue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="4dp"
-        android:padding="10dp"
-        android:background="?android:selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@+id/play_next"
-        tools:layout_editor_absoluteX="10dp"
-        tools:ignore="UseCompoundDrawables">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/add_to_playing_queue"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginTop="4dp"-->
+<!--        android:padding="10dp"-->
+<!--        android:background="?android:selectableItemBackground"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/play_next"-->
+<!--        tools:layout_editor_absoluteX="10dp"-->
+<!--        tools:ignore="UseCompoundDrawables">-->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/add_to_playing_queue"
-            android:contentDescription="@string/add_to_playlist" />
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/add_to_playing_queue"-->
+<!--            android:contentDescription="@string/add_to_playlist" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_to_playing_queue"
-            android:textColor="@color/black"
-            android:layout_marginStart="20dp"
-            android:textSize="15sp" />
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/add_to_playing_queue"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:layout_marginStart="20dp"-->
+<!--            android:textSize="15sp" />-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
 
     <LinearLayout
@@ -214,7 +214,7 @@
         android:layout_marginTop="4dp"
         android:padding="10dp"
         android:background="?android:selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@+id/add_to_playing_queue"
+        app:layout_constraintTop_toBottomOf="@+id/div1"
         tools:layout_editor_absoluteX="10dp"
         tools:ignore="UseCompoundDrawables">
 
@@ -235,13 +235,6 @@
     </LinearLayout>
 
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/div2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_to_playlist"/>
-
 
     <LinearLayout
         android:id="@+id/go_to_album"
@@ -251,7 +244,7 @@
         android:layout_marginTop="4dp"
         android:padding="10dp"
         android:background="?android:selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@+id/div2"
+        app:layout_constraintTop_toBottomOf="@+id/add_to_playlist"
         tools:layout_editor_absoluteX="10dp"
         tools:ignore="UseCompoundDrawables">
 
@@ -360,12 +353,6 @@
     </LinearLayout>
 
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/div3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/go_to_favourite"/>
 
 
     <LinearLayout
@@ -376,7 +363,7 @@
         android:layout_marginTop="4dp"
         android:padding="10dp"
         android:background="?android:selectableItemBackground"
-        app:layout_constraintTop_toBottomOf="@+id/div3"
+        app:layout_constraintTop_toBottomOf="@+id/go_to_favourite"
         tools:layout_editor_absoluteX="10dp"
         tools:ignore="UseCompoundDrawables">
 

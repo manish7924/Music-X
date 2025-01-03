@@ -8,66 +8,59 @@
     android:theme="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
     tools:context=".activities.Favourite">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:background="@android:color/transparent"
-        android:orientation="horizontal"
-        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
+        android:layout_height="56dp"
+        app:title="@string/favourites"
+        app:titleTextColor="@color/item_text"
+        android:background="@color/main_bg_color"
+        style="@style/Theme.Material3.DayNight.NoActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/backBtnFav"
-            android:layout_width="44dp"
-            android:layout_height="50dp"
-            android:background="@android:color/transparent"
-            android:gravity="center"
-            android:onClick="favBackBtn"
-            android:padding="10dp"
-            android:src="@drawable/back_btn"
-            android:contentDescription="@string/back"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="0.4dp"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar">
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favouriteRv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="7dp"
-            android:contentDescription="@string/favourites"
-            android:gravity="center_vertical"
-            android:text="@string/favourites"
-            android:textColor="@color/title"
-            android:textFontWeight="700"
-            android:textSize="23sp"
-            tools:targetApi="p" />
+            android:layout_marginBottom="20dp"
+            android:fadeScrollbars="true"
+            android:background="@android:color/transparent"
+            android:scrollIndicators="right"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
+            android:keepScreenOn="true"
+            android:nestedScrollingEnabled="true"
+            android:isScrollContainer="true"
+            style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar" />
 
 
-    </LinearLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/favouriteRv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp"
-        android:fadeScrollbars="true"
-        android:paddingHorizontal="4dp"
-        android:paddingBottom="48dp"
-        android:scrollIndicators="right"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"
-        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -76,19 +69,20 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="80dp"
-        android:contentDescription="@string/shuffle"
-        android:src="@drawable/shuffle_on"
+        android:layout_gravity="end|bottom"
+        android:text="@string/shuffle"
+        app:iconSize="50dp"
         app:fabSize="normal"
         android:visibility="visible"
         android:tooltipText="Shuffle"
         app:icon="@drawable/shuffle_on"
-        android:backgroundTint="@color/fab_color"
-        app:iconSize="50dp"
-        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/shuffle_on"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="12dp"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
+        android:contentDescription="@string/add"
         app:layout_goneMarginBottom="50dp"
         tools:targetApi="o" />
 

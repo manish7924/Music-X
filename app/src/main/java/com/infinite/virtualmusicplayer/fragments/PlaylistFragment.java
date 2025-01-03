@@ -1,6 +1,7 @@
 package com.infinite.virtualmusicplayer.fragments;
 
 import static com.infinite.virtualmusicplayer.activities.MainActivity.playlists;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validAlbums;
 import static com.infinite.virtualmusicplayer.adapters.PlaylistAdapter.playlistList;
 
 import android.annotation.SuppressLint;
@@ -9,17 +10,31 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.activities.Favourite;
+import com.infinite.virtualmusicplayer.adapters.AlbumAdapter;
 import com.infinite.virtualmusicplayer.adapters.PlaylistAdapter;
+import com.infinite.virtualmusicplayer.model.Music;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
 
 
 public class PlaylistFragment extends Fragment {
@@ -28,6 +43,9 @@ public class PlaylistFragment extends Fragment {
     PlaylistAdapter playlistAdapter;
     LinearLayout favouriteLayout;
 
+    TextView noPlaylistFound, noPlaylistFoundDes;
+    ImageView noPlaylistImg;
+
 //    private ViewGroup alertdialog;
 
     FloatingActionButton networkStreamBtn;
@@ -35,14 +53,17 @@ public class PlaylistFragment extends Fragment {
 
 //    public static Music.MusicPlaylist musicPlaylist = new Music.MusicPlaylist();
 
-//    TextInputEditText playlistNameEditText, yourNameEditText;
+    TextInputEditText playlistNameEditText, yourNameEditText;
     FloatingActionButton addPlaylistBtn;
+
+    public static Music.Playlist playlist = new Music.Playlist();
+    public static Music.MusicPlaylist musicPlaylist = new Music.MusicPlaylist();
+
 
 
     public PlaylistFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -53,26 +74,35 @@ public class PlaylistFragment extends Fragment {
         recyclerView = view.findViewById(R.id.playlistRv);
         networkStreamBtn = view.findViewById(R.id.networkStreamBtn);
         addPlaylistBtn = view.findViewById(R.id.addPlaylistBtn);
-        favouriteLayout = view.findViewById(R.id.favouriteLayout);
+//        favouriteLayout = view.findViewById(R.id.favouriteLayout);
+        noPlaylistFound = view.findViewById(R.id.no_playlist_found);
+        noPlaylistImg = view.findViewById(R.id.no_playlist_found_img);
+        noPlaylistFoundDes = view.findViewById(R.id.no_playlist_description);
+
+
+        playlistAdapter = new PlaylistAdapter(getContext(), playlistList = musicPlaylist.ref);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        recyclerView.setAdapter(playlistAdapter);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(20);
         recyclerView.setHorizontalScrollBarEnabled(true);
 
-        favouriteLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), Favourite.class);
-                startActivity(intent);
-            }
-        });
+
+//        favouriteLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(getContext(), Favourite.class);
+//                startActivity(intent);
+//            }
+//        });
 
 
         addPlaylistBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                createPlaylistCustomAlertDialog();
-                Toast.makeText(getContext(), "Coming soon", Toast.LENGTH_SHORT).show();
+                createPlaylistCustomAlertDialog();
+//                Toast.makeText(getContext(), "Coming soon", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -88,13 +118,12 @@ public class PlaylistFragment extends Fragment {
 
 
 
-        if (!(playlists.size() < 1))
+        if (!(playlists.isEmpty()))
         {
-            playlistAdapter = new PlaylistAdapter(getContext(), playlistList);
-            recyclerView.setAdapter(playlistAdapter);
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+            noPlaylistImg.setVisibility(View.GONE);
+            noPlaylistFound.setVisibility(View.GONE);
+            noPlaylistFoundDes.setVisibility(View.GONE);
 
-//            createPlaylistCurstomAlertDialog();
         }
         return view;
     }
@@ -136,63 +165,75 @@ public class PlaylistFragment extends Fragment {
 //        builder.show();
 //    }
 
-//    private void createPlaylistCustomAlertDialog() {
-//        playlistNameEditText = customDialog.findViewById(R.id.playlistName);
-//        yourNameEditText = customDialog.findViewById(R.id.createdBy);
-//
-//        new MaterialAlertDialogBuilder(requireContext())
-//                .setView(customDialog)
-//                .setTitle("New Playlist")
-//                .setPositiveButton("Add", (dialog, which) -> {
-//                    // Exit the app
-////                    playlistName = playlistEditInput.getText().toString();
-////                    createdByName = createdByEditInput.getText().toString();
-////
-//////                    if (!(playlistName.isEmpty()  &&  createdByName.isEmpty()))
-//////                    {
-//////                        addPlaylist(playlistName, createdByName);
-//////                    }
-////                    dialog.dismiss();
-//
-//                    String playlistName = playlistNameEditText.getText().toString();
-//                    String createdBy = yourNameEditText.getText().toString();
-//                    if (!playlistName.isEmpty() && !createdBy.isEmpty()) {
-//                        addPlaylist(playlistName, createdBy);
-//                    }
-//                    dialog.dismiss();
-//
-//                })
-//                .setNegativeButton("cancel", (dialog, which) -> {
-//                    // Exit the app
-//                    dialog.dismiss();
-//                })
-//                .show();
-//    }
+    private void createPlaylistCustomAlertDialog() {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        View customDialog = inflater.inflate(R.layout.add_playlist_dialog, null);
+
+        playlistNameEditText = customDialog.findViewById(R.id.playlistName);
+        yourNameEditText = customDialog.findViewById(R.id.createdBy);
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setView(customDialog)
+                .setTitle("New Playlist")
+                .setPositiveButton("Create", (dialog, which) -> {
+
+                    String playlistName = Objects.requireNonNull(playlistNameEditText.getText()).toString();
+                    String createdBy = yourNameEditText.getText().toString();
+
+                    if (!playlistName.isEmpty()) {
+                        addPlaylist(playlistName, createdBy);
+                    }
+                    else {
+                        Toast.makeText(getContext(), "Empty field not allowed", Toast.LENGTH_SHORT).show();
+                    }
+
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    // Exit the app
+                    dialog.dismiss();
+                })
+                .show();
+    }
 
 
-//    private void addPlaylist(String name, String createdBy) {
-//        boolean playlistExists = false;
-//        ArrayList<Music> myPlaylist = new ArrayList<>();
-//        for (Music.Playlist playlist : musicPlaylist.getRef()) {
-//            if (name.equals(playlist.getName())) {
-//                playlistExists = true;
-//                break;
-//            }
-//        }
-//        if (playlistExists) {
-//            Toast.makeText(getContext(), "Playlist Exist!!", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Music.Playlist tempPlaylist = new Music.Playlist();
-//            tempPlaylist.setName(name);
-//            tempPlaylist.setPlaylist(new ArrayList<>());
-//            tempPlaylist.setCreatedBy(createdBy);
-//            Date calendar = Calendar.getInstance().getTime();
-//            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
-//            tempPlaylist.setCreatedOn(sdf.format(calendar));
-//            musicPlaylist.getRef().add(tempPlaylist);
-//            playlistAdapter.refreshPlaylist(myPlaylist);
-//        }
-//    }
+    private void addPlaylist(String name, String createdBy) {
+        boolean playlistExists = false;
+
+        // Check if the playlist already exists
+        for (Music.Playlist playlist : musicPlaylist.ref) {
+            if (name.equals(playlist.name)) {
+                playlistExists = true;
+                break;
+            }
+        }
+
+        // If the playlist exists, show a toast message
+        if (playlistExists) {
+            Toast.makeText(getContext(), "Playlist Exist!!", Toast.LENGTH_SHORT).show();
+        } else {
+            // Create a new playlist
+            Music.Playlist tempPlaylist = new Music.Playlist();
+            tempPlaylist.name = name;
+            tempPlaylist.myPlaylist = new ArrayList<>();
+            tempPlaylist.createdBy = createdBy;
+
+            // Get the current date and format it
+            Date calendar = Calendar.getInstance().getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+            tempPlaylist.createdOn = sdf.format(calendar);
+
+            // Add the new playlist to the list
+            musicPlaylist.ref.add(tempPlaylist);
+
+
+            noPlaylistImg.setVisibility(View.GONE);
+            noPlaylistFound.setVisibility(View.GONE);
+            noPlaylistFoundDes.setVisibility(View.GONE);
+
+            // Refresh the adapter
+            playlistAdapter.refreshPlaylist();
+        }
+    }
 
 
     @SuppressLint("NotifyDataSetChanged")

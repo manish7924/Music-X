@@ -1,72 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/playlistView"
     android:layout_width="match_parent"
-    android:layout_height="220dp"
-    app:cardCornerRadius="15dp"
+    android:layout_height="216dp"
+    app:cardCornerRadius="18dp"
     app:cardElevation="10dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/colorPrimaryDark"
     android:background="?selectableItemBackground"
     android:layout_marginVertical="10dp"
     android:layout_marginHorizontal="10dp">
 
 
-<RelativeLayout
-    android:id="@+id/relative_layout_cardView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimary">
-
-    <ImageView
-        android:id="@+id/playlistSongImg"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/relative_layout_cardView"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:layout_centerHorizontal="true"
-        android:scaleType="center"
-        android:src="@drawable/music_note"
-        android:contentDescription="@string/song_image" />
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/playlistSongName"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginVertical="10dp"
-        android:layout_marginHorizontal="10dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignStart="@+id/playlistDeleteBtn"
-        android:layout_toStartOf="@+id/playlistDeleteBtn"
-        android:fontFamily="@font/poppins_rg"
-        android:gravity="center_vertical"
-        android:maxLines="1"
-        android:ellipsize="marquee"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:singleLine="true"
-        android:text="@string/playlist_name"
-        android:textColor="@color/black"
-        android:textFontWeight="700"
-        android:textSize="14sp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="176dp"
+            android:background="@color/black"
+            style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/playlistSongImg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/album"
+                android:src="@drawable/album_art"
+                android:scaleType="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <ImageButton
-        android:id="@+id/playlistDeleteBtn"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:src="@drawable/delete"
-        android:layout_marginTop="190dp"
-        android:layout_alignParentBottom="true"
-        app:tint="@color/pink"
-        android:layout_below="@+id/playlistSongImg"
-        android:layout_marginHorizontal="5dp"
-        android:layout_marginVertical="5dp"
-        android:contentDescription="@string/delete"
-        android:backgroundTint="@android:color/transparent"
-        android:layout_marginEnd="5dp"
-        android:layout_alignParentEnd="true" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/playlistSongName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="8dp"
+            android:ellipsize="marquee"
+            android:fontFamily="@font/poppins_rg"
+            android:gravity="center_horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:text="@string/playlist_name"
+            android:textColor="@color/text"
+            android:textFontWeight="700"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+            app:layout_constraintVertical_bias="0.0"
+            tools:targetApi="p" />
 
-</RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/playlist_menu"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="6dp"
+            android:translationZ="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/more_vert"
+            android:contentDescription="@string/more_options"
+            app:tint="@color/whiteOrBlack" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </com.google.android.material.card.MaterialCardView>

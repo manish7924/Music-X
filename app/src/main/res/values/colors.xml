@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#000000</color>
+    <color name="alterBlack">#000000</color>
+    <color name="text">#000000</color>
+    <color name="title">#00B0FF</color>
+    <color name="item_text">#00B0FF</color>
     <color name="white">#FFFFFF</color>
+    <color name="whiteOrBlack">#FFFFFF</color>
     <color name="stroke">#00CAFF</color>
     <color name="colorPrimary">#F7F1FF</color>
     <color name="colorPrimaryDark">#F4EBFF</color>
@@ -62,7 +67,6 @@
     <color name="btn_blue">#06E8E6</color>
     <color name="p_music">#06E8E6</color>
     <color name="play_bg">#E8DEF8</color>
-    <color name="title">#00B0FF</color>
     <color name="blue_grad">#D0F4FF</color>
     <color name="my_blue">#00CAFF</color>
     <!--    <color name="my_blue2">#5AD4FF</color>-->
@@ -82,5 +86,9 @@
     <color name="color_hint">#17CAC8</color>
     <color name="chat_input">#FEFDFF</color>
     <color name="btn_input">#EDEEFF</color>
+
+    <color name="defaultDominantColor">#FF6200EE</color> <!-- Purple -->
+    <color name="defaultColor">#FFFFFFFF</color> <!-- White -->
+
 
 </resources>

@@ -1,13 +1,12 @@
 package com.infinite.virtualmusicplayer.fragments;
 
 import static com.infinite.virtualmusicplayer.activities.MainActivity.albums;
-import static com.infinite.virtualmusicplayer.activities.MainActivity.artists;
-import static com.infinite.virtualmusicplayer.activities.MainActivity.musicFiles;
 import static com.infinite.virtualmusicplayer.activities.MainActivity.validAlbums;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isShuffle;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -27,13 +26,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.infinite.virtualmusicplayer.R;
 import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
 import com.infinite.virtualmusicplayer.adapters.AlbumAdapter;
-import com.infinite.virtualmusicplayer.adapters.ArtistAdapter;
-import com.infinite.virtualmusicplayer.adapters.MusicAdapter;
 import com.infinite.virtualmusicplayer.model.Music;
 
 import java.util.Random;
@@ -45,9 +41,7 @@ public class AlbumFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private TextView noAlbumsFound;
-
-    private ExtendedFloatingActionButton shuffleExtendedFab;
-    private FloatingActionButton fabUp;
+    private FloatingActionButton shuffleExtendedFab, fabUp;
 
     private boolean isFabVisible = true; // to track the main FAB visibility
     private boolean isFabUpVisible = false; // to
@@ -73,7 +67,7 @@ public class AlbumFragment extends Fragment {
         shuffleExtendedFab = view.findViewById(R.id.shuffleFab);
         fabUp = view.findViewById(R.id.UpFab);
 
-
+        // Validate Albums
         validAlbums = Music.checkAndSetValidSongs(albums);
 
         albumAdapter = new AlbumAdapter(getContext(), validAlbums);
@@ -81,16 +75,13 @@ public class AlbumFragment extends Fragment {
         recyclerView.setAdapter(albumAdapter);
         recyclerView.setHasFixedSize(true);
 
+        // Initial setup for songs
         setUpAlbums();
 
-
-        // set color
+        // Swipe-to-refresh setup
         swipeRefreshLayout.setColorSchemeColors(Color.BLACK);
-        shuffleExtendedFab.setAnimateShowBeforeLayout(true);
-
 
         shuffleExtendedFab.setOnClickListener(view1 -> playAllSongs());
-
 
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -143,12 +134,20 @@ public class AlbumFragment extends Fragment {
         return view;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setUpAlbums() {
-        if (albums != null  && !albums.isEmpty()) {
+        validAlbums = Music.checkAndSetValidSongs(albums);
+
+        if (validAlbums != null  && !validAlbums.isEmpty()) {
             noAlbumsFound.setVisibility(View.GONE);
             shuffleExtendedFab.setVisibility(View.VISIBLE);
 
-            int cacheSize = albums.size();
+            // Update adapter and RecyclerView
+            albumAdapter = new AlbumAdapter(getContext(), validAlbums);
+            recyclerView.setAdapter(albumAdapter);
+            albumAdapter.notifyDataSetChanged();
+
+            int cacheSize = validAlbums.size();
             recyclerView.setItemViewCacheSize(cacheSize);
 
         } else {
@@ -157,6 +156,7 @@ public class AlbumFragment extends Fragment {
         }
 
     }
+
 
     private void playAllSongs() {
         isShuffle = true;
@@ -168,23 +168,19 @@ public class AlbumFragment extends Fragment {
             intent.putExtra("position", mainPosition);
             intent.putExtra("mainPlayIntent", "MainPlayIntent");
             startActivity(intent);
-
-        }else {
+        }
+        else {
             Toast.makeText(getContext(), "You hava not any song", Toast.LENGTH_SHORT).show();
         }
-
-
 
     }
 
 
     private void hideFab() {
-        shuffleExtendedFab.setExtended(false);
         ObjectAnimator.ofFloat(shuffleExtendedFab, "translationX", 0).start();
     }
 
     private void showFab() {
-        shuffleExtendedFab.setExtended(true);
         ObjectAnimator.ofFloat(shuffleExtendedFab, "translationY", 0).start();
     }
 
@@ -205,6 +201,12 @@ public class AlbumFragment extends Fragment {
         return random.nextInt(i + 1);
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (recyclerView == null){
+            setUpAlbums();
+        }
+    }
 
 }

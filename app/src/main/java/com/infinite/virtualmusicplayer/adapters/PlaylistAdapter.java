@@ -2,30 +2,39 @@ package com.infinite.virtualmusicplayer.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.infinite.virtualmusicplayer.R;
+import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
+import com.infinite.virtualmusicplayer.activities.PlaylistDetails;
+import com.infinite.virtualmusicplayer.fragments.PlaylistFragment;
 import com.infinite.virtualmusicplayer.model.Music;
 
 import java.util.ArrayList;
 
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyViewHolder> {
 
-    public static ArrayList<Music> playlistList;
+    public static ArrayList<Music.Playlist> playlistList;
     private Context context;
 
 
-    public PlaylistAdapter(Context context, ArrayList<Music> playlistList)
+    public PlaylistAdapter(Context context, ArrayList<Music.Playlist> playlistList)
     {
         PlaylistAdapter.playlistList = playlistList;
         this.context = context;
@@ -43,11 +52,69 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-//        holder.playlistSongName.setText(Music.Playlist.name);
-//        holder.playlistSongName.setText(PlaylistFragment.musicPlaylist.getRef().get(position).getName());
+
+        holder.playlistSongName.setText(playlistList.get(position).name);
+//        holder.playlistSongName.setText(PlaylistFragment.musicPlaylist.ref.get(position).name);
         holder.playlistSongName.setSelected(true);
 
-        byte[] image = getAlbumArt(playlistList.get(position).getPath());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PlaylistDetails.class);
+                intent.putExtra("index", position);
+                context.startActivity(intent);
+            }
+        });
+
+        holder.menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PopupMenu popupMenu = new PopupMenu(context, holder.menuBtn);
+                popupMenu.getMenuInflater().inflate(R.menu.playlist_item_menu, popupMenu.getMenu());
+
+                popupMenu.show();
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        if (id == R.id.add_songs) {
+                            Toast.makeText(context, "Coming soon", Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                        if (id == R.id.delete) {
+
+                            new MaterialAlertDialogBuilder(context)
+                                    .setTitle(playlistList.get(position).name)
+                                    .setIcon(R.drawable.ic_playlist_outlined)
+                                    .setMessage("Do you want to delete this playlist ?")
+                                    .setPositiveButton("Delete", (dialog, which) -> {
+
+//                                        delete the playlist
+                                        PlaylistFragment.musicPlaylist.ref.remove(position);
+                                        refreshPlaylist();
+
+                                        dialog.dismiss();
+
+                                    })
+                                    .setNegativeButton("Cancel", (dialog, which) -> {
+                                        // Exit the app
+                                        dialog.dismiss();
+                                    })
+                                    .show();
+                            return true;
+                        }
+
+
+                        return true;
+                    }
+                });
+
+            }
+        });
+
+//        byte[] image = getAlbumArt(playlistList.get(position).getPath());
 //        if (image != null){
 //            Glide.with(context).asBitmap().placeholder(R.drawable.favourite_on)
 //                    .load(image)
@@ -67,35 +134,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
 
 
 
-//        holder.itemView.setOnClickListener(v -> {
-//            Intent intent = new Intent(context, PlaylistDetails.class);
-//            intent.putExtra("index", position);
-//            ContextCompat.startActivity(context, intent, null);
-//        });
-
-
-//        holder.playlistDeleteBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ArrayList<Music> myFiles = new ArrayList<>();
-//                new MaterialAlertDialogBuilder(context)
-//                        .setTitle(playlistList.get(position).getAlbum())
-//                        .setMessage("Do you want to Delete this Playlist ?")
-//                        .setPositiveButton("Yes", (dialog, which) -> {
-//                            // Exit the app
-//                            PlaylistFragment.musicPlaylist.getRef().remove(position);
-//                            refreshPlaylist(playlistList);
-//                            dialog.dismiss();
-//                        })
-//                        .setNegativeButton("No", (dialog, which) -> {
-//                            // Exit the app
-//                            dialog.dismiss();
-//                        })
-//                        .show();
-//
-//            }
-//        });
-
     }
 
 
@@ -108,18 +146,16 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout cardView;
+        ConstraintLayout cardView;
         TextView playlistSongName;
-        ImageView playlistSongImg;
-        ImageButton playlistDeleteBtn;
+        ImageView playlistSongImg, menuBtn;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             cardView = itemView.findViewById(R.id.relative_layout_cardView);
             playlistSongName = itemView.findViewById(R.id.playlistSongName);
             playlistSongImg = itemView.findViewById(R.id.playlistSongImg);
-            playlistDeleteBtn = itemView.findViewById(R.id.playlistDeleteBtn);
-
+            menuBtn = itemView.findViewById(R.id.playlist_menu);
 
         }
     }
@@ -143,9 +179,9 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.MyView
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void refreshPlaylist(ArrayList<Music> playlistArrayList) {
+    public void refreshPlaylist() {
         playlistList = new ArrayList<>();
-        playlistList.addAll(playlistArrayList);
+        playlistList.addAll(PlaylistFragment.musicPlaylist.ref);
         notifyDataSetChanged();
     }
 

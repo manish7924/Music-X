@@ -10,6 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/title"
+        app:boxStrokeColor="@color/item_text"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="10dp"
+        app:startIconTint="@color/item_text"
+        app:startIconDrawable="@drawable/tracks"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -25,8 +30,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/artist"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_marginTop="8dp">
+        app:boxStrokeColor="@color/item_text"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="10dp"
+        app:startIconTint="@color/item_text"
+        app:startIconDrawable="@drawable/artist"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_artist"
@@ -41,8 +50,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/album"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_marginTop="8dp">
+        app:boxStrokeColor="@color/item_text"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="10dp"
+        app:startIconTint="@color/item_text"
+        app:startIconDrawable="@drawable/album"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_album"
@@ -57,8 +70,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/year"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_marginTop="8dp">
+        app:boxStrokeColor="@color/item_text"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="10dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edit_year"

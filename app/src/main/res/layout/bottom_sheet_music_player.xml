@@ -1,37 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    app:layout_wrapBehaviorInParent="included"
-    android:padding="16dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/mini_player"
+    android:background="@drawable/now_playing_bg"
+    android:theme="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
+    tools:context=".fragments.NowPlayingFragment">
 
-    <TextView
-        android:id="@+id/songTitle"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/progress_relative_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Song Title"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:layout_height="2.7dp"
+        android:paddingHorizontal="7.79dp"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_below="@id/card_relative_layout">
 
-    <TextView
-        android:id="@+id/artistName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Artist Name"
-        android:textSize="16sp" />
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/mini_player_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:indicatorColor="@color/title"
+            app:trackColor="@android:color/transparent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
+            android:foregroundGravity="bottom" />
 
-    <SeekBar
-        android:id="@+id/seekBar"
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/playPauseButton"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Play" />
+        android:paddingHorizontal="1dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
+        android:paddingVertical="1dp">
 
-    <!-- Add more controls as needed -->
-</LinearLayout>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@id/card_relative_layout"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:cardCornerRadius="9dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:strokeColor="@android:color/transparent"
+            style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="3dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/bottom_art"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:background="@android:color/transparent"
+                android:src="@drawable/music_note"
+                android:contentDescription="@string/now_playing" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <ImageView
+            android:id="@+id/previousBtn_bottom"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:shadowColor="@color/white"
+            android:shadowRadius="23"
+            android:src="@drawable/skip_previous_bottom"
+            android:background="?selectableItemBackground"
+            android:layout_toStartOf="@id/play_pause_miniplayer"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="2dp"
+            android:contentDescription="@string/previous"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/play_pause_miniplayer"
+            app:tint="@color/title" />
+
+        <ImageView
+            android:id="@+id/nextBtn_bottom"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:shadowColor="@color/white"
+            android:shadowRadius="23"
+            android:src="@drawable/skip_next_bottom"
+            android:background="?selectableItemBackground"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/next_song"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/title" />
+
+        <ImageView
+            android:id="@+id/play_pause_miniplayer"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/play_bottom"
+            android:padding="4dp"
+            android:shadowColor="@color/white"
+            android:shadowRadius="23"
+            android:background="?android:selectableItemBackground"
+            android:layout_toStartOf="@id/nextBtn_bottom"
+            android:layout_marginEnd="2dp"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/play_pause"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/nextBtn_bottom"
+            app:tint="@color/title" />
+
+        <TextView
+            android:id="@+id/song_name_mini_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/song_name"
+            android:tooltipText="@string/song_name"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_rg"
+            android:layout_marginTop="7dp"
+            android:layout_marginStart="4dp"
+            android:ellipsize="marquee"
+            android:fadingEdge="horizontal"
+            android:fadingEdgeLength="20dp"
+            android:textFontWeight="700"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:background="@android:color/transparent"
+            android:singleLine="true"
+            android:layout_toEndOf="@id/card_relative_layout"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:maxLines="1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/card_relative_layout"
+            app:layout_constraintEnd_toStartOf="@+id/previousBtn_bottom"
+            tools:targetApi="p" />
+
+        <TextView
+            android:id="@+id/song_artist_mini_player"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/artist_name"
+            android:tooltipText="@string/artist_name"
+            android:textColor="@color/ar_gray"
+            android:fontFamily="@font/poppins_rg"
+            android:ellipsize="end"
+            android:textFontWeight="400"
+            android:layout_marginTop="1dp"
+            android:layout_marginStart="4dp"
+            android:layout_toEndOf="@id/card_relative_layout"
+            android:layout_below="@id/song_name_mini_player"
+            android:textSize="11sp"
+            android:maxLines="1"
+            app:layout_constraintTop_toBottomOf="@+id/song_name_mini_player"
+            app:layout_constraintStart_toEndOf="@+id/card_relative_layout"
+            tools:targetApi="p" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

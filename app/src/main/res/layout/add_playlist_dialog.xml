@@ -8,13 +8,12 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:boxStrokeColor="@color/pink"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="10dp"
-        app:startIconScaleType="center"
-        app:startIconDrawable="@drawable/add_to_playlist"
-        app:startIconTint="@color/pink"
         android:hint="@string/playlist_name"
+        app:boxStrokeColor="@color/item_text"
+        android:layout_marginHorizontal="16dp"
+        app:startIconDrawable="@drawable/add_to_playlist"
+        android:layout_marginTop="10dp"
+        app:startIconTint="@color/item_text"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -31,10 +30,10 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:boxStrokeColor="@color/pink"
+        android:hint="@string/your_name"
+        app:boxStrokeColor="@color/item_text"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="10dp"
-        android:hint="@string/your_name"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText

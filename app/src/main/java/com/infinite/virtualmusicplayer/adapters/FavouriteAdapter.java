@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,8 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.infinite.virtualmusicplayer.R;
+import com.infinite.virtualmusicplayer.activities.Favourite;
 import com.infinite.virtualmusicplayer.activities.MusicPlayerActivity;
+import com.infinite.virtualmusicplayer.fragments.PlaylistFragment;
 import com.infinite.virtualmusicplayer.model.Music;
 
 import java.util.ArrayList;
@@ -77,6 +82,34 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
 
         });
 
+        holder.menuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PopupMenu popupMenu = new PopupMenu(context, holder.menuBtn);
+                popupMenu.getMenuInflater().inflate(R.menu.favourite_item_menu, popupMenu.getMenu());
+
+                popupMenu.show();
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+
+                        if (id == R.id.remove) {
+
+                            Favourite.favouriteSongs.remove(position);
+                            return true;
+                        }
+
+
+                        return true;
+                    }
+                });
+
+            }
+        });
+
     }
 
 
@@ -90,12 +123,14 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView favSongName;
-        ImageView favSongImg;
+        ImageView favSongImg, menuBtn;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             favSongName = itemView.findViewById(R.id.songNameFav);
             favSongImg = itemView.findViewById(R.id.songImgFav);
+            menuBtn = itemView.findViewById(R.id.favourite_menu);
+
 
 
         }

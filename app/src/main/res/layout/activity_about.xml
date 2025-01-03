@@ -22,7 +22,25 @@
         app:titleTextColor="@color/title"
         style="@style/Theme.Material3.DynamicColors.DayNight.NoActionBar"
         app:layout_constraintStart_toEndOf="@id/back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints" />
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/back"
+        android:layout_width="44dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:onClick="backBtn"
+        android:padding="10dp"
+        android:src="@drawable/back_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <com.google.android.material.card.MaterialCardView
@@ -173,20 +191,6 @@
         app:layout_goneMarginTop="2dp"
         tools:targetApi="p" />
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/back"
-        android:layout_width="44dp"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/transparent"
-        android:gravity="center"
-        android:onClick="backBtn"
-        android:padding="10dp"
-        android:src="@drawable/back_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
     <LinearLayout

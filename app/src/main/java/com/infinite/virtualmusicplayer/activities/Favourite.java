@@ -1,5 +1,7 @@
 package com.infinite.virtualmusicplayer.activities;
 
+import static com.infinite.virtualmusicplayer.activities.MainActivity.tracks;
+import static com.infinite.virtualmusicplayer.activities.MainActivity.validSongs;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isLoop;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isShuffle;
 
@@ -14,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.infinite.virtualmusicplayer.adapters.FavouriteAdapter;
@@ -29,6 +32,8 @@ public class Favourite extends AppCompatActivity {
     TextView noFavSongsFound;
     int favPosition = 0;
     FloatingActionButton shuffleBtnFav;
+
+    SwipeRefreshLayout swipeRefreshLayout;
     @SuppressLint("StaticFieldLeak")
     static FavouriteAdapter favouriteAdapter;
 
@@ -43,8 +48,20 @@ public class Favourite extends AppCompatActivity {
         getWindow().setStatusBarColor(Color.TRANSPARENT);
 
         recyclerView = findViewById(R.id.favouriteRv);
+        swipeRefreshLayout = findViewById(R.id.refresh_layout);
         noFavSongsFound = findViewById(R.id.no_fav_songs_found);
         shuffleBtnFav = findViewById(R.id.shuffleBtnFav);
+
+        swipeRefreshLayout.setColorSchemeColors(Color.BLACK);
+
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
 
         shuffleBtnFav.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +73,7 @@ public class Favourite extends AppCompatActivity {
 
 
 
-        if (!(favouriteSongs.size() < 1))
+        if (!(favouriteSongs.isEmpty()))
         {
             favouriteAdapter = new FavouriteAdapter(this, favouriteSongs);
             recyclerView.setAdapter(favouriteAdapter);
@@ -81,7 +98,7 @@ public class Favourite extends AppCompatActivity {
         if (!isLoop) {
             favPosition = getRandom(favouriteSongs.size() - 1);
         }
-        if (!(favouriteSongs.size() < 1)){
+        if (!(favouriteSongs.isEmpty())){
             Intent intent = new Intent(Favourite.this, MusicPlayerActivity.class);
             intent.putExtra("position", favPosition);
             intent.putExtra("favShuffle", "FavShuffle");

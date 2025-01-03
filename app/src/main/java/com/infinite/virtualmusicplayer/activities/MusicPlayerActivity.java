@@ -24,6 +24,7 @@ import static com.infinite.virtualmusicplayer.services.MusicService.musicService
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ClipData;
@@ -62,6 +63,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -1315,6 +1317,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
         }
     }
 
+//    private void applyAlbumArtAnimation(View albumArt) {
+//        ObjectAnimator rotateAnim = ObjectAnimator.ofFloat(albumArt, "rotation", 0f, 360f);
+//        rotateAnim.setDuration(10000); // 10 seconds
+//        rotateAnim.setInterpolator(new LinearInterpolator());
+//        rotateAnim.setRepeatCount(ObjectAnimator.INFINITE);
+//        rotateAnim.start();
+//    }
+
 
     @SuppressLint("ResourceAsColor")
     private void initializePlayerMetaData() {
@@ -1356,14 +1366,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
                         int dominantColor = mPalette.getDominantColor(Color.WHITE);
                         lightVibrantColor = manipulateColor(mPalette.getLightVibrantColor(Color.WHITE), 1f);
 
-//                        int myTintColor = manipulateColor(lightVibrantColor, 4f);
-
-//                        int lightVibrantColor = mPalette.getLightVibrantColor(Color.WHITE);
-//                        int darkVibrantColor = mPalette.getDarkVibrantColor(Color.BLACK);
-//                        int VibrantColor = mPalette.getVibrantColor(Color.WHITE);
-//                        int darkVibrantColor = mPalette.getDarkVibrantColor(Color.GRAY);
-//                        int darkVibrantColor2 = mPalette.getLightMutedColor(Color.GRAY);
-//                        int lightStatusColor = mPalette.getLightVibrantColor(Color.TRANSPARENT);
 
 //                        int lightColor = manipulateColor(dominantColor, 0.7f);
                         int lightColor1 = manipulateColor(dominantColor, 0.8f);
@@ -1673,20 +1675,101 @@ public class MusicPlayerActivity extends AppCompatActivity implements ActionPlay
     }
 
 
-//    private void nextThreadBtn() {
-//        nextThread = new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-//                nextBtn.setOnClickListener(view -> {
-//                    nextBtnClicked();
-//                    nextBtn.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_next_prev_btn));
+
+//    private void initializePlayerMetaData() {
+//        // Set song title and artist
+//        songTitleTv.setText(listSongs.get(position).getTitle());
+//        artistTv.setText(listSongs.get(position).getArtist());
+//        NowPlayingFragment.songName.setText(listSongs.get(position).getTitle());
+//        NowPlayingFragment.artistName.setText(listSongs.get(position).getArtist());
 //
-//                });
-//            }
-//        };
-//        nextThread.start();
+//        // Configure progress and seek bars
+//        seekBar.setMax(totalDuration);
+//        mini_player_progressBar.setMax(totalDuration);
+//        totalTimeTv.setText(millisecondsToTime(totalDuration));
+//
+//        // Handle album art and apply theme
+//        if (thumb != null) {
+//            musicCover.setPadding(0, 0, 0, 0);
+//            musicCover.setImageBitmap(thumb);
+//            miniPlayerCoverArt.setImageBitmap(thumb);
+//            headerImage.setImageBitmap(thumb);
+//
+//            // Apply a rotation animation to the album art
+////            applyAlbumArtAnimation(musicCover);
+//
+//            // Generate a color palette for dynamic theming
+//            Palette.from(thumb).generate(palette -> {
+//                if (palette != null) {
+//                    int dominantColor = palette.getDominantColor(Color.WHITE);
+//                    int lightVibrantColor = manipulateColor(palette.getLightVibrantColor(Color.WHITE), 1.0f);
+//
+//                    applyGradientTheme(dominantColor, lightVibrantColor);
+//                }
+//            });
+//        } else {
+//            // Fallback for no album art
+//            musicCover.setPadding(70, 60, 70, 60);
+//            musicCover.setImageResource(R.drawable.music_note_player);
+//            miniPlayerCoverArt.setImageResource(R.drawable.music_note);
+//            headerImage.setImageResource(R.drawable.music_note);
+//            applyDefaultTheme();
+//        }
 //    }
+
+    // Apply album art rotation animation
+
+    // Apply gradient theme
+    private void applyGradientTheme(int dominantColor, int lightVibrantColor) {
+        GradientDrawable gradientDrawable = new GradientDrawable(
+                GradientDrawable.Orientation.BOTTOM_TOP,
+                new int[]{manipulateColor(dominantColor, 0.9f), dominantColor}
+        );
+        mContainer.setBackground(gradientDrawable);
+
+        // Update text and icon colors
+        int adjustedColor = manipulateColor(lightVibrantColor, 0.9f);
+        songTitleTv.setTextColor(adjustedColor);
+        artistTv.setTextColor(adjustedColor);
+
+        // Example: Update other UI components (repeat for other elements)
+        play.setColorFilter(adjustedColor);
+        previousBtn.setColorFilter(adjustedColor);
+        nextBtn.setColorFilter(adjustedColor);
+
+        // Status bar color
+        getWindow().setStatusBarColor(dominantColor);
+    }
+
+    // Apply default theme for no album art
+    private void applyDefaultTheme() {
+        GradientDrawable defaultGradient = new GradientDrawable(
+                GradientDrawable.Orientation.BOTTOM_TOP,
+                new int[]{Color.DKGRAY, Color.BLACK}
+        );
+        mContainer.setBackground(defaultGradient);
+
+        songTitleTv.setTextColor(Color.WHITE);
+        artistTv.setTextColor(Color.WHITE);
+
+        play.setColorFilter(Color.WHITE);
+        previousBtn.setColorFilter(Color.WHITE);
+        nextBtn.setColorFilter(Color.WHITE);
+
+        getWindow().setStatusBarColor(Color.BLACK);
+    }
+
+    // Manipulate color brightness
+    private int manipulateColor(int color, float factor) {
+        int alpha = Color.alpha(color);
+        int red = Math.round(Color.red(color) * factor);
+        int green = Math.round(Color.green(color) * factor);
+        int blue = Math.round(Color.blue(color) * factor);
+
+        return Color.argb(alpha, red, green, blue);
+    }
+
+
 
     @SuppressLint("SetTextI18n")
     public void nextBtnClicked() {

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/artist_items"
     android:layout_width="match_parent"
-    android:layout_height="220dp"
-    app:cardCornerRadius="23dp"
+    android:layout_height="216dp"
+    app:cardCornerRadius="18dp"
     app:cardElevation="10dp"
     android:background="?selectableItemBackground"
     android:layout_marginVertical="14dp"
@@ -39,7 +40,7 @@
             android:layout_marginVertical="10dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="@string/album"
+            android:text="@string/title"
             android:textSize="14sp"
             android:textColor="@color/black"
             android:ellipsize="marquee"
@@ -48,7 +49,26 @@
             android:gravity="center_horizontal"
             android:layout_centerHorizontal="true"
             android:textFontWeight="700"
-            android:fontFamily="@font/poppins_rg" />
+            android:fontFamily="@font/poppins_rg"
+            tools:targetApi="p" />
+
+
+        <ImageView
+            android:id="@+id/favourite_menu"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="6dp"
+            android:translationZ="10dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/more_vert"
+            android:contentDescription="@string/more_options"
+            app:tint="@color/whiteOrBlack" />
 
     </RelativeLayout>
 

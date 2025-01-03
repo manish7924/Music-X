@@ -51,7 +51,7 @@
             android:maxWidth="230dp"
             android:maxLines="2"
             android:text="@string/music"
-            android:textColor="@color/black"
+            android:textColor="@color/text"
             android:textFontWeight="500"
             android:textIsSelectable="false"
             android:textSize="13sp"

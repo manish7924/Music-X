@@ -228,6 +228,13 @@
     <string name="scroll_to_top">Scroll to Top</string>
     <string name="add">Add</string>
     <string name="next">Next</string>
+    <string name="no_playlists_found">No playlists found</string>
+    <string name="no_playlist_des">You can cretate a new playlist by clicking on te + button</string>
+    <string name="menu">Menu</string>
+    <string name="add_songs">Add songs</string>
+    <string name="created_by_on">Created by On</string>
+    <string name="remove_all">Remove all</string>
+    <string name="remove">Remove</string>
 
 
 </resources>

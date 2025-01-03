@@ -39,13 +39,14 @@
 
 
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/shuffleFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:text="@string/shuffle"
         app:icon="@drawable/shuffle_on"
+        android:src="@drawable/shuffle_on"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="70dp"
@@ -63,8 +64,8 @@
         android:contentDescription="@string/scroll_to_top"
         android:visibility="gone"
         android:scaleType="center"
-        android:layout_marginBottom="130dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="135dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:fabSize="mini"

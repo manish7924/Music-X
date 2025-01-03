@@ -8,6 +8,7 @@ import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.fin
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.isPlaying;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.listSongs;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.musicService;
+import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.position;
 import static com.infinite.virtualmusicplayer.activities.MusicPlayerActivity.thumb;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.miniPlayerCoverArt;
 import static com.infinite.virtualmusicplayer.fragments.NowPlayingFragment.songName;
@@ -259,6 +260,10 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                    createMediaPlayer(currentSongIndex);
                    mediaPlayer.start();
                }
+               else {
+                   mediaPlayer.stop();
+//                   musicService.release();
+               }
            }catch (Exception e) {
                e.printStackTrace();
                Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
@@ -271,6 +276,10 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                 {
                     createMediaPlayer(currentSongIndex);
                     mediaPlayer.start();
+                }
+                else {
+                    mediaPlayer.stop();
+//                   musicService.release();
                 }
             }catch (Exception e) {
                 e.printStackTrace();
@@ -399,8 +408,9 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 ////        intent.putExtra("position", MusicPlayerActivity.position);
 //        intent.putExtra("nowPlaying","NowPlaying");
 
-        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-
+        Intent intent = new Intent(getBaseContext(), MusicPlayerActivity.class);
+        intent.putExtra("position", position);
+        intent.putExtra("nowPlaying","NowPlaying");
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         Intent prevIntent = new Intent(this, NotificationReceiver.class)

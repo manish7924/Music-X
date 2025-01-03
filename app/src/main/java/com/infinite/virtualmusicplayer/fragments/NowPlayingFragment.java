@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -55,7 +56,7 @@ public class NowPlayingFragment extends Fragment implements ServiceConnection {
     public static TextView songName;
     @SuppressLint("StaticFieldLeak")
     boolean isExpanded = false;
-    public static RelativeLayout mini_player;
+    public static ConstraintLayout mini_player;
     public static LinearProgressIndicator mini_player_progressBar;
     View view;
     MusicService musicService;
