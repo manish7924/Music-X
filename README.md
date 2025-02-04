@@ -28,7 +28,7 @@
 
 ## Installation
 
-1. Download the latest Music X APK from the [Website](https://music-x-lac.vercel.app/) and also avaliable on [github releases](https://github.com/manish7924/Music-X/releases).
+1. Download the latest Music X APK from the [Website](http://music-x-love.vercel.app) and also avaliable on [github releases](https://github.com/manish7924/Music-X/releases).
 2. Enable installation from unknown sources in your device settings.
 3. Open the downloaded APK and follow the on-screen instructions to install.
 
