@@ -161,7 +161,7 @@ html[dir=rtl] .app__logo-wrapper {
   margin: 0;
 }
 .app__description {
-  font-size: var(--font-lg);
+  font-size: var(--font-md);
 }
 .app__des__download {
   font-size: var(--font-xs);
