@@ -205,7 +205,7 @@ html[dir=rtl] .app__logo-wrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-left: -9.8px;
+  margin-horizontal: 12px;
   margin-top: 36px;
 }
 .app__buttons--mobile {
