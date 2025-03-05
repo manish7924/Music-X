@@ -211,8 +211,8 @@ html[dir=rtl] .app__logo-wrapper {
 .app__buttons--mobile {
   display: none;
 }
-.fix_cont {
-  margin-horizontal: 20px; 
+.text_center {
+  text_alignment: center; 
 }
 @media (max-width: 768px) {
   .app__buttons {
