@@ -104,7 +104,7 @@ If you have any questions, suggestions, or feedback, please feel free to reach o
 
 **Developer:** [Manish Chidar](https://manish7924.github.io/My-Portfolio/)
 
-**Email:** manishchidar79@gmail.com
+**Email:** developermanish79@gmail.com
 
 
 Thank you for checking out Music X! Enjoy your music!
